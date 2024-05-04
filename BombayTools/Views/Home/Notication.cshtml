@@ -1,0 +1,59 @@
+﻿
+
+@if (ViewBag.Count > 0)
+{
+    foreach (var sd in ViewBag.TagsDataList)
+    {
+<a href="#" class="dropdown-item d-flex pb-3" onclick="UpdateisRead(@sd.UserID)">
+@*<a href="#" class="dropdown-item d-flex pb-3" onclick="getDailyVisitdetails(@sd.UserID)">*@
+    <div class="notifyimg">
+        @sd.TagCount
+    </div>
+    <div class="mt-2">
+        <strong>@sd.UserName    </strong>
+        @*<div class="small text-muted">@d.Datetime</div>*@
+    </div>
+</a> }
+
+}
+else
+{
+<a href="#" class="dropdown-item d-flex pb-3">
+    No Notification
+</a>}
+
+
+<script>
+    console.log(123)
+
+    $(document).ready(function () {
+        var Count = @ViewBag.Count;
+        console.log(Count)
+        if (Count == 0) {
+            $("#bell_noti").hide();
+        }
+    });
+
+    function UpdateisRead(UserID) {
+        $("#global-loader").fadeIn();
+        var data = { "ID": UserID };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: '/Home/AjaxMarkAsReadNotification',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //window.location = URL
+                getDailyVisitDetails(UserID);
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert("Error");
+            }
+        });
+    }
+
+</script>

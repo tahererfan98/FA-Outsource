@@ -1,0 +1,349 @@
+﻿
+
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title" id="New">Terms And Condition Master</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" id="ShowSummary" class="btn btn-josph btn-success" style="color:white;align-content:center;"><i class="fa fa-file-text" data-toggle="tooltip" data-placement="bottom" title="Summary" data-original-title="Back"></i>  </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="row">
+            <div class="card">
+
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Template Name</label>
+                                @Html.TextBox("TemplateName", null, new { @class = "form-control", @id = "TemplateName", name = "TemplateName", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Packing</label>
+                                @Html.TextBox("Packing", null, new { @class = "form-control", @id = "Packing", name = "Packing", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Freight</label>
+                                @Html.TextBox("Freight", null, new { @class = "form-control", @id = "Freight", name = "Freight", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Ex Godown</label>
+                                @Html.TextBox("Exgodown", null, new { @class = "form-control", @id = "Exgodown", name = "Exgodown", autocomplete = "off" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Tax</label>
+                                @Html.TextBox("Tax", null, new { @class = "form-control", @id = "Tax", name = "Tax", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Warranty</label>
+                                @Html.TextBox("Warranty", null, new { @class = "form-control", @id = "Warranty", name = "Warranty", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Payment</label>
+                                @Html.TextBox("Payment", null, new { @class = "form-control", @id = "Payment", name = "Payment", autocomplete = "off" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Delivery</label>
+                                @Html.TextBox("Delivery", null, new { @class = "form-control", @id = "Delivery", name = "Delivery", autocomplete = "off" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success float-right" id="Save" onclick="SaveTemplate()" title="Save"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-warning float-right" id="Update" onclick="UpdateTemplate()"><i class="fa fa-save"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var SetID = 0;
+
+
+    $(document).ready(function () {
+        console.log("sdc")
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        SetID = '@ViewBag.TemplateID';
+        if (SetID != 0) {
+            $("#Save").hide();
+            $("#Update").show();
+        } else {
+            document.getElementById("TemplateName").value = "";
+            document.getElementById("Packing").value = "";
+            document.getElementById("Freight").value = "";
+            document.getElementById("Exgodown").value = "";
+            document.getElementById("Tax").value = "";
+            document.getElementById("Warranty").value = "";
+            document.getElementById("Payment").value = "";
+            document.getElementById("Delivery").value = "";
+            $("#Update").hide();
+            $("#Save").show();
+        }
+
+    });
+
+
+    function SaveTemplate() {
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+         }
+        var Name = document.getElementById("TemplateName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < TemplateList.length; i++) {
+            var temp = TemplateList[i].TemplateName;
+            temp = temp.toLowerCase();
+            if (Name.trim() == temp) {
+                alert("Template Name already exist");
+                return false;
+            }
+        }
+        var element = {};
+
+        element.TemplateID = 0;
+        element.TemplateName = document.getElementById("TemplateName").value;
+        element.Packing = document.getElementById("Packing").value;
+        element.Freight = document.getElementById("Freight").value;
+        element.Exgodown = document.getElementById("Exgodown").value;
+        element.Tax = document.getElementById("Tax").value;
+        element.Warranty = document.getElementById("Warranty").value;
+        element.Payment = document.getElementById("Payment").value;
+        element.Delivery = document.getElementById("Delivery").value;
+
+         element.IsNew = 1;
+         data = JSON.stringify(element);
+       // alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/NewSaveQuotTermCondition',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("QuotTermConditionSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdateTemplate() {
+        var Name = document.getElementById("TemplateName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < TemplateList.length; i++) {
+            if (SetID != TemplateList[i].TemplateID) {
+                var temp = TemplateList[i].TemplateName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    alert("Template Name already exist");
+                    return false;
+                }
+            }
+        }
+
+        var element = {};
+
+        element.TemplateID = SetID;
+        element.TemplateName = document.getElementById("TemplateName").value;
+        element.Packing = document.getElementById("Packing").value;
+        element.Freight = document.getElementById("Freight").value;
+        element.Exgodown = document.getElementById("Exgodown").value;
+        element.Tax = document.getElementById("Tax").value;
+        element.Warranty = document.getElementById("Warranty").value;
+        element.Payment = document.getElementById("Payment").value;
+        element.Delivery = document.getElementById("Delivery").value;
+        element.isActive = 1;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+        $.ajax({
+            type: 'post',
+            url: '/Master/UpdateQuotTermCondition',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("QuotTermConditionSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function CheckPrincipal() {
+        if (PrincipalList.length == 0) {
+            $.ajax({
+                url: "/Master/AjaxGetAllQuotTermCondition",
+                //data: '{QuotNo: ' + JSON.stringify(QuotNo) + '}',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    PrincipalList = response;
+                    ValidatePrincipal();
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+        else {
+            ValidatePrincipal();
+        }
+    }
+
+    function ValidatePrincipal() {
+        var EnteredPrincipal = document.getElementById('TemplateName').value;
+        EnteredPrincipal = EnteredPrincipal.toLowerCase();
+        EnteredPrincipal = EnteredPrincipal;
+
+        for (i = 0; i < PrincipalList.length; i++) {
+            var temp = PrincipalList[i].TemplateName.toLowerCase();
+            if (EnteredPrincipal == temp) {
+                alert("Template name already exist");
+                $('#SaveButton').attr('disabled', true);
+                document.getElementById('TemplateName').style.borderColor = "red";
+                return;
+            } else {
+                $('#SaveButton').attr('disabled', false);
+                document.getElementById('TemplateName').style.borderColor = "Gainsboro";
+            }
+        }
+    }
+
+    function validateAllDetail() {
+        var isValid = Boolean;
+        isValid = true;
+        var Principal = document.getElementById("TemplateName").value;
+        var Packing = document.getElementById("Packing").value;
+        var Freight = document.getElementById("Freight").value;
+        var Exgodown = document.getElementById("Exgodown").value;
+        var Tax = document.getElementById("Tax").value;
+        var Warranty = document.getElementById("Warranty").value;
+        var Payment = document.getElementById("Payment").value;
+        var Delivery = document.getElementById("Delivery").value;
+
+        if (Principal == "" || Principal == undefined) {
+            document.getElementById('TemplateName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('TemplateName').style.borderColor = "Gainsboro";
+        }
+        if (Packing == "" || Packing == undefined) {
+            document.getElementById('Packing').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Packing').style.borderColor = "Gainsboro";
+        }
+        if (Freight == "" || Freight == undefined) {
+            document.getElementById('Freight').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Freight').style.borderColor = "Gainsboro";
+        }
+
+        if (Exgodown == "" || Exgodown == undefined) {
+            document.getElementById('Exgodown').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Exgodown').style.borderColor = "Gainsboro";
+        }
+        if (Tax == "" || Tax == undefined) {
+            document.getElementById('Tax').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Tax').style.borderColor = "Gainsboro";
+        }
+        if (Warranty == "" || Warranty == undefined) {
+            document.getElementById('Warranty').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Warranty').style.borderColor = "Gainsboro";
+        }
+
+        if (Payment == "" || Payment == undefined) {
+            document.getElementById('Payment').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Payment').style.borderColor = "Gainsboro";
+        }
+        if (Delivery == "" || Delivery == undefined) {
+            document.getElementById('Delivery').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Delivery').style.borderColor = "Gainsboro";
+        }
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+    }
+</script>
+
+
+

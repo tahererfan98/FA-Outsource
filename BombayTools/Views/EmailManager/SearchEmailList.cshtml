@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+
+<div class="row" id="SearchMailList">
+    <div class="card">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-inbox table-hover">
+
+                    <tbody>
+                        @foreach (var d in Model)
+                        {
+                            <tr>
+                                <td class="view-message dont-show" style="width:150px;">@Html.DisplayFor(m => d.FromName)</td>
+                                <td class="view-message" onclick="ShowBodyTagView('@d.ID','@d.ThreadID')">@Html.DisplayFor(m => d.Subject)</td>
+                                <td class="view-message text-right" style="width:250px;">@Html.DisplayFor(m => d.Display)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        @*emailMaster = @Html.Raw(Json.Encode(@ViewBag.MailDetails));
+        emailMaster = JSON.parse(emailMaster);
+        getMessageID(emailMaster);
+        console.log(emailMaster);*@
+        //height adjust
+        //$("#goBackButton").show();
+        console.log(emailMaster);
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        //height adjust
+    });
+
+    function ShowBodyTagView(messageID, threadID) {
+        resetCompanyInfo();
+        MessageID = messageID;
+        ThreadID = threadID;
+        setMessageID(messageID, threadID);
+        $("#Inbox").hide();
+        $("#SearchMailList").hide();
+        $("#MailNavigation").hide();
+        $("#MessageBody").show();
+        $("#AddEnquiry").hide();
+        mode = 4;
+        console.log(mode);
+        var data = { 'ID': messageID, 'ThreadID': threadID };
+        data = JSON.stringify(data);
+        $("#backButton").show();
+
+        //height adjust
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        //height adjust
+
+        $.ajax({
+            url: "/EmailManager/GetEMailBody",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#Inbox').hide();
+                $('#SearchList').hide();
+
+                $("#MessageBody").show();
+                var ifrm = $('#MailText')[0].contentWindow.document;
+                $('body', ifrm).html(response.Body);
+                $('#TextFormat').text(response.PlainText);
+                $('#MailFrom').text(response.FromName);
+                $('#MailSubject').text(response.Subject);
+                $('#MailText').show();
+                BodyText = response.PlainText;
+                SubjectText = response.Subject;
+                getValueFromEmail(BodyText, SubjectText, response.FromName);
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

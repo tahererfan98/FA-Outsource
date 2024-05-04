@@ -1,0 +1,177 @@
+﻿
+
+@model BombayToolsEntities.BusinessEntities.PurchaseOrderM
+<a href="~/fonts/Poppins/Poppins-Black.ttf"></a>
+<a href="~/fonts/Poppins/Poppins-Bold.ttf"></a>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:display=swap');
+</style>
+
+<style>
+
+
+    html {
+        background-color: white !important;
+    }
+
+    body {
+        color: #000000 !important;
+        background-color: white !important;
+    }
+
+    .table-responsive {
+        border: 1px;
+    }
+
+    pre {
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    .table td {
+        padding: 0.5rem !important;
+        vertical-align: top;
+    }
+
+    .TEXT_BOLD {
+        font-weight: bold;
+        font-size: 13px;
+        color: black;
+    }
+
+    .TEXT_UNBOLD {
+        font-family: Poppins;
+        font-size: 13px;
+        color: black;
+    }
+
+    #tblstatic {
+        page-break-before: avoid;
+    }
+
+    #tblstatic2 {
+        page-break-before: always;
+    }
+
+    /*FontContainer*/
+    #FontContainer {
+        font-family: Poppins !important;
+    }
+
+    .ItemTblFont {
+        font-family: Poppins !important;
+        color: black;
+    }
+</style>
+@*<hr style="border: dotted 1px;" class="mt-0 pl-0" />*@
+
+<div class="row " id="FontContainer" style="margin-top:0px;">
+
+
+    @*<hr class="m-0" style=" background-color: black !important; height:4px" />*@
+
+    <div class="col-sm-12 col-md-12 col-lg-12 ">
+        <div class="" id="tblstatic">
+            <div class="row mt-1 mb-4">
+                <div class="col-md-6">
+                    <p class="m-0 TEXT_BOLD" style="color: #3ca7ba;"> KEY AGREEMENT TERMS:  </p>
+                </div>
+            </div>
+            <div class="row mb-2 ml-7" style="font-size:13px">
+                <div class="col-md-12 ml-12">
+                    <div class="columns mb-4" style="width:85%">
+
+                        <table class="text-wrap  pb-0 mb-0" style="width:100%; border-color:black;">
+
+                            <tbody>
+
+                                @foreach (var dr in ViewBag.tblKeyTerm)
+                                {
+                                    <tr>
+                                        <td style="text-align:left" width="4%">@dr["SrNo"]</td>
+                                        <td style="text-align:left" width="96%">@dr["Terms"]</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+
+                        </table>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row mb-3" style="font-size:8px">
+                <div class="col-md-12 ml-12">
+
+                    <div class="columns">
+                        <p class="m-0 text-left  TEXT_BOLD">PENALTIES AND BACK-CHARGES : </p>
+
+                        <p class="m-0 text-left text-wrap" style="text-align:justify">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Future Architectural Glass will not accept or be responsible for any back-charges / penalties / delay penalties / liquidated damages or any other form of debits to our
+                            receivable amount from the customer in any given scenario whatsoever. If we find that the customer is intending to make such claims on us, we reserve all rights to hold their
+                            deliveries and / or stop their production with immediate effect and without intimation.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="row mb-3" style="font-size:8px">
+                <div class="col-md-12 ml-12">
+
+                    <div class="columns">
+                        <p class="m-0 text-left  TEXT_BOLD">BACK-TO-BACK PAYMENTS : </p>
+
+                        <p class="m-0 text-left text-wrap" style="text-align:justify">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Under no circumstances whatsoever and irrespective of any confirmation given by any employee of Future Architectural Glass LLC, we will not accept any back-to-back
+                            payment terms and we do not assume any responsibility on behalf of the customer to help with their non-payment from their client.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" style="font-size:8px">
+                <div class="col-md-12 ml-12">
+
+                    <div class="columns">
+                        <p class="m-0 text-left  TEXT_BOLD">DELAYED PAYMENT CHARGES : </p>
+
+                        <p class="m-0 text-left text-wrap" style="text-align:justify">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment delays beyond the mentioned Payment Terms shall be charged interest at the rate of 24% per annum. The interest shall be counted from the due date until
+                            the actual date of the payment. Buyer shall pay such interest within thirty (30) days from the date of the demand notice.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" style="font-size:8px">
+                <div class="col-md-12 ml-12">
+
+                    <div class="columns">
+                        <p class="m-0 text-left TEXT_BOLD ">TERMINATION OF CONTRACT / AGREEMENT / LPO : </p>
+
+                        <p class="m-0 text-left text-wrap" style="text-align:justify">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If Buyer has not paid the amount due as per agreed Payment Terms, The Future Architectural Glass LLC shall be entitled to terminate the Contract / Agreement / LPO
+                            by notice in writing to Buyer and, inter alia claim compensation for the loss "and any expenses incurred to claim the balance payment.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

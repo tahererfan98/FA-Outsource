@@ -1,0 +1,191 @@
+﻿@model BombayToolsEntities.BusinessEntities.PurchaseOrderM
+
+@{ ViewBag.Title = "PurchaseOrder";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<style>
+    html {
+        background-color: white !important;
+    }
+
+    body {
+        color: #000000 !important;
+        background-color: white !important;
+    }
+
+    .table-responsive {
+        border: 1px;
+    }
+
+    pre {
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    .table td {
+        padding: 0.5rem !important;
+        vertical-align: top;
+    }
+
+    .normal-p {
+        font-family: 'Quicksand', sans-serif !important;
+        font-size: 14px;
+        font-weight: 400;
+        color: inherit !important;
+        padding: inherit !important;
+        overflow: auto;
+        font-size: 100%;
+        line-height: 1.45;
+        border-left: 0px;
+        background-color: inherit !important;
+        border-radius: 3px;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        text-shadow: 0 1px white;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+    }
+</style>
+<div class="row m-5 ">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        @*FOR START HEADER*@
+        <div class="bg-white">
+            <div class="row">
+                <div class="col-3 offset-9">
+                    <img height="100" style="margin-right: 5px; width:100%" src="~/images/BTC-Logo.svg" />
+                </div>
+            </div>
+            <hr />
+        </div>
+        @*FOR END HEADER*@
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h3><strong><u>Purchase Order</u></strong></h3>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                @if (Model.ManualPONo != null && Model.ManualPONo != "" && Model.ManualPONo != " " && Model.ManualPONo != "-")
+                {
+                    <p class="m-0"><strong>PO No:</strong> <label>@Model.ManualPONo</label></p> 
+                }
+                else
+                {
+                    <p class="m-0"><strong>PO No:</strong> <label>@Model.PONO</label></p>
+                }
+                <p class="m-0"><strong>Date:</strong> <label>@Model.PODisplayDate</label></p>
+                <p class="m-0"><strong>Vendor:</strong> <label>@Model.VendorName</label></p>
+
+            </div>
+            <div class="col-md-4 pr-5">
+
+            </div>
+            <div class="col-md-4">
+                <p class="m-0"> Details</p>
+                <p class="m-0"><strong>QTN No #:</strong> <label>@Model.QuotationNo</label></p>
+                <p class="m-0"><strong>GST #:</strong> <label id="Date">27AAFCB2492P1Z5</label></p>
+                <p class="m-0"><strong>PAN #:</strong> <label id="DueDate">AAFCB2492P</label></p>
+            </div>
+        </div>
+
+        @*header ends*@
+        @*Item-start*@
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="">
+                    <table class="table table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:15px !important">#</th>
+                                <th>Item Name</th>
+                                <th>Part No</th>
+                                <th>Make</th>
+                                <th>Rate</th>
+                                <th>QTY</th>
+                                <th>Discount</th>
+                                <th>Net Total</th>
+                                <th>GST</th>
+                                <th>Final Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var index = 0;
+                                var index1 = 0; }
+                            @foreach (var item in Model.POItem)
+                            {
+                                index++;
+                <tr>
+                    <td>@index</td>
+                    <td>@item.ItemDescription</td>
+                    <td>@item.PartNo</td>
+                    <td>@item.Manufacture</td>
+                    <td>@item.Rate</td>
+                    <td>@item.QTY</td>
+                    <td>@item.Discount</td>
+                    <td>@item.NetTotal</td>
+                    <td>@item.GST</td>
+                    <td>@item.FinalTotal</td>
+                </tr>}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*item ends*@
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Terms and Condition</h4>
+                @foreach (var d in Model.POCondition)
+                {
+                    index1++;
+    <p class="m-0"><strong>@index1: </strong><label>@d.Condition</label></p>}
+            </div>
+        </div>
+        @*FOR FOOTER START*@
+
+        <div class="bg-white">
+            <hr />
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h5>Bombay Tools Centre (Bombay) Pvt Ltd</h5>
+                        <p>CIN-U52500MH2012PTC234920</p>
+                        <p>Plot 22G, 224 Nesbit Compound, Opposite Jupiter Tower/ SBI Bank, Nesbit Road Mazagaon, Mumbai 400010</p>
+                        <p>Ph.No.022-66668781/82/83</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*FOR FOOTER END*@
+    </div>
+</div>
+
+
+
+<script>
+        setTimeout(function () {
+            window.onload = window.print();
+
+
+        }, 1000);
+        window.onload = function () {
+
+    };
+
+</script>
+
+<script>
+        setTimeout(function () {
+            window.onload = window.close();
+        }, 1000);
+        window.onload = function () {
+
+        };
+</script>

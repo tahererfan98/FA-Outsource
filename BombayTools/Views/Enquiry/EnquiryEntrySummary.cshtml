@@ -1,0 +1,532 @@
+﻿
+@{
+    ViewBag.Title = "EnquiryEntrySummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<style>
+    pre {
+        color: white;
+        padding: 0;
+        overflow: auto;
+        font-size: 85%;
+        line-height: 1.45;
+        border-left: none;
+        background-color: white;
+        border-radius: 3px;
+/*        -moz-tab-size: 4;
+*/        -o-tab-size: 4;
+        tab-size: 4;
+        text-shadow: 0 1px white;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+    }
+
+    .isSavedAsDraft_1 {
+        background-color: #ffb2b6;
+    }
+
+    #tblPOSummary th,
+    #tblPOSummary td {
+        height: 0.7rem;
+        padding: 5px;
+        vertical-align: middle;
+        line-height: 1.5 !important;
+    }
+</style>
+
+<div id="summary">
+    <div class="page-header">
+        <h4 class="page-title">Enquiry Summary <label class="bg-primary text-white br-7 pl-3 pr-3" id="poCount"></label></h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-sm-12 col-md-2">
+            <div class="row no-gutters">
+                <div class="col-4">
+                    <label class="form-label mt-1">From <i class="fa fa-calendar"></i></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(-20).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-2">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">To <i class="fa fa-calendar"></i></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.AddDays(1).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Criteria</label>
+                </div>
+                <div class="col-9">
+                    @Html.DropDownList("ddlcriteria", new List<SelectListItem>
+                                { new SelectListItem { Text = "--Select--", Value = "0"},
+                                    new SelectListItem { Text = "ENQ NO", Value = "ENQ NO"},
+                                    new SelectListItem { Text = "Customer Name", Value = "Customer Name"},
+
+                                  }, new { @class = "form-control", autocomplete = "off", @id = "ddlcriteria", onchange = "getCriteria()" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-3" id="hid">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Search</label>
+                </div>
+                <div class="col-auto">
+                    @Html.TextBox("Textsearch", null, new { @class = "form-control", @id = "Textsearch", name = "Textsearch", autocomplete = "off" })
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-12 col-md-1">
+            <button class="btn btn-primary" onclick="GetGRNSummary()"><i class="fa fa-search" style="font-size:14px"></i></button>
+        </div>
+
+        <div class="col-sm-12 col-md-2" style="display:none">
+            <div class="row no-gutters">
+                <div class="col-1">
+                    @*<label class="form-label mt-1">Search</label>*@
+                </div>
+                <div class="col-10">
+                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", autocomplete = "off", placeholder = "Search" })
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card mt-3 p-1">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" id="tblPOSummary">
+                    <thead class="head bg-primary">
+                        <tr>
+                            <th class="text-center text-white">Action</th>
+                            <th class="text-center text-white">ENQ No</th>
+                            <th class="text-center text-white">ENQ Date</th>
+                            <th class="text-left text-white">Customer Name</th>
+                            <th class="text-left text-white">Project</th>
+                            <th class="text-left text-white">PINO</th>
+                            <th class="text-left text-white">WONO</th>
+                            <th class="text-left text-white">OTS Qty</th>
+                            <th class="text-left text-white">OTS SQM</th>
+                            <th class="text-left text-white">OS Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="GRNForm"></div>
+<div id="ViewForm"></div>
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+
+        </div>
+    </div>
+</div>
+<script>
+
+
+    var BillAttachment = [];
+    var MasterAttachment = [];
+
+    $(document).ready(function () {
+        getCriteria()
+         GetGRNSummary();
+        var tablePOItem = $('#tblPOSummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+            "ordering": false,
+        });
+    });
+
+
+    function GetGRNSummary() {
+        debugger;
+        var FromDate = document.getElementById("fromDate").value;
+        var ToDate = document.getElementById("toDate").value;
+        var date1 = new Date(FromDate);
+        var date2 = new Date(ToDate);
+        var Today = new Date();
+        if (date1 >= date2) {
+            document.getElementById('toDate').style.borderColor = "red";
+            // alert('Please enter valid from date');
+            Swal.fire({
+                title: 'Error',
+                text: "To Date should not be less than from date ",
+                icon: 'error'
+            })
+            return false;
+        } else {
+            document.getElementById('toDate').style.borderColor = "Gainsboro";
+        }
+        var element = {};
+        element.FromDate = document.getElementById("fromDate").value;
+        element.ToDate = document.getElementById("toDate").value;
+
+
+        if (element.FromDate == "" || element.ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+
+        element.SearchCriteria = document.getElementById("ddlcriteria").value;
+        element.Search = document.getElementById("Textsearch").value;
+        element.Search = (element.Search).trim();
+
+        var data = { 'data1': element }
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn("slow");
+        $.ajax({
+            url: "/Enquiry/GetEnquiryEntrySummary",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                $('#tblPOSummary').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"f>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+                    "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                        $('td', row).css('color', 'black');
+                        $('td', row).css('font-weight', 'bold');
+                    },
+                    "columnDefs": [{
+                        "targets": '_all',
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "ENQNO",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    if (row.IsApproved == 1) {
+
+                                        data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewEnquiry('" + row.ENQNO + "',`View`)\"><i class=\"fe fe-eye\"></i></button> <button class=\"btn btn-sm btn-info\" disabled=\"disabled\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addEnquiryEntry('" + row.ENQNO + "',`Edit`)\"><i class=\"fa fa-edit\"></i></button> <button class=\"btn btn-sm btn-success\" disabled=\"disabled\"   onclick=\"EnguirySendToPartner(" + 0 + ",'" + row.ENQNO + "', 'Add' )\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Send To OS Partner\"><i class=\"fa fa-share-square-o\"></i></button> ";
+                                    }
+                                    else if (row.IsENQSend == 1) {
+                                        data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewEnquiry('" + row.ENQNO + "',`View`)\"><i class=\"fe fe-eye\"></i></button> <button class=\"btn btn-sm btn-info\" disabled=\"disabled\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addEnquiryEntry('" + row.ENQNO + "',`Edit`)\"><i class=\"fa fa-edit\"></i></button> <button class=\"btn btn-sm btn-success\"  onclick=\"EnguirySendToPartner(" + 0 + ",'" + row.ENQNO + "', 'Add' )\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Send To OS Partner\"><i class=\"fa fa-share-square-o\"></i></button> ";
+                                    }
+                                    else {
+                                        data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewEnquiry('" + row.ENQNO + "',`View`)\"><i class=\"fe fe-eye\"></i></button> <button class=\"btn btn-sm btn-info\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addEnquiryEntry('" + row.ENQNO + "',`Edit`)\"><i class=\"fa fa-edit\"></i></button> <button class=\"btn btn-sm btn-success\"  onclick=\"EnguirySendToPartner(" + 0 + ",'" + row.ENQNO + "', 'Add' )\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Send To OS Partner\"><i class=\"fa fa-share-square-o\"></i></button> ";
+                                    }
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "ENQNO" },
+                        { "data": "ENQDate" },
+                        {
+                            "data": "CustomerName",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "ProjectName",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "AllPINO",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "AllWONO",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "OutQty",
+                            className: 'text-right'
+                        },
+                        {
+                            "data": "OutSQM",
+                            className: 'text-right'
+                        },
+                        {
+                            "data": "ENQStatus",
+                            className: 'text-left'
+                        },
+
+                    ],
+                    mark: true
+                });
+                $("div.newQuote").html('<div class="float-right" style="display:flex"><div class="mr-3 mt-1"> </div><button class="btn btn-primary"  onclick="addEnquiryEntry(0,`Add`)"><i class="fa fa-plus"></i> Add New Enquiry</button></div>');
+                var table = $('#tblPOSummary').DataTable();
+                //$('#searchText').on('keyup', function () {
+                //    table.search(this.value).draw();
+                //});
+
+                table = $('#tblPOSummary').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert(error.responseText);
+            }
+        });
+    }
+    function ViewEnquiry(id) {
+        var data = { 'ENQNO': id, 'Action': "View" };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Enquiry/_AddOrEditEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+
+                $('#summary').hide();
+                $('#ViewForm').html(response);
+                $('#ViewForm').show();
+                $("#global-loader").fadeOut();
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function addEnquiryEntry(id, Action) {
+        debugger;
+        var data = { 'ENQNO': id, 'Action': Action };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Enquiry/_AddOrEditEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#summary').hide();
+                $('#GRNForm').html(response);
+                $('#GRNForm').show();
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function EnguirySendToPartner(ESNO, id, Action) {
+        debugger;
+        var data = { 'ESNO': ESNO, 'ENQNO': id, 'Action': Action };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Enquiry/_AddorEditENQSendToPartner",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#summary').hide();
+                $('#GRNForm').html(response);
+                $('#GRNForm').show();
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function addPackingList(id) {
+        var data = { 'EXINO': id };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/ExportInvoice/_AddOrEditPackingList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+
+                $('#summary').hide();
+                $('#GRNForm').html(response);
+                $('#GRNForm').show();
+                $("#global-loader").fadeOut();
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+
+    function GetCancelModel(EXINO) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you sure you want to cancel GRN?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                var data1 = { 'EXINO': EXINO };
+                data = JSON.stringify(data1);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/GRN/AjaxGetCancelGRN',
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (response) {
+                               $("#global-loader").fadeOut("slow");
+                                if (response.Status != 0) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: response.Message,
+                                        icon: 'success'
+                                    }).then((result) => {
+                                     document.location = '@Url.Action("GRNSummary", "GRN")';
+
+                                });
+
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.Message,
+                                        icon: 'error'
+                                    })
+                                }
+                    },
+                    error: function (error) {
+                        $("#global-loader").fadeOut();
+                        let str = error.responseText;
+                        var a = str.indexOf("<title>") + 7;
+                        var b = str.indexOf("</title>");
+                        str = str.substring(a, b);
+                        Swal.fire("Error!", "Something went wrong: " + str, "error");
+                    }
+                });
+
+            }
+        })
+     }
+
+
+    function getBack() {
+        //$('#ViewForm').hide();
+        //$('#GRNForm').hide();
+        //$('#summary').show();
+        document.location = '@Url.Action("EnquiryEntrySummary", "Enquiry")';
+
+    }
+
+    function getBack2() {
+        $('#ViewForm').hide();
+        $('#GRNForm').hide();
+        $('#summary').show();
+    }
+    function PrintExportInvoice(EXINO) {
+        var url = '/Print/ExportInvoicePdf?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function PrintPackingList(EXINO) {
+        var url = '/Print/PackingListPrint?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function getCriteria() {
+        var x = $('#ddlcriteria option:selected').text();
+        if (x == "--Select--") {
+            $("#hid").hide();
+        }
+        else {
+            $("#hid").show();
+        }
+    }
+
+    function SetGRNStatusForApproval(EXINO) {
+            var data = { 'EXINO': EXINO }
+         data = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/GRN/_GRNApprovalView",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        })
+    }
+
+
+</script>

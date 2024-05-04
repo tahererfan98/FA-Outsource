@@ -1,0 +1,155 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.SubmenuInfo>
+
+@{
+    ViewBag.Title = "AddRoleWiseMenu";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="page-header">
+    <h4 class="page-title">
+        Assign Menu
+    </h4>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <div class="form-group">
+                    <div class="form-label">Role ID</div>
+                    <input type="number" class="form-control" id="RoleID" value="@ViewBag.RoleID" readonly/>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <div class="form-label">Role Name</div>
+                    <input type="text" class="form-control" id="RoleName" value="@ViewBag.RoleName" readonly/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="bg-white">
+
+    <div class="row ">
+        @{
+            var Count = 0;
+            var Count1 = 0;
+
+            foreach (var d in Model)
+            {
+                Count1 = Count1 + 1;
+                var MenuID = d.MenuID;
+                if (Count != d.Priority)
+                {
+
+                    <div class="col-sm-12 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">@Html.DisplayFor(m => d.Description)</h4>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var c in Model)
+                                {
+                                    if (MenuID == c.MenuID)
+                                    {
+                                        Count = Count + 1;
+
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                @Html.DisplayFor(m => c.SubMenu)
+                                                <div class="material-switch pull-right">
+                                                    @if (c.IsActive)
+                                                    {
+                                                        <input id="switch_0@(c.SubMenuID)" name="switch_0@(c.SubMenuID)" value="@(c.SubMenuID)" type="checkbox" checked class="_p_switch" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="switch_0@(c.SubMenuID)" name="switch_0@(c.SubMenuID)" value="@(c.SubMenuID)" type="checkbox"  class="_p_switch"/>
+                                                    }
+                                                    <label for="switch_0@(c.SubMenuID)" class="label-primary"></label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (Count == d.Priority && Count1 == d.Priority)
+                {
+                    Count = 0;
+                    Count1 = 0;
+                }
+            }
+
+        }
+                    <div class="col-sm-12 col-md-12">
+                        <div class="float-left  p-4">
+                            <button class="btn btn-block btn-primary" onclick="Save()">Save</button>
+                        </div>
+                    </div>
+    </div>
+
+</div>
+<script>
+
+    function Save() {
+        $("#cute-loader").fadeIn("slow");
+        var element = {}
+        element.RoleID = "@ViewBag.RoleID";
+        
+        element.AddedOn = new Date();
+        var myColumnDefs = [];
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                myColumnDefs.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefs.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+        //alert(myColumnDefs)
+        if (myColumnDefs == "") {
+            alert("There is no Menu list")
+            return false;
+        }
+        console.log(myColumnDefs);
+        var data = { 'ListObject': myColumnDefs, 'role': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/User/AjaxSaveRoleWiseMenuMapping",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                //alert(response);
+                               if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+             document.location = '@Url.Action("RoleWiseMenuMappingSummary", "User")';
+                });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                }
+            },
+            error: function (errormessage) {
+                $("#cute-loader").fadeOut("slow");
+                let str = errormessage.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+    }
+</script>

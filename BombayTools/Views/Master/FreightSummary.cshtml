@@ -1,0 +1,54 @@
+﻿
+<div class="page-header">
+    <h4 class="page-title">Frieght Master</h4>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="form-control">
+                    <label>Freight Name</label>
+                    <input type="text" id="name" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="form-control">
+                    <label>Description</label>
+                    <input type="text" id="desc" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-success float-right " onclick="OnSave">Save</button>
+    </div>
+</div>
+
+<script>
+    function onSave(){
+        var element = {};
+        element.Name = $("#name").val();
+        element.Description = $("#desc").val();
+        element.AddedOn = new Date();
+        ///
+        var data = { 'data': element };
+        data = JSON.stringify();
+
+        $.ajax({
+            type: "post",
+            data: data,
+            type: "POST",
+            url: "/Master/AjaxAddOrEditFrieght",
+            contentType: "application/json; charset=utf-8",
+              success: function (result) {
+                   
+
+                },
+                error: function (errormessage) {
+                    $("#global-loader").fadeOut();
+
+                    alert("Something went wrong please try again later " + errormessage.responseText);
+                }
+        })
+    }
+</script>

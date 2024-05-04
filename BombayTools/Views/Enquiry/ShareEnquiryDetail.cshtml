@@ -1,0 +1,30 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.User>
+
+
+<div>
+    @foreach (var a in Model)
+    {
+        <ul class="list-group">
+            <li class="list-group-item">
+                @if (a.Status)
+                {
+                    @Html.DisplayFor(m => a.UserName)
+                    <div class="material-switch pull-right">
+                        <input id="switch_0(@a.ID)" name="switch_0(@a.ID)" class="uniqCheck" value="@a.ID" type="checkbox" checked/>
+                        <label for="switch_0(@a.ID)" class="label-primary"></label>
+                    </div>
+                }
+                else
+                {
+                    @Html.DisplayFor(m => a.UserName)
+                    <div class="material-switch pull-right">
+                        <input id="switch_0(@a.ID)" name="switch_0(@a.ID)" class="uniqCheck" value="@a.ID" type="checkbox" />
+                        <label for="switch_0(@a.ID)" class="label-primary"></label>
+                    </div>
+                }
+
+            </li>
+        </ul>
+    }
+
+</div>

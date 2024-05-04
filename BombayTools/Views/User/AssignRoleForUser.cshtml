@@ -1,0 +1,206 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.SubmenuInfo>
+
+@{
+    ViewBag.Title = "AssignRoleForUser";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<div id="cute-loader" style="display: none;"></div>
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title"><a href="/user/UserSummary"><i class="fa fa-arrow-left"></i></a> Assign Role</h4>
+        @*<ol class="breadcrumb" id="ShowSummary">
+                <li class="breadcrumb-item"><a onclick="BackToPendingSummary();" class="btn btn-primary btn-success" style="color:white;align-content:center;"><i class="fa fa-arrow-left" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back"></i>  </a></li>
+            </ol>*@
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                @Html.TextBox("UserName", null, new { @class = "form-control", @id = "UserName", name = "UserName", autocomplete = "off", disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">User Name</label>
+                                @Html.TextBox("Email", null, new { @class = "form-control", @id = "Email", name = "Email", autocomplete = "off", disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Assign Role</label>
+                                @Html.DropDownList("ddlRoleDropdown", (IEnumerable<SelectListItem>)ViewBag.ddlRoleDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlRoleDropdown", name = "ddlRoleDropdown", autocomplete = "off",onchange= "getAssignedMenuForRole()" })
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12">
+                            <h4>Menu List</h4>
+                            <div class="row">
+                                @{
+                                    var Count = 0;
+                                    var Count1 = 0;
+
+                                    foreach (var d in Model)
+                                    {
+                                        Count1 = Count1 + 1;
+                                        var MenuID = d.MenuID;
+                                        if (Count != d.Priority)
+                                        {
+
+                                            <div class="col-sm-12 col-lg-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title">@Html.DisplayFor(m => d.Description)</h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        @foreach (var c in Model)
+                                                        {
+                                                            if (MenuID == c.MenuID)
+                                                            {
+                                                                Count = Count + 1;
+
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        @Html.DisplayFor(m => c.SubMenu)
+                                                                        <div class="material-switch pull-right">
+                                                                            @if (c.IsActive)
+                                                                            {
+                                                                                <input id="switch_0@(c.SubMenuID)" name="switch_0@(c.SubMenuID)" value="@(c.SubMenuID)" type="checkbox" checked class="_p_switch"/>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <input id="switch_0@(c.SubMenuID)" name="switch_0@(c.SubMenuID)" value="@(c.SubMenuID)" type="checkbox" class="_p_switch" />
+                                                                            }
+                                                                            <label for="switch_0@(c.SubMenuID)" class="label-primary"></label>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        if (Count == d.Priority && Count1 == d.Priority)
+                                        {
+                                            Count = 0;
+                                            Count1 = 0;
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success pull-right" onclick="Save(@ViewBag.UserID,'@ViewBag.Email')">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var country = document.getElementById("ddlRoleDropdown");
+        country.value = @ViewBag.RoleID;
+        $("#cute-loader").fadeOut("slow");
+
+    });
+
+    function Save(ID, Email) {
+        $("#cute-loader").fadeIn("slow");
+        var element = {}
+        element.ID = ID;
+        var e = document.getElementById("ddlRoleDropdown");
+        element.RoleID = e.options[e.selectedIndex].value;
+        if (element.RoleID == null || element.RoleID == undefined) {
+            alert("Role Not Selected");
+            return;
+        }
+        element.ModifiedOn = new Date();
+        element.UserEmail = Email;
+        element.Body = "Your Role has been updated. Please login to ERP";
+        var myColumnDefs = [];
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                myColumnDefs.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefs.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+        //alert(myColumnDefs)
+        if (myColumnDefs == "") {
+            alert("There is no Menu list")
+            return false;
+        }
+        var data = { 'ListObject': myColumnDefs, 'User': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/User/AssignRoleAndMenu",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                alert(response);
+                $("#cute-loader").fadeOut("slow");
+             document.location = '@Url.Action("UserSummary", "User")';
+            },
+            error: function (errormessage) {
+                $("#cute-loader").fadeOut("slow");
+                let str = errormessage.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+    }
+</script>
+<script>
+    function getAssignedMenuForRole() {
+        var ID = $("#ddlRoleDropdown").val();
+        if (ID != "" || ID != 0) {
+            var data = {'ID':ID};
+            data = JSON.stringify(data);
+        $.ajax({
+            url: "/User/getAssignedMenuForRole",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $("._p_switch").prop('checked', false);
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i].IsActive) {
+                        $("#switch_0" + response[i].SubMenuID).prop('checked', true);
+                    }
+                }
+                $("#cute-loader").fadeOut("slow");
+
+            },
+            error: function (errormessage) {
+                $("#cute-loader").fadeOut("slow");
+                let str = errormessage.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+        }
+    }
+</script>

@@ -1,0 +1,220 @@
+﻿
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title" id="New">Department Master</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" id="ShowSummary" class="btn btn-josph btn-success" style="color:white;align-content:center;"><i class="fa fa-file-text" data-toggle="tooltip" data-placement="bottom" title="Summary" data-original-title="Back"></i>  </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Department Name</label>
+                                @Html.TextBox("DepartmentName", null, new { @class = "form-control", @id = "DepartmentName", name = "DepartmentName", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success float-right" id="Save" onclick="SaveDepartment()" title="Save"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-warning float-right" id="Update" onclick="UpdateDepartment()"><i class="fa fa-save"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var SetID = 0;
+
+
+    $(document).ready(function () {
+        console.log("sdc")
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        SetID = '@ViewBag.DepartmentID';
+        if (SetID != 0) {
+            $("#Save").hide();
+            $("#Update").show();
+        } else {
+            document.getElementById("DepartmentName").value = "";
+            $("#Update").hide();
+            $("#Save").show();
+        }
+
+    });
+
+
+    function SaveDepartment() {
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+         }
+        var Name = document.getElementById("DepartmentName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < DepartmentList.length; i++) {
+            var temp = DepartmentList[i].DepartmentName;
+            temp = temp.toLowerCase();
+            if (Name.trim() == temp) {
+                alert("Department Name already exist");
+                return false;
+            }
+        }
+        var element = {};
+
+        element.DepartmentID = 0;
+         element.DepartmentName = document.getElementById("DepartmentName").value;
+
+         element.IsNew = 1;
+         data = JSON.stringify(element);
+       // alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/NewSaveDepartment',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("DepartmentSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdateDepartment() {
+        var Name = document.getElementById("DepartmentName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < DepartmentList.length; i++) {
+            if (SetID != DepartmentList[i].DepartmentID) {
+                var temp = DepartmentList[i].DepartmentName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    alert("Department Name already exist");
+                    return false;
+                }
+            }
+        }
+
+        var element = {};
+
+        element.DepartmentID = SetID;
+        element.DepartmentName = document.getElementById("DepartmentName").value;
+
+        element.isActive = 1;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+        $.ajax({
+            type: 'post',
+            url: '/Master/UpdateDepartment',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("DepartmentSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function CheckPrincipal() {
+        if (PrincipalList.length == 0) {
+            $.ajax({
+                url: "/Master/AjaxGetAllDepartment",
+                //data: '{QuotNo: ' + JSON.stringify(QuotNo) + '}',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    PrincipalList = response;
+                    ValidatePrincipal();
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+        else {
+            ValidatePrincipal();
+        }
+    }
+
+    function ValidatePrincipal() {
+        var EnteredPrincipal = document.getElementById('DepartmentName').value;
+        EnteredPrincipal = EnteredPrincipal.toLowerCase();
+        EnteredPrincipal = EnteredPrincipal;
+
+        for (i = 0; i < PrincipalList.length; i++) {
+            var temp = PrincipalList[i].DepartmentName.toLowerCase();
+            if (EnteredPrincipal == temp) {
+                alert("Department name already exist");
+                $('#SaveButton').attr('disabled', true);
+                document.getElementById('DepartmentName').style.borderColor = "red";
+                return;
+            } else {
+                $('#SaveButton').attr('disabled', false);
+                document.getElementById('DepartmentName').style.borderColor = "Gainsboro";
+            }
+        }
+    }
+
+    function validateAllDetail() {
+        var isValid = Boolean;
+        isValid = true;
+        var Principal = document.getElementById("DepartmentName").value;
+
+
+        if (Principal == "" || Principal == undefined) {
+            document.getElementById('DepartmentName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('DepartmentName').style.borderColor = "Gainsboro";
+        }
+
+
+
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+    }
+</script>
+
+
+
+

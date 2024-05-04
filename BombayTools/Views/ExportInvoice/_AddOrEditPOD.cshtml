@@ -1,0 +1,186 @@
+﻿<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> POD Master</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+
+<div class="card mb-3 ">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">POD Name</label>
+                    @Html.TextBox("txtPODName", null, new { @class = "form-control", @id = "txtPODName", name = "txtPODName", autocomplete = "off", @oninput = "this.value = this.value.toUpperCase()" })
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;visibility:hidden">POD Name</label>
+                    <button class="btn btn-sm btn-success" id="Savebtn" onclick="OnSave()"><i class="fa fa-save"></i> Save</button>
+
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function OnSave() {
+        debugger;
+
+            var PODName = $("#txtPODName").val();
+
+            if (PODName == "" || PODName == null || PODName == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter POD Name",
+                icon: 'error'
+            });
+
+                $("#txtPODName").focus();
+            return false;
+        }
+
+        $("#global-loader").fadeIn("slow");
+
+            var data = { 'PODName': PODName,  };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/ExportInvoice/AjaxAddOrEdit',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("PODMasterSummary", "ExportInvoice")';
+                });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+
+</script>

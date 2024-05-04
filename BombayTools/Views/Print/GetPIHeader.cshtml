@@ -1,0 +1,185 @@
+﻿
+<style>
+    #text-big {
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    #text-small {
+        font-size: 19px;
+        font-weight: 500;
+        margin-left:-4%;
+    }
+    #FontContainer {
+        font-family: Poppins !important;
+    }
+</style>
+<div class="page-head" style="text-align: center ;">
+    <div class="row" style="background-color:white">
+
+        <div class="row col-md-12">
+            <div class="col-md-4" style="margin-right:15px">
+                <img src="~/assets/images/FG_Logo-01.png" style="height: 80px;width:280px;margin-left:-20%"/>
+            </div>
+            <div class="col-md-8">
+                <div class="row" style="width:120%;margin-top: -75px;padding: 0;">
+                    <table style="text-align: right;width: 100%">
+                        <tr>
+
+                            <td style=" color: black;  font-size: 50PX">
+                                <span style="font-family:Poppins !important ;font-size:50px;font-weight: bolder; color:black;margin-right:-250px;">PROFORMA INVOICE</span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            @*<div class="col-12">
+                    <div class="mt-1">
+                        <h1 style=" color:black;text-align:center; font-size:20PX" class="ml-5"><strong>ISSUE - BATCH GEL</strong></h1>
+
+                    </div>
+                </div>*@
+        </div>
+        <div class="row col-md-12" style="margin-left:-3%">
+            <div class="col-md-2">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;text-align:left; border: none;font-family:Poppins;"><strong id="text-big">PI NO.</strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;text-align:left;font-family:Poppins;margin-right:-90PX"><strong id="text-big">VERSION </strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;text-align:left;border: none;font-family:Poppins;margin-right:-90PX"><strong id="text-big">PI DATE </strong></td>
+
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;text-align:left;border: none;font-family:Poppins;margin-right:-90PX"><strong id="text-big">VALID UNTIL </strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:10px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:110px;color:black;border: none;text-align:left;font-family:Poppins;margin-right:-90PX"><strong id="text-big">PROJECT MANAGER </strong></td>
+
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:50px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;text-align:left;font-family:Poppins;margin-left:-90PX"><strong id="text-big">PREPARED BY </strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top:-20px;margin-left:-2.7%">
+            <div class="col-md-2" style="width:320px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+                        <tr>
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish"><b id="text-small">@ViewBag.PINo</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+                        <tr>
+
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish;margin-right:-90PX"><b id="text-small">@ViewBag.PIMasterData[0].RevisionNo</b></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish;margin-right:-90PX;text-transform:uppercase"><b id="text-small">@ViewBag.PIMasterData[0].PIDate</b></td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:-30px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish;margin-right:-90PX;text-transform:uppercase"><b id="text-small">@ViewBag.PIMasterData[0].ValueTo</b></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:10px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish;margin-right:-90PX;text-transform:uppercase"><b id="text-small">@ViewBag.PIMasterData[0].PersonName</b></td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2" style="margin-left:50px">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td style="color:black;border: none;font-weight: 500;text-align:left;font-family:Mulish;margin-left:-90PX;text-transform:uppercase"><b id="text-small">@ViewBag.PIMasterData[0].UserName</b></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <hr class="m-0" style=" background-color: black !important; height:5px" />
+</div>
+

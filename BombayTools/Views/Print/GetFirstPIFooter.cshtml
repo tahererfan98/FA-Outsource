@@ -1,0 +1,308 @@
+﻿<style>
+    .vl {
+        border-left: 3px solid black;
+        height: 90px;
+    }
+
+    .print td {
+        padding: 0.15rem !important;
+    }
+
+    .m-0 {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .p-0 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .cell {
+        padding: 0.15rem !important;
+    }
+
+    th, tr, td {
+        padding: 0px;
+    }
+
+    #text-big {
+        font-size: 19px;
+        font-weight: 900;
+    }
+
+    #text-small {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    #text-med {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    #text-num {
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    #Systemdiv {
+        page-break-before: always;
+    }
+
+    #displayTable {
+        font-weight: 900;
+    }
+
+    #PrintStyle {
+        font-size: 12px;
+        font-weight: bolder;
+    }
+</style>
+<style>
+    #btnJCBack {
+        background-color: black;
+        border-color: black;
+    }
+
+    #center {
+        text-align: center;
+        border-bottom: none;
+    }
+
+    #right {
+        text-align: right;
+        border-bottom: none;
+    }
+
+    #left {
+        text-align: left;
+        border-bottom: none;
+    }
+    /*.table thead th, .text-wrap table thead th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }
+        .table tbody th, .text-wrap table tbody th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }*/
+</style>
+<div class="page-footer" style="background-color:white">
+
+    <hr class="m-0" style=" background-color: black !important; height:3px" />
+    <div class="row">
+        @*<div class="col-md-2">
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;">
+                            <strong id="text-small" style="font-size:13px">&nbsp;PRODUCT LEDGER: REFER ANNEXURE I</strong>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1">
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black" style="width:250px;color:black;border: none;font-family:Mulish;visibility:hidden">
+                            <b style="font-weight:900"> | </b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>*@
+        <div class="col-md-3">
+
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black" style="width:100px;color:black;border: none;font-family:Poppins;">
+                            <strong id="text-small" style="font-size:13px;font-weight: 800;">
+                                &nbsp;SIZES AND QUANTITIES: REFER ANNEXURE I
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1">
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black text-right" style="width:250px;color:black;border: none;font-family:Mulish;">
+                            <b style="font-weight:900"> | </b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black" style="width:100px;color:black;border: none;font-family:Poppins;">
+                            <strong id="text-small" style="font-size:13px;margin-left:27%;font-weight: 800;">
+                                &nbsp;T&C: Refer ANNEXURE II
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1">
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black text-center" style="width:250px;color:black;border: none;font-family:Mulish;">
+                            <b style="font-weight:900"> | </b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+
+            <table class="table card-table table-vcenter text-nowrap print">
+                <tbody>
+                    <tr>
+                        <td class="text-black" style="width:100px;color:black;border: none;font-family:Poppins;">
+                            <strong id="text-small" style="font-size:13px;font-weight: 800;">
+                                &nbsp;WARRANTY T&C: REFER ANNEXURE III
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr class="m-0" style=" background-color: black !important; height:3px" />
+    <div class="row p-0" style="margin-bottom:-1%">
+        <div class="row col-md-12">
+
+            <div class="col-md-7">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big" style="font-size:18px">BANK PAYMENT TRANSFER DETAILS </strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-1">
+                <table class="table card-table table-vcenter text-nowrap print" style="visibility:hidden">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong>BANK PAYMENT TRANSFER DETAILS </strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-1 vl"></div>
+            <div class="col-md-3">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big" style="margin-left:-50px;font-size:18px">CUSTOMER'S APPROVAL</strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top:-6%">
+
+            <div class="col-md-4">
+                <table class="table card-table table-vcenter text-nowrap print" style="line-height:1.2">
+                    <tbody>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Mulish;padding:0">
+                                <b id="text-big"style="font-size: 17px;">BANK NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
+                                <b id="text-small"style="font-size: 17px;"> UNION BANK OF INDIA </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Mulish;padding:0">
+                                <b id="text-big" style="font-size: 17px;">  BANK BRANCH &nbsp;:</b><b id="text-small"style="font-size: 17px;"> NULL BAZAR</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Mulish;padding:0">
+                                <b id="text-big" style="font-size: 17px;"> MICR NO &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
+                                <b id="text-small"style="font-size: 17px;"> 400026016</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col-md-4">
+                <table class="table card-table table-vcenter text-nowrap print" style="line-height:1.2">
+                    <tbody>
+                        <tr>
+                            <td class="text-black" style="padding:0;width:150px;color:black;border: none;font-family:Mulish">
+                                <b id="text-big"style="font-size: 17px;">
+                                    BANK A/C NO &nbsp;&nbsp;:
+                                </b><b id="text-small"style="font-size: 17px;"> 318705010000149</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-black" style="padding:0;width:150px;color:black;border: none;font-family:Mulish">
+                                <b id="text-big"style="font-size: 17px;"> SWIFT CODE &nbsp;&nbsp;&nbsp;:&nbsp; </b>
+                                <b id="text-small"style="font-size: 17px;">U B I N I N B B O P H </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-black" style="padding:0;width:150px;color:black;border: none;font-family:Mulish">
+                                <b id="text-big" style="font-size: 17px;">IFSC / RTGS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</b>
+                                <b id="text-small"style="font-size: 17px;"> U B I N 0531871</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="col-md-1 vl"></div>
+            <div class="col-md-3">
+                <table class="table card-table table-vcenter text-nowrap print">
+                    <tbody>
+
+                        <tr>
+                            <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong></strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="row" style="border-top: 4px solid black;border-bottom: 1px solid black;margin-top:5px">
+        <h3 style="font-weight:900">&nbsp;&nbsp;<b style="font-weight:900;color:black;font-family:Poppins">FG GLASS INDUSTRIES PVT. LTD</b></h3><br />
+        <span style="font-size:12px;margin-top:-20px;color:black;font-family:Mulish">
+            &nbsp;&nbsp;&nbsp;&nbsp;1204 TOWER A, NAMAN MIDTOWN, SENAPATI BAPAT MARG, PRABHADEVI (W), MUMBAI-400 013, INDIA | T : +91 22-4065 7777 | SALES@FGGLASS.COM | FGGLASS.COM <br />
+        </span>
+
+    </div>
+</div>

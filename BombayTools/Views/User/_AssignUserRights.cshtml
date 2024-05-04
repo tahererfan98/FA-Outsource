@@ -1,0 +1,314 @@
+﻿
+@model IEnumerable<BombayToolsEntities.BusinessEntities.Users>
+
+<style>
+
+
+
+    .table td {
+        border-bottom: 1px solid #e3ebf3;
+    }
+
+    .material-switch > input[type="checkbox"]:checked + label::after {
+        background: inherit;
+        left: 15px;
+    }
+
+    .material-switch > label::after {
+        background: rgb(255, 255, 255);
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        content: '';
+        height: 16px;
+        left: -2px;
+        margin-top: -6px;
+        position: absolute;
+        top: -4px;
+        transition: all 0.3s ease-in-out;
+        width: 16px;
+    }
+
+    .material-switch > label::before {
+        background: rgb(0, 0, 0);
+        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        content: '';
+        height: 12px;
+        margin-top: -8px;
+        position: absolute;
+        opacity: 0.3;
+        transition: all 0.4s ease-in-out;
+        width: 32px;
+    }
+
+    .label-primary {
+        background: darkblue;
+    }
+</style>
+<div id="cute-loader" style="display: none;"></div>
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title">Assign Rights</h4>
+        <div class="ibox-content  text-right">
+            <a onclick="getBack();" class="btn btn-primary btn-success text-right" style="align-content:center;color:white"><i class="fa fa-arrow-left"></i> </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                @Html.TextBox("UserName", null, new { @class = "form-control", @id = "UserName", name = "UserName", autocomplete = "off", disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12">
+                            <h4>Menu List</h4>
+                            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+                                <div class="row">
+                                    @{
+                                        var Count1 = 0;
+                                        var Count2 = 0;
+
+                                        foreach (var d in Model)
+                                        {
+                                            Count2 = Count2 + 1;
+                                            var MenuID = d.MenuID;
+                                            if (Count1 != d.Count)
+                                            {
+
+                                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                                                    <div class="card">
+                                                        <div class="card-header bg-gradient-primary" role="tab" id="Head_@Html.DisplayFor(m => d.MenuID)" style=" color: #fff;background: -webkit-gradient(linear,left top,right top,from(#9f78ff),to(#32cafe));">
+
+                                                            <div class="col-sm-10 col-lg-10">
+                                                                @if (d.IsAccess >= 1)
+                                                                {
+                                                                    <a id="menuAccordian_@(d.MenuID)" class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapse_@Html.DisplayFor(m => d.MenuID)" aria-expanded="false" aria-controls="@Html.DisplayFor(m => d.MenuID)">
+                                                                        <div class="row">
+                                                                            <h4 class="card-title" style="color:white;">@Html.DisplayFor(m => d.MenuName)</h4>
+                                                                        </div>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a id="menuAccordian_@(d.MenuID)" class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapse_@Html.DisplayFor(m => d.MenuID)" aria-expanded="false" aria-controls="@Html.DisplayFor(m => d.MenuID)" >
+                                                                        <div class="row">
+                                                                            <h4 class="card-title" style="color:white;">@Html.DisplayFor(m => d.MenuName)</h4>
+                                                                        </div>
+                                                                    </a>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-sm-2 col-lg-2" style="margin-left: 4%;">
+                                                                <div class="material-switch float-right">
+                                                                    @if (d.IsAccess >= 1)
+                                                                    {
+                                                                        <input id="MenuSwitch_0@(d.MenuID)" name="MenuAccesscheckbox" value="@(d.MenuID)" type="checkbox" checked onclick="disableAccordian(@(d.MenuID))" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input id="MenuSwitch_0@(d.MenuID)" name="MenuAccesscheckbox" value="@(d.MenuID)" type="checkbox" onclick="disableAccordian(@(d.MenuID))" />
+                                                                    }
+                                                                    <label for="MenuSwitch_0@(d.MenuID)" class="label-primary"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="collapse_@Html.DisplayFor(m => d.MenuID)" class="collapse" role="tabpanel" aria-labelledby="Head_@Html.DisplayFor(m => d.MenuID)" data-parent="#accordionEx">
+                                                            <div class="card-body col-sm-12 col-lg-12 table-responsive" style="padding:0px">
+                                                                <table class="table  table-hover  text-wrap " id="tbl_@Html.DisplayFor(m => d.MenuID)">
+                                                                    <thead>
+                                                                        <tr class="text-white  p-2" style=" background-color:grey">
+                                                                            <th class="text-white  p-2">Module Name</th>
+                                                                            <th class="text-white colwidth p-2" style="width:1%">Access</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var c in Model)
+                                                                        {
+                                                                            if (MenuID == c.MenuID)
+                                                                            {
+                                                                                Count1 = Count1 + 1;
+
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        @Html.DisplayFor(m => c.SubMenu)
+                                                                                    </td>
+                                                                                    <td>
+
+                                                                                        <div class="material-switch">
+                                                                                            @if (c.IsAccess == 1)
+                                                                                            {
+                                                                                                <input id="switch_0@(c.SubMenuID)" name="Accesscheckbox" value="@(c.SubMenuID)" type="checkbox" checked />
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <input id="switch_0@(c.SubMenuID)" name="Accesscheckbox" value="@(c.SubMenuID)" type="checkbox" />
+                                                                                            }
+                                                                                            <label for="switch_0@(c.SubMenuID)" class="label-primary"></label>
+                                                                                        </div>
+                                                                                    </td>
+
+                                                                                </tr>
+
+
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            }
+                                            if (Count1 == d.Count && Count2 == d.Count)
+                                            {
+                                                Count1 = 0;
+                                                Count2 = 0;
+                                            }
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-success pull-right" data-toggle="tooltip" type="button" id="Save" onclick="Save(@ViewBag.UserID)" data-original-title="Save" name="Save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        for (i = 0; i < MasterArray.length; i++) {
+            if (MasterArray[i].UserID == @ViewBag.UserID) {
+                document.getElementById('UserName').value = MasterArray[i].UserName;
+            }
+        }
+        $("#global-loader").fadeOut("slow");
+
+    });
+
+    function Save(UserID) {
+        debugger;
+        //$("#global-loader").fadeIn();
+        var element = {}
+        element.UserID = UserID;
+
+        element.AddedOn = new Date();
+        var myColumnDefs = [];
+        var myColumnDefsMenu = [];
+        $('input[name=MenuAccesscheckbox]').each(function () {
+            if (this.checked) {
+                myColumnDefsMenu.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefsMenu.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+        $('input[name=Accesscheckbox]').each(function () {
+            if (this.checked) {
+                myColumnDefs.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefs.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+
+        if (myColumnDefs == "") {
+            Swal.fire("Error!", "Please select atleast one menu rights.", "error");
+            return false;
+        }
+        if (myColumnDefsMenu == "") {
+            Swal.fire("Error!", "Please select atleast one menu rights.", "error");
+            return false;
+        }
+
+        var data = { 'ListObject': myColumnDefs, 'SideMenus': myColumnDefsMenu, 'User': element};
+        data = JSON.stringify(data);
+        console.log(myColumnDefs);
+        console.log(myColumnDefsMenu);
+        console.log(UserID);
+        $.ajax({
+            url: "/User/AssignRightsAndMenu",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+             dataType: "json",
+            success: function (response) {
+
+
+
+              Swal.fire({
+                       title: 'Success!',
+                             text: "User Rights Updated successfully!",
+                       icon: 'success'
+              }).then((result) => {
+                  $("#global-loader").fadeOut();
+                         document.location = '@Url.Action("UserRightSummary", "User")';
+                   });
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire("Error!", "Something went wrong: " + str, "error");
+
+            }
+        });
+    }
+    function getBack() {
+      $('#divuserSummary').show();
+        $('#AssignUserRights').hide();
+        }
+
+
+    function myFunction() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+    }
+
+    function disableAccordian(menuID) {
+        debugger;
+        $('input[name=MenuAccesscheckbox]').each(function () {
+            if (this.id == "MenuSwitch_0" + menuID) {
+                if (this.checked) {
+                    $("#menuAccordian_" + menuID).removeAttr("disabled");
+                    $("#menuAccordian_" + menuID).attr("data-toggle", "collapse");
+
+                } else {
+
+                    $("#menuAccordian_" + menuID).attr("disabled", true);
+                    $("#menuAccordian_" + menuID).removeAttr('data-toggle');
+
+                }
+            }
+
+        });
+    }
+</script>
+
+
+

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.MailCampaignTemplate>
+
+@{
+    ViewBag.Title = "MailTemplateSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="page-header">
+    <h4 class="page-title">Mail Template Summary</h4>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered w-100" id="tblSummary">
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Template Name</th>
+                    <th>Remark</th>
+                    <th>Added By</th>
+                    <th>Added on</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var d in Model)
+                {
+                <tr>
+                    <td>@d.SrNo</td>
+                    <td>@d.TemplateName</td>
+                    <td>@d.Remark</td>
+                    <td>@d.DisplayAddedOnName</td>
+                    <td>@d.DisplayAddedOn</td>
+                    <td><a href="/master/newmailtemplate?ID=@d.AutoID" class="btn btn-primary"><i class="fa fa-edit"></i></a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+        $(document).ready(function () {
+            $('#tblSummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": true,
+            "bInfo": false,
+            "paging": true,
+            order: [],
+            "searching": true,
+            "dom": '<"top"i>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+
+            mark: true
+        });
+        $("div.newQuote").html('<div class="float-right" style="display:flex"><button class="btn btn-success"  onclick="addNew()"><i class="fa fa-plus"></i> Add New </button></div>');
+    });
+
+    function addNew() {
+        document.location = "/master/newmailtemplate?ID=0";
+    }
+</script>

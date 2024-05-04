@@ -1,0 +1,528 @@
+﻿
+@{
+    ViewBag.Title = "PackingListPrint";
+}
+
+
+@model BombayToolsEntities.BusinessEntities.ExportInvoiceM
+
+
+<html>
+<head>
+
+    <style>
+
+
+        .vl {
+            border-left: 7px solid black;
+            height: 90px;
+        }
+
+        .print td {
+            padding: 0.15rem !important;
+        }
+
+        .m-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .p-0 {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .cell {
+            padding: 0.15rem !important;
+        }
+
+        /*th, tr, td {
+            padding-left: 7px;
+        }*/
+
+        #text-big {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        #text-small {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        #text-med {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        #text-num {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        #Systemdiv {
+            page-break-before: always;
+        }
+
+        #displayTable {
+            font-weight: 900;
+        }
+
+        #PrintStyle {
+            font-size: 12px;
+            font-weight: bolder;
+        }
+
+        #tablebreak {
+            page-break-inside: avoid;
+            page-break-before: avoid;
+        }
+
+        #tablebreakrow {
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            page-break-before: auto;
+        }
+    </style>
+    <style>
+        #btnJCBack {
+            background-color: black;
+            border-color: black;
+        }
+
+        #center {
+            text-align: center;
+            border-bottom: none;
+        }
+
+        #right {
+            text-align: right;
+            border-bottom: none;
+        }
+
+        #left {
+            text-align: left;
+            border-bottom: none;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #e7e9f4;
+        }
+
+        .tblBreak {
+            page-break-after: always;
+        }
+
+        .tblBox {
+            page-break-inside: avoid;
+        }
+        /*.table thead th, .text-wrap table thead th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }
+        .table tbody th, .text-wrap table tbody th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }*/
+    </style>
+
+</head>
+
+<body style="background-color:white">
+
+    <page size="A4">
+        <div id="main" style="width:100%;background-color:white; ">
+            <div class=" col-sm-12 col-md-12 col-lg-12 ml-2 pl-0">
+
+                <div class=" col-sm-12 col-md-12 col-lg-12 ml-4 pl-0 ">
+                    <div class=" row mt-0">
+
+                        <div class=" col-md-8 mt-9 mb-3" style="" border:none">
+                            <div class="" style="border:none">
+                            </div>
+                        </div>
+
+                        <div class=" tblBox col-md-4 mt-7" style="margin-top:0%">
+                            <img class="" style="width:80%;height:70%;" src="~/images/Header_Logo.png" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                @*Header ||*@
+
+
+                <table class="tblBox" style="border:2px solid black;padding-left:2px" width="100%">
+                    <tbody>
+                        <tr style="">
+                            <td style=" font-size: 25px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black; width: 100%; padding:7px" colspan="3">PACKING LIST</td>
+                        </tr>
+                        @*<tr>
+            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50% ; padding-left:7px">CONSIGNEE</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 25%; ">Invoice No</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 25%;  ">Date</td>
+        </tr>
+        <tr>
+            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">@Model.Customer</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; width: 25% ">@Model.EXINO</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-bottom: 1px solid black; width: 25%">@Model.EXIDate</td>
+        </tr>
+        <tr>
+            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">@Model.BillToAddress</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 25% ">Port Of Loading</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 25%">Port Of Discharge</td>
+        </tr>
+        <tr>
+            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">GSTIN &nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Fira Sans Regular';"></span></td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; width: 25% ">@Model.PortOfLoading</td>
+            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-bottom: 1px solid black; width: 25%">@Model.POD</td>
+        </tr>*@
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">CONSIGNEE</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 25%; ">Invoice No</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 25%; border-right: 1px solid black; ">Date</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">@Model.Customer</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; width: 25% ">@Model.EXINO</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; width: 25%">@Model.EXIDate</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px;vertical-align:top " rowspan="3">@Model.BillToAddress</td>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; width: 50%; padding-left: 7px " colspan="2"><strong>Port Of Loading &nbsp;&nbsp; :</strong> @Model.PortOfLoading</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black; width: 50%; padding-left: 7px " colspan="3"><strong>Port Of Discharge&nbsp; :</strong> @Model.POD</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black; width: 50%; padding-left: 7px " colspan="3"><strong>Final Destination&nbsp; :</strong> @Model.FinalDestination</td>
+                        </tr>
+                        @if (@Model.IsINDPresent == 1)
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black ;width:50%; padding-left:7px">GSTIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Fira Sans Regular';"></span>@Model.GSTNO</td>
+                                <td style="font-size: 22px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px " colspan="2">Project : @Model.Project_Name</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black ;width:50%; padding-left:7px"><span style="font-family: 'Fira Sans Regular';"></span></td>
+                                <td style="font-size: 22px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px " colspan="2">Project : @Model.Project_Name</td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black ;width:50%; padding-left:7px">CP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Fira Sans Regular';">@Model.Cont_Person</span></td>
+                            <td style=" font-size: 22px; text-align: left; color: black; font-family: 'Fira Sans Medium'; width: 50%; padding-left: 7px" colspan="2"></td>
+                        </tr>
+                        @if (@Model.ShipmentID == 1)
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; width: 50%; padding-left: 7px">Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Fira Sans Regular';">@Model.Cust_Email</span></td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Mode : @Model.Shipment</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; width: 50%; padding-left: 7px">Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Fira Sans Regular';">@Model.Cust_Email</span></td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Other : @Model.Others</td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">SHIPPER</td>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">PI REF : @Model.PINO</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">Future Architectural Glass LLC</td>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Terms : @Model.ShipmentTerm</td>
+                        </tr>
+                        @if (@Model.ShipmentID == 1)
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Plot No : P278</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Payment Term : @Model.PaymentTerm</td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Al Ghail Industrial Area,</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">PO Box 86001</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Ras Al Khaimah, United Arab Emirates</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2"></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Plot No : P278</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Vessel Name : @Model.VesselNo</td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Al Ghail Industrial Area,</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Container No : @Model.ContainerNo</td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">PO Box 86001</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Seal No : @Model.SealNo</td>
+                            </tr>
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; width: 50%; padding-left: 7px">Ras Al Khaimah, United Arab Emirates</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">Payment Term : @Model.PaymentTerm</td>
+                            </tr>
+                        }
+                        @if (@Model.IsLC == 1)
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">VAT Registration No : 100049089400003</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2">LC No: @Model.LCNO / Date: @Model.LCDate</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px">VAT Registration No : 100049089400003</td>
+                                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 50%; padding-left: 7px" colspan="2"></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+                <div class="table-responsive">
+                    <table class=" table mt-3" style="border: 2px solid black;margin-top:0px;padding:5px" width="100%">
+                        <thead>
+                            <tr>
+                                <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; padding: 7px; ">SrNo</td>
+                                <td style="width: 24%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; " colspan="2">Actual Size</td>
+                                <td style="width: 42%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; ">Remarks</td>
+                                <td style="width: 7%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; ">Pcs</td>
+                                <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; padding-right: 7px; ">QTY</td>
+
+                            </tr>
+                            <tr>
+                                <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 7px;"></td>
+                                @if (@Model.SaleUnit == "INCH")
+                                {
+                                    <td style="width: 12%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; ">Width(SQFT)</td>
+                                    <td style="width: 12%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; ">Height(SQFT)</td>
+                                    <td style="width: 44%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; "></td>
+                                    <td style="width: 7%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; "></td>
+                                    <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">SQFT</td>
+                                }
+                                else
+                                {
+                                    <td style="width: 12%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; ">Width(@Model.SaleUnit)</td>
+                                    <td style="width: 12%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; ">Height(@Model.SaleUnit)</td>
+                                    <td style="width: 44%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; "></td>
+                                    <td style="width: 7%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; "></td>
+                                    <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Model.SaleUnit</td>
+                                }
+                            </tr>
+                        </thead>
+                        @foreach (var Spec in Model.POItem)
+                        {
+                            <tbody>
+
+                                <tr>
+                                    <td style=" font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: none; border-bottom: 1px solid black; padding: 7px;"></td>
+                                    <td style=" font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black;  " colspan="5">@Spec.ItemDescription</td>
+                                </tr>
+
+                                @foreach (var Pack in Model.PackingList)
+                                {
+                                    if (Pack.DCNO == Spec.DCNO)
+                                    {
+                                        if (Spec.SaleUnit == "SQM" || Spec.SaleUnit == "PCS")
+                                        {
+                                            <tr>
+                                                <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-left: 7px;">@Pack.BatchNo</td>
+                                                <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; ">@Pack.AWidth</td>
+                                                <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Pack.AHeight</td>
+                                                <td style="width: 44%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-left: 7px; ">@Pack.Remark</td>
+                                                <td style="width: 7%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Pack.Qty</td>
+                                                <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; ">@Pack.ASQM</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-left: 7px;">@Pack.BatchNo</td>
+                                                <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; ">@Pack.Inch_Height</td>
+                                                <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Pack.Inch_Width</td>
+                                                <td style="width: 44%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-left: 7px; ">@Pack.Remark</td>
+                                                <td style="width: 7%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Pack.Qty</td>
+                                                <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; ">@Pack.Qty_SQFT</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                @foreach (var PckTotal in Model.PackingTotal)
+                                {
+                                    if (PckTotal.DCNO == Spec.DCNO)
+                                    {
+                                        <tr>
+                                            <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Medium';  padding-right: 7px;background-color:white"></td>
+                                            <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; padding-right: 7px; background-color: white "></td>
+                                            <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; padding-right: 7px; background-color: white"></td>
+                                            <td style="width: 44%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; padding-right: 7px; background-color: white ">Total</td>
+                                            <td style="width: 7%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; background-color: white">@PckTotal.ToatlQTY</td>
+                                            @if (Spec.SaleUnit == "SQM" || Spec.SaleUnit == "PCS")
+                                            {
+                                                <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; background-color: white ">@PckTotal.TotASQM</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; background-color: white ">@PckTotal.TotalSQFT</td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+
+                        }
+                    <tfoot>
+                        <tr>
+                            <td style="width: 5%; font-size: 18px; text-align: left; border: none; color: black; font-family: 'Fira Sans Regular'; border-bottom: 1px solid black; border-top: 1px solid black; padding-left: 7px;"></td>
+                            <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-bottom: 1px solid black; border-top: 1px solid black; padding-right: 7px; "></td>
+                            <td style="width: 12%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;"></td>
+                            <td style="width: 44%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black; padding-left: 7px; ">Grand Total</td>
+                            <td style="width: 7%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black; padding-right: 7px;">@Model.TotalQty</td>
+                            <td style="width: 10%; font-size: 18px; text-align: right; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding-right: 7px; background-color: white ">@Model.TotalSQFT</td>
+
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+
+                <table class="tblBox mt-2" style="border:2px solid black;" width="100%">
+                    <tbody>
+                        @*<tr style="">
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black; border-right: 2px solid black; width: 100%;" colspan="3">AMMOUNT IN WORDS : @Model.AmountInWord</td>
+                        </tr>*@
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';  width: 19%; padding-left: 7px;"> &nbsp;</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 41%; ">&nbsp;</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 2px solid black; width: 40%; ">&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';   width: 19%; padding-left: 7px">COUNTRY OF ORIGIN  </td>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 41%; ">: @Model.CountryOfOrigin</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 2px solid black; width: 40%; "></td>
+                        </tr>
+
+                        @*<tr>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';   width: 19%; padding-left: 7px">TOTAL NO OF PCKGS </td>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; width: 41%; ">: @Pack.NoOfPackages Boxes</td>
+                <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 2px solid black; width: 40%; "></td>
+            </tr>*@
+                        <tr>
+                            <td width="60%" colspan="2" style="border-right: 1px solid black;">
+                                <table class="tblBox mt-2" style="border:2px solid black;" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">Container No</td>
+                                            <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">No Of Pack</td>
+                                            <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">Net WT</td>
+                                            <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">Gross WT</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var Pack in Model.POPacking)
+                                        {
+                                            <tr>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Pack.ContainerNo</td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Pack.NoOfPackages</td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Pack.NetWeight</td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Pack.GrossWeight</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        @if (Model.POPacking.Count > 1)
+                                        {
+                                            <tr>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-bottom: 1px solid black; padding: 5px; ">Total</td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; "></td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Model.TotNetWeight</td>
+                                                <td style="width: 25%; font-size: 18px; text-align: center; border: none; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black; border-bottom: 1px solid black; padding: 5px; ">@Model.TotGrossWeight</td>
+                                            </tr>
+                                        }
+                                    </tfoot>
+                                </table>
+                            </td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-right: 2px solid black; width: 40%; "></td>
+
+                        </tr>
+                        @*<tr>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';   width: 19%; padding-left: 7px">NET WEIGHT </td>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; width: 41%; border-right: 1px solid black; ">: @Pack.NetWeight Kgs</td>
+                <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 40%; border-right: 2px solid black; "></td>
+            </tr>
+            <tr>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';  width: 19%; padding-left: 7px">GROSS WEIGHT </td>
+                <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; width: 41%; border-right: 1px solid black; ">: @Pack.GrossWeight Kgs</td>
+                <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 40%; border-right: 2px solid black; "></td>
+            </tr>*@
+
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium';  width: 19%; padding-left: 7px"> &nbsp;</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 41%; border-right: 1px solid black; ">&nbsp;</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 40%; border-right: 2px solid black; ">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 16px; text-align: left; color: black; font-family: 'Fira Sans Regular'; border-right: 1px solid black;   padding-left: 7px" colspan="2">We here by certify that material is free from manufacturing defects and contents are true and correct</td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; width: 50%; border-right: 2px solid black; "></td>
+                        </tr>
+                        <tr>
+                            <td style=" font-size: 18px; text-align: left; color: black; font-family: 'Fira Sans Medium'; border-right: 1px solid black;   padding-left: 7px" colspan="2"></td>
+                            <td style=" font-size: 18px; text-align: center; color: black; font-family: 'Fira Sans Medium'; border-top: 1px solid black; width: 50%; border-right: 2px solid black; " colspan="2">Authorized Signatory</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                @*Footer*@
+                <table class="mt-5 mb-0 pl-0 ml-0" height="100%" width="100%" style="border: none; padding: 0; ">
+                    <tbody>
+                        <tr>
+                            <td style="color: black; font-size: 15px; border: none; text-align: left; font-family: 'Fira Sans Medium'; width: 100% ">Future Architectural Glass LLC</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 13px; color: black; border: none; text-align: left; font-family: 'Fira Sans Regular'; width: 100% ">Office: 2411 Churchchill Executive Tower, Business Bay, PO Box, Dubai | <i class="fa fa-phone"></i>  +971 4346 1279</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 13px; color: black; border: none; text-align: left; font-family: 'Fira Sans Regular'; width: 100% ">Works: P278 Al Ghail Industial Area, Ras Al Khaimah (UAE), PO Box 86001 | <i class="fa fa-phone"></i>  +971 7258 9247 | <i class="fa fa-fax"></i>  +971 7258 9071</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 13px; color: black; border: none; text-align: left; font-family: 'Fira Sans Regular'; width: 100% "><i class="fa fa-envelope-open-o"></i>  sales@faglass.com | www.faglass.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </page>
+
+
+
+
+</body>
+
+</html>
+
+
+
+

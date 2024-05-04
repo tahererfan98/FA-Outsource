@@ -1,0 +1,341 @@
+﻿@model BombayToolsEntities.BusinessEntities.MailCampaignTemplate
+@{
+    ViewBag.Title = "New Template";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<script src="~/plugins/ckeditor/ckeditor.js"></script>
+<link href="~/plugins/ckeditor/samples/toolbarconfigurator/lib/codemirror/neo.css" rel="stylesheet" />
+@*<img src="http://localhost:44951/Email/Pixel?t=1" alt="" width="1" height="1" />*@
+<div class="page-header">
+    <h4 class="page-title">
+        <i class="fa fa-arrow-left cursor-p" onclick="GetBack()"></i>
+        @if (Model.AutoID == 0)
+        {
+            <span>New Template</span>
+        }
+        else
+        {
+            <span>Edit Template</span>
+
+        }
+    </h4>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class=" form-group">
+                    <label class="form-label">Auto ID </label>
+                    @Html.TextBox("AutoID", null, new { @class = "form-control", @id = "autoID", name = "Refernce", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <div class=" form-group">
+                    <label class="form-label">Template Name</label>
+                    @Html.TextBox("TemplateName", null, new { @class = "form-control", @id = "chapter", name = "Refernce", autocomplete = "off" })
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <div class=" form-group">
+                    <label class="form-label">Subject</label>
+                    @Html.TextBox("Subject", null, new { @class = "form-control", @id = "subject", name = "subject", autocomplete = "off" })
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-md-12">
+                <div id="editor1"></div>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-md-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Upload Attachment</label>
+                            <input class="form-control" type="file" id="fileJOAttachment" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                       <button class="btn btn-primary mt-5" onclick="uploadAttachment()"><i class="fa fa-upload"></i></button>
+                    </div>
+                    <div class="col-12">
+                        <table class="w-100 table table-bordered" id="tblAttachment">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
+                <div class=" form-group">
+                    <label class="form-label">Remark</label>
+                    @Html.TextArea("Remark", new { @class = "form-control", @id = "remark", name = "Remark" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-success" onclick="saveDocument()">
+            Save
+        </button>
+    </div>
+</div>
+
+<script>
+    var runningno = 0;
+    var Attachment = [];
+    $(document).ready(function () {
+        if (@Model.AutoID != 0) {
+            var temp = @Html.Raw(Json.Encode(ViewBag.Html));
+            var objEditor1 = CKEDITOR.instances["editor1"].setData(JSON.parse(temp));
+            
+            Attachment = @Html.Raw(Json.Encode(@ViewBag.Attachment));
+            Attachment = JSON.parse(Attachment);
+            runningno = Attachment.length;
+            $('#tblAttachment').dataTable({
+                "bLengthChange": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "bFilter": false,
+                "paging": false,
+                "destroy": true,
+                "bLengthChange": false,
+                "aaData": Attachment,
+                "columns": [
+                    { "data": "SrNo" },
+                    { "data": "DocName" },
+                    {
+                        "data": "FilePath",
+                        "render": function (data, type, row, meta) {
+                            if (type === 'display') {
+                                data = '<a   onclick="DownloadAttachment(' + row.SrNo + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a> <a   onclick="Delete(' + row.SrNo + ')"  href="#" class="btn btn-danger"  title="Download"><i class="fa fa-trash"></i></a> ';
+                            }
+                            return data;
+                        }
+                    },
+
+                ]
+            });
+        }
+    });
+
+    CKEDITOR.addCss('.cke_editable { font-size: 15px; padding: 2em; }');
+
+    CKEDITOR.replace('editor1', {
+
+        extraAllowedContent: 'h3{clear};h2{line-height};h2 h3{margin-left,margin-top}',
+
+        // Adding drag and drop image upload.
+        extraPlugins: 'print,format,font,colorbutton,justify,uploadimage',
+        uploadUrl: '/Master/UploadImage',
+
+        // Configure your file manager integration. This example uses CKFinder 3 for PHP.
+        filebrowserBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html',
+        filebrowserImageBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html?type=Images',
+        filebrowserUploadUrl: '/Master/UploadImage',
+        filebrowserImageUploadUrl: '/Master/UploadImage',
+        height: 400,
+
+        removeDialogTabs: 'image:advanced;link:advanced'
+    });
+</script>
+<script>
+    function saveDocument() {
+
+        var objEditor1 = CKEDITOR.instances["editor1"];
+        var element = {};
+        element.TemplateName = $("#chapter").val();
+        element.DocHTML = objEditor1.getData();
+        element.AutoID = $("#autoID").val();
+        element.Subject = $("#subject").val();
+        element.Remark = $("#remark").val();
+        element.AddedOn = new Date();
+        if (element.TemplateName == "") {
+            Swal.fire({
+                title: 'Error',
+                text: "Please Enter Template Name",
+                icon: 'error'
+            });
+            return false;
+        }
+        if (element.DocHTML == "") {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter chapter detail",
+                icon: 'error'
+            });
+            return false;
+        }
+        if (element.Remark == "") {
+            element.Remark = "NA";
+        }
+        var data = { 'doc': element, 'attachment': Attachment };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Master/AjaxAddorEditMailTemplate",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("MailTemplateSummary", "Master")';
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.ResponseMessage,
+                        icon: 'error'
+                    });
+
+                }
+            },
+            failure: function (response) {
+                let str = response.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            },
+            error: function (response) {
+                let str = response.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+
+        });
+    }
+
+    function GetBack() {
+        window.location = '/Master/MailTemplateSummary';
+    }
+
+    function uploadAttachment() {
+        $("#global-loader").fadeIn("slow");
+        var fileUpload = $("#fileJOAttachment").get(0);
+        var files = fileUpload.files;
+        var fileData = new FormData();
+        //var UploadType = data;
+        //End Of maximum meetin number
+        var iSize = document.getElementById('fileJOAttachment').files[0].size / 1024
+        iSize = (Math.round((iSize / 1024) * 100) / 100)
+        if (iSize > 25) {
+            alert("Selected file size more than 25 MB");
+            $("#global-loader").fadeOut("slow");
+            return false;
+        }
+        // Looping over all files and add it to FormData object
+        for (var i = 0; i < files.length; i++) {
+
+            fileData.append(files[i].name, files[i]);
+
+        }
+        runningno++;
+        $.ajax({
+            url: '/Master/UploadTemplateAttachment',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (Data) {
+                $("#global-loader").fadeOut("slow");
+
+                var element = {};
+                element.DocName = Data.DocName;
+                element.SrNo = runningno;
+                element.FilePath = Data.FilePath;
+                element.ContentType = Data.ContentType;
+                //element.UploadType = type;
+                Attachment.push(element);
+                var table = Attachment;
+
+
+                $('#tblAttachment').dataTable({
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bPaginate": false,
+                    "bFilter": false,
+                    "paging": false,
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": table,
+                    "columns": [
+                        { "data": "SrNo" },
+                        { "data": "DocName" },
+                        {
+                            "data": "FilePath",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = '<a   onclick="DownloadAttachment(' + row.SrNo + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a> <a   onclick="Delete(' + row.SrNo + ')"  href="#" class="btn btn-danger"  title="Download"><i class="fa fa-trash"></i></a> ';
+                                }
+                                return data;
+                            }
+                        },
+                       
+                    ]
+                });
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                console.log(errormessage.responseText)
+                $("#global-loader").fadeOut("slow");
+            }
+
+
+        });
+        $("#fileJOAttachment").val('');
+    }
+
+    function DownloadAttachment(id) {
+        var x = Attachment.filter((x) => x.SrNo == id);
+        window.open(x[0].FilePath, "_blank");
+    }
+
+    function Delete(id) {
+        Attachment = Attachment.filter((x) => x.SrNo != id);
+
+        $('#tblAttachment').dataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bFilter": false,
+            "paging": false,
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": Attachment,
+            "columns": [
+                { "data": "SrNo" },
+                { "data": "DocName" },
+                {
+                    "data": "FilePath",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<a   onclick="DownloadAttachment(' + row.SrNo + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a> <a   onclick="Delete(' + row.SrNo + ')"  href="#" class="btn btn-danger"  title="Download"><i class="fa fa-trash"></i></a> ';
+                        }
+                        return data;
+                    }
+                },
+
+            ]
+        });
+    }
+</script>

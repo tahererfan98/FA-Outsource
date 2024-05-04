@@ -1,0 +1,559 @@
+﻿
+@model BombayToolsEntities.BusinessEntities.SalesDashboard
+@{ ViewBag.Title = "Sales Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml"; }
+@using System.Globalization;
+
+<script src="~/plugins/echarts/echarts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+<style>
+    #tblClosedWon td {
+        padding: 0.25rem;
+    }
+
+    option {
+        /* Whatever color  you want */
+        background-color: #82caff;
+    }
+
+    select {
+        appearance: none;
+    }
+</style>
+
+<div id="main">
+
+    <div class="row mt-4 mb-4">
+
+        <div class="col-1 mt-2">
+            @*<div class="btn-group dropright">
+                <button id="btnTags" type="button" class="btn bg-primary dropdown-toggle col-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">
+                    <i class="fa fa-tags mt-2 mr-1"></i> Tags
+                </button>
+                <div class="dropdown-menu">
+                    @foreach (var sd in ViewBag.TagsDataList)
+                    {
+        <a class="dropdown-item" href="#" onclick="getDailyVisitdetails(@sd.UserID)">
+            @sd.UserName &nbsp; &nbsp;  <span class="badgetext badge badge-primary badge-pill">@sd.TagCount</span>
+        </a>}
+                </div>
+            </div>*@
+        </div>
+        <diiv class="col-7"></diiv>
+        
+       
+
+    </div>
+</div>
+
+<div class="row" id="divDVT">
+    <div class="page-header ml-2" id="DailyVisitSummary">
+        <h4 class="page-title"><i class="fa fa-arrow-left" id="TopQ" onclick="getBacktoDashboard()"></i>  Daily Visit Tags <label class="bg-primary text-white br-7 pl-3 pr-3" id="quotCount2"></label></h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100 m-0 text-nowrap" id="tblDVTags">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th class="text-white">Daily Visit No</th>
+                                <th class="text-white">Visit Date</th>
+                                <th class="text-white">Company</th>
+                                <th class="text-white">Location</th>
+                                <th class="text-white">Contact Person</th>
+                                <th class="text-white">Contact No</th>
+                                <th class="text-white">Email-ID</th>
+                                <th class="text-white">Vertical</th>
+                                <th class="text-white">Added By</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<div class="modal fade" id="divDVT_tags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalPOTitle"> Daily Visit Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="row mt-2">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover w-100 m-0 text-nowrap" id="tblDVTags">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <th class="text-white">Daily Visit No</th>
+                                                <th class="text-white">Visit Date</th>
+                                                <th class="text-white">Company</th>
+                                                <th class="text-white">Location</th>
+                                                <th class="text-white">Contact Person</th>
+                                                <th class="text-white">Contact No</th>
+                                                <th class="text-white">Email-ID</th>
+                                                <th class="text-white">Vertical</th>
+                                                <th class="text-white">Added By</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>-->
+            @*<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>*@
+        <!--</div>
+    </div>
+</div>-->
+
+@*/----------------------GRAPH LOGIC--------------------------/*@
+<script>
+    var orderClosedArray = [];
+    orderClosedArray = @Html.Raw(Json.Encode(@ViewBag.GraphData));
+    orderClosedArray = JSON.parse(orderClosedArray);
+    var orderClosedArray_data = [];
+    var orderClosedArray_period = [];
+
+    var RoleUser = "@ViewBag.RoleUser";
+    var RoleWiseUserID = @ViewBag.RoleWiseUserID;
+
+    $(document).ready(function () {
+        debugger;
+        //if (RoleUser != "Administrator") {
+        //    if (RoleWiseUserID == "" || RoleWiseUserID == "-" || RoleWiseUserID == null || RoleWiseUserID == undefined) {
+        //        RoleWiseUserID = 0;
+        //    }
+        //    $("#UserDetailDropdownSearch").val(RoleWiseUserID);
+        //    $("#UserDetailDropdownSearch").prop('disabled', true);
+        //    setSelectedUser();
+        //}
+
+     // loadWeeklyReort();
+        //loadMonthWonReort();
+        //loadMonthlyReport();
+        //loadVisitWeeklyReort();
+    });
+
+
+    ////for (var i = 0; i < orderClosedArray.length; i++) {
+    ////    var element = {};
+    ////    orderClosedArray_data.push(orderClosedArray[i].DealSize);
+    ////    orderClosedArray_period.push(orderClosedArray[i].MonthCode + "-" + orderClosedArray[i].YearNo);
+    ////}
+    ////var areaData3 = [
+    ////    {
+    ////        name: 'Deal Size',
+    ////        type: 'bar',
+    ////        smooth: true,
+    ////        data: orderClosedArray_data,
+    ////        symbolSize: 10,
+    ////        barWidth: "30",
+    ////        barMaxWidth: "40",
+    ////        barMinWidth: "20",
+    ////        barGap: "10%",
+    ////        itemStyle: {
+    ////            normal: {
+    ////                barBorderRadius: [50, 50, 0, 0],
+    ////                color: new echarts.graphic.LinearGradient(
+    ////                    0, 0, 0, 1,
+    ////                    [
+    ////                        { offset: 0, color: '#9f78ff' },
+    ////                        { offset: 1, color: '#32cafe' }
+    ////                    ]
+    ////                )
+    ////            }
+    ////        },
+    ////    },
+
+    ////];
+
+    ////var optionArea3 = {
+    ////    grid: {
+    ////        top: '6',
+    ////        right: '12',
+    ////        bottom: '17',
+    ////        left: '60',
+    ////    },
+    ////    xAxis: {
+    ////        data: orderClosedArray_period,
+    ////        //boundaryGap: false,
+    ////        axisLine: {
+    ////            lineStyle: { color: '#c0dfd8' }
+    ////        },
+    ////        axisLabel: {
+    ////            fontSize: 10,
+    ////            color: '#000',
+    ////            display: 'false'
+    ////        }
+    ////    },
+    ////    tooltip: {
+    ////        show: true,
+    ////        showContent: true,
+    ////        alwaysShowContent: true,
+    ////        triggerOn: 'mousemove',
+    ////        trigger: 'axis',
+    ////        axisPointer:
+    ////        {
+    ////            label: {
+    ////                show: false,
+    ////            }
+    ////        }
+
+    ////    },
+    ////    yAxis: {
+    ////        splitLine: {
+    ////            lineStyle: { color: '#eaeaea' },
+    ////            display: false
+    ////        },
+    ////        axisLine: {
+    ////            lineStyle: { color: '#eaeaea' },
+    ////            display: false
+    ////        },
+    ////        axisLabel: {
+    ////            fontSize: 10,
+    ////            color: '#000'
+    ////        }
+    ////    },
+    ////    series: areaData3,
+    ////    color: ['#32cafe']
+    ////};
+
+    ////var chartArea3 = document.getElementById('echartArea3');
+    ////var areaChart3 = echarts.init(chartArea3);
+    ////areaChart3.setOption(optionArea3);
+
+</script>
+
+<script>
+    var currentWeekFirstDay, currentWeekLastDay;
+    var dateForWeek = new Date();
+    currentWeekFirstDay = moment(dateForWeek, "MM-DD-YYYY").startOf('week').toDate();
+    currentWeekLastDay = moment(dateForWeek, "MM-DD-YYYY").endOf('week').toDate();
+    //loadWeeklyReort();
+    function loadWeeklyReort() {
+        RoleWiseUserID = $("#UserDetailDropdownSearch").val();
+        if (RoleWiseUserID == "" || RoleWiseUserID == "-" || RoleWiseUserID == null || RoleWiseUserID == undefined) {
+            RoleWiseUserID = 0;
+        }
+        var data = { 'from': currentWeekFirstDay, 'to': currentWeekLastDay, 'RoleUserID': RoleWiseUserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Report/_WeeklyReportForUser",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $("#_weekDuration").text("(" + moment(currentWeekFirstDay).format('DD MMM YYYY') + " - " + moment(currentWeekLastDay).format('DD MMM YYYY') + ")");
+                $('#_viewReportWeekly').html(response);
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function loadPreviousWeek() {
+        dateForWeek.setDate(dateForWeek.getDate() - 7);
+        currentWeekFirstDay = moment(dateForWeek, "MM-DD-YYYY").startOf('week').toDate();
+        currentWeekLastDay = moment(dateForWeek, "MM-DD-YYYY").endOf('week').toDate();
+        loadWeeklyReort();
+    }
+
+    function loadNextWeek() {
+        dateForWeek.setDate(dateForWeek.getDate() + 7);
+        currentWeekFirstDay = moment(dateForWeek, "MM-DD-YYYY").startOf('week').toDate();
+        currentWeekLastDay = moment(dateForWeek, "MM-DD-YYYY").endOf('week').toDate();
+        loadWeeklyReort();
+    }
+
+</script>
+
+<script>
+    var currentMonthWonFirstDay, currentMonthWonLastDay;
+    var dateForMonthWon = new Date();
+    currentMonthWonFirstDay = moment(dateForMonthWon, "MM-DD-YYYY").startOf('month').toDate();
+    currentMonthWonLastDay = moment(dateForMonthWon, "MM-DD-YYYY").endOf('month').toDate();
+    //loadMonthWonReort();
+
+    function loadMonthWonReort() {
+        RoleWiseUserID = $("#UserDetailDropdownSearch").val();
+        if (RoleWiseUserID == "" || RoleWiseUserID == "-" || RoleWiseUserID == null || RoleWiseUserID == undefined) {
+            RoleWiseUserID = 0;
+        }
+
+        var data = { 'from': currentMonthWonFirstDay, 'to': currentMonthWonLastDay, 'RoleUserID': RoleWiseUserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Report/_MonthWonReportForUser",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $("#_monthClosedDuration").text("(" + moment(currentMonthWonFirstDay).format('DD MMM YYYY') + " - " + moment(currentMonthWonLastDay).format('DD MMM YYYY') + ")");
+
+                $('#_viewReportMonthlyWon').html(response);
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    // Month calc
+    function loadPreviousMonthWon() {
+        dateForMonthWon.setDate(dateForWeek.getDate() - 28);
+        currentMonthWonFirstDay = moment(dateForMonthWon, "MM-DD-YYYY").startOf('month').toDate();
+        currentMonthWonLastDay = moment(dateForMonthWon, "MM-DD-YYYY").endOf('month').toDate();
+        loadMonthWonReort();
+    }
+
+    function loadNextMonthWon() {
+        dateForMonthWon.setDate(dateForWeek.getDate() + 28);
+        currentMonthWonFirstDay = moment(dateForMonthWon, "MM-DD-YYYY").startOf('month').toDate();
+        currentMonthWonLastDay = moment(dateForMonthWon, "MM-DD-YYYY").endOf('month').toDate();
+        loadMonthWonReort();
+    }
+</script>
+
+<script>
+    var currentMonthFirstDay, currentMonthLastDay;
+    var dateForMonth = new Date();
+    currentMonthFirstDay = moment(dateForMonth, "MM-DD-YYYY").startOf('month').toDate();
+    currentMonthLastDay = moment(dateForMonth, "MM-DD-YYYY").endOf('month').toDate();
+    //loadMonthlyReport();
+    function loadMonthlyReport() {
+        RoleWiseUserID = $("#UserDetailDropdownSearch").val();
+
+        if (RoleWiseUserID == "" || RoleWiseUserID == "-" || RoleWiseUserID == null || RoleWiseUserID == undefined) {
+            RoleWiseUserID = 0;
+        }
+
+        var data = { 'from': currentMonthFirstDay, 'to': currentMonthLastDay, 'RoleUserID': RoleWiseUserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Report/_MonthlyReportForUser",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $("#_monthDuration").text("(" + moment(currentMonthFirstDay).format('DD MMM YYYY') + " - " + moment(currentMonthLastDay).format('DD MMM YYYY') + ")");
+                $('#_viewReportMonthly').html(response);
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    // Month calc
+
+    function loadPreviousMonth() {
+        dateForMonth.setDate(dateForMonth.getDate() - 28);
+        currentMonthFirstDay = moment(dateForMonth, "MM-DD-YYYY").startOf('month').toDate();
+        currentMonthLastDay = moment(dateForMonth, "MM-DD-YYYY").endOf('month').toDate();
+        loadMonthlyReport();
+    }
+
+    function loadNextMonth() {
+        dateForMonth.setDate(dateForMonth.getDate() + 28);
+        currentMonthFirstDay = moment(dateForMonth, "MM-DD-YYYY").startOf('month').toDate();
+        currentMonthLastDay = moment(dateForMonth, "MM-DD-YYYY").endOf('month').toDate();
+        loadMonthlyReport();
+    }
+</script>
+
+<script>
+
+    var currentVisitWeekFirstDay = '', currentVisitWeekLastDay = '';
+    var dateForVisitWeek = new Date();
+
+    currentVisitWeekFirstDay = moment(dateForVisitWeek, "MM-DD-YYYY").startOf('week').toDate();
+    currentVisitWeekLastDay = moment(dateForVisitWeek, "MM-DD-YYYY").endOf('week').toDate();
+    //loadVisitWeeklyReort();
+
+    function loadVisitWeeklyReort() {
+        debugger
+        RoleWiseUserID = $("#UserDetailDropdownSearch").val();
+        if (RoleWiseUserID == "" || RoleWiseUserID == "-" || RoleWiseUserID == null || RoleWiseUserID == undefined) {
+            RoleWiseUserID = 0;
+        }
+
+        var data = { 'from': moment(currentVisitWeekFirstDay).format('DD MMM YYYY'), 'to': moment(currentVisitWeekLastDay).format('DD MMM YYYY'), 'RoleUserID': RoleWiseUserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Report/_WeeklyVisitPlanReportForUser",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $("#_weeklyVisitDuration").text("(" + moment(currentVisitWeekFirstDay).format('DD MMM YYYY') + " - " + moment(currentVisitWeekLastDay).format('DD MMM YYYY') + ")");
+                $('#_viewVisitReportWeekly').html(response);
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function loadVisitPreviousWeek() {
+        dateForVisitWeek.setDate(dateForVisitWeek.getDate() - 7);
+        currentVisitWeekFirstDay = moment(dateForVisitWeek, "MM-DD-YYYY").startOf('week').toDate();
+        currentVisitWeekLastDay = moment(dateForVisitWeek, "MM-DD-YYYY").endOf('week').toDate();
+        loadVisitWeeklyReort();
+    }
+
+    function loadVisitNextWeek() {
+        dateForVisitWeek.setDate(dateForVisitWeek.getDate() + 7);
+        currentVisitWeekFirstDay = moment(dateForVisitWeek, "MM-DD-YYYY").startOf('week').toDate();
+        currentVisitWeekLastDay = moment(dateForVisitWeek, "MM-DD-YYYY").endOf('week').toDate();
+        loadVisitWeeklyReort();
+    }
+
+</script>
+
+<script>
+
+    function setSelectedUser() {
+        debugger
+        var selectedUser = $("#UserDetailDropdownSearch").val();
+        var selectedUserName = $("#UserDetailDropdownSearch option:selected").text();
+        $("#SPSelectedID_").val(selectedUser);
+        $("#SPSelectedName_").val(selectedUserName);
+
+        loadWeeklyReort();
+        loadMonthWonReort();
+        loadMonthlyReport();
+        loadVisitWeeklyReort();
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#divDVT").hide();
+        $("#main").show ();
+    });
+    var user_id = 0;
+
+    function getBacktoDashboard() {
+        $("#divDVT").hide();
+        $("#main").show();
+    }
+
+    function getDailyVi_sitdetails(userId) {
+        user_id = userId;
+        //$("#divDVT_tags").modal("show");
+        $("#divDVT").show();
+        $("#main").hide();
+        var data = { 'UserID': user_id };
+        data = JSON.stringify(data);
+
+        $("#global-loader").fadeIn("slow");
+        $.ajax({
+            url: "/DailyVisitReport/GetDailyVisitTagSummary",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#quotCount2").html(response.length);
+                $('#tblDVTags').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": false,
+                    scrollX: true,
+                    fixedHeader: true,
+                    order: [],
+                    "searching": true,
+                    ordering: true,
+                    "columns": [
+
+                        //{
+                        //    "data": "DailyVisitNo",
+                        //    "orderable": false,
+                        //    "render": function (data, type, row, meta) {
+                        //        if (type === 'display') {
+                        //            if (row.IsEditable == 1) {
+                        //                data = "<div class=\"btn-list text-center\"><button data-toggle=\"tooltip\" class=\"btn btn-sm btn-danger\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"CancelDailyVisit('" + row.DailyVisitNo + "')\"><i class=\"fa fa-trash\"></i></button><button data-toggle=\"tooltip\" class=\"btn btn-sm btn-info\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addNewDVReport(" + row.DailyVisitID + ",'" + row.DailyVisitNo + "', " + row.IsEditable + ")\"><i class=\"fa fa-edit\"></i></button></div> ";
+                        //            } else {
+
+                        //                data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-danger\"data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\"  onclick=\"CancelDailyVisit('" + row.DailyVisitNo + "')\"><i class=\"fa fa-trash\"></i></button><button data-toggle=\"tooltip\" style=\"visibility: hidden;\" class=\"btn btn-sm btn-info\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addNewDVReport(" + row.DailyVisitID + ",'" + row.DailyVisitNo + "', " + row.IsEditable + ")\"><i class=\"fa fa-edit\"></i></button></div> ";
+                        //            }
+                        //        }
+                        //        return data;
+                        //    }
+                        //},
+                        { "data": "DailyVisitNo" },
+                        { "data": "DisplayDailyVisitDate", 'type': 'date', },
+                        //{ "data": "Time" },
+                        { "data": "CompanyName" },
+                        { "data": "Location" },
+                        { "data": "ContactPerson" },
+                        //{ "data": "Designation" },
+                        //{ "data": "Department" },
+                        { "data": "ContactNo" },
+                        { "data": "EmailID" },
+                        { "data": "Vertical" },
+                        { "data": "AddedByName" },
+                        //{ "data": "Discussion" },
+                        //{ "data": "NextAction" },
+                        //{ "data": "DisplayNextActionDate", 'type': 'date', },
+
+                    ],
+
+                    "sScrollY": "55vh",
+                    "sScrollX": "100%",
+                    "sScrollXInner": "100%",
+                    "bScrollCollapse": true,
+                    mark: true
+                });
+
+                $("#global-loader").fadeOut();
+
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert(error.responseText);
+            }
+        });
+
+    }
+
+</script>

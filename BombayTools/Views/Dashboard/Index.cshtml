@@ -1,0 +1,29 @@
+﻿<style>
+    .error_page_img {
+        background-image: url('../../images/btc/LoginBG.jpg');
+        background-repeat: no-repeat;
+        border-radius: 0 0 20px 0px;
+        padding: 3rem 1.8rem;
+        background-size: cover;
+        height: 800px;
+    }
+
+    body {
+        height: 100%;
+    }
+
+    .scale:hover {
+        transform: scale(1.20);
+        cursor: pointer;
+    }
+</style>
+
+<div class="error_page_img col-xl-12 col-lg-12 col-xs-12 progress-title">
+    <span class="text-white" style="font-size: 25px; font-weight: 500;"><i class="fa fa-arrow-circle-o-left scale" aria-hidden="true" onclick="GetBacktoMain()"></i>&nbsp;&nbsp; Unauthorize user</span>
+</div>
+
+<script>
+    function GetBacktoMain() {
+        window.history.back();
+    }
+</script>

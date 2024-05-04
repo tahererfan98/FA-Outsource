@@ -1,0 +1,138 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Users>
+@{
+    ViewBag.Title = "User Right Summary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<style>
+
+    #tblUserSummary td {
+        /*padding: 2px !important;*/
+    }
+
+</style>
+<div class=" content-area overflow-hidden" id="divuserSummary">
+    <div class="page-header">
+        <h4 class="page-title">User Summary</h4>
+       
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="col-sm-12 col-md-6">
+                <div class="row no-gutters">
+                    <div class="col-2">
+                        <label class="form-label mt-1">Search<i class="fe fe-search ml-2"></i></label>
+                    </div>
+                    <div class="col-10">
+                        @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", style = "width: 100%;", autocomplete = "off" })
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+
+                    <div id="divActive">
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" data-page-length='10' id="tblUserSummary">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <th class="text-white sorting">#</th>
+                                        <th class="text-white">User Name</th>
+                                        <th class="wd-15p sorting text-white">Department</th>
+                                        <th class="wd-20p text-white">Contact No</th>
+                                        <th class="wd-15p text-white">EMPLOYEE ID</th>
+                                        <th style="width:10px; " class="text-white"></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="box-sizing :border-box;">
+                                    @{
+                                        var SrNo = 0;
+                                    }
+                                    @foreach (var d in Model)
+                                    {
+
+                                        SrNo = SrNo + 1;
+                                        <tr>
+                                            <td>@SrNo</td>
+                                            <td class="text-left">@Html.DisplayFor(m => d.UserName)</td>
+                                            <td class="text-left">@Html.DisplayFor(m => d.UserType)</td>
+                                            <td class="text-left">@Html.DisplayFor(m => d.ContactNo)</td>
+                                            <td>@Html.DisplayFor(m => d.EmpID)</td>
+                                            <td> <a class="btn btn-sm btn-info" href="#" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Assign Rights" onclick="AssignUserRightsDetails(@d.UserID)"><i class="fe fe-edit"></i> </a></td>
+                                        </tr>
+
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- table-wrapper -->
+            </div>
+            <!-- section-wrapper -->
+        </div>
+    </div>
+</div>
+<div id="AssignUserRights"></div>
+<script type="text/javascript">
+    var MasterArray = [];
+   
+    MasterArray = @Html.Raw(Json.Encode(ViewBag.UserArray));
+    MasterArray = JSON.parse(MasterArray);
+
+    $(document).ready(function () {
+        $('#tblUserSummary').dataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": true,
+            "bFilter": true,
+            "paging": true,
+            "searching": true,
+            "dom": '<"top"i>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [5]
+                }
+            ]
+
+        });
+        var table = $('#tblUserSummary').DataTable();
+
+        $('#searchText').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+    });
+    function AssignUserRightsDetails(UserID) {
+        debugger;
+       
+        var data = { 'UserID': UserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            type: 'post',
+            url: '/User/_AssignUserRights',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#divuserSummary').hide();
+                $('#AssignUserRights').html(response);
+                $('#AssignUserRights').show();
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire("Error!", "Something went wrong: " + str, "error");
+            }
+        });
+    }
+</script>
+
+

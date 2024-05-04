@@ -1,0 +1,302 @@
+﻿
+@{
+    ViewBag.Title = "SalesPerson1Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class=" content-area" id="HeaderLabel">
+    <div class="page-header">
+        <h4 class="page-title">Dashboard</h4>
+        <div class="float-right">
+            <button class="btn btn-success" id="ToDashBoard" onclick="getBack()"><i class="fa fa-arrow-left"></i></button>
+        </div>
+    </div>
+    <div id="Dashboard">
+        <div class="row">
+            <div class="col-sm-12 col-lg-4">
+                <div class="card bg-danger pointer_cursor" onclick="showOpenEnquiry()">
+                    <div class="card-body list-icons pb-0">
+                        <div class="clearfix">
+                            <div class="float-left  mt-2">
+                                <span class="text-white ">
+                                    <i class="fa fa-envelope-open-o "></i>
+                                </span>
+                            </div>
+                            <div class="float-right text-right">
+                                <h4 class="card-text text-muted mb-2 text-white">Open Enquiries</h4>
+                                <h1 class="text-white">@ViewBag.OpenEnquiry</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+                <div class="card bg-info pointer_cursor" onclick="showOpenQuotation()">
+                    <div class="card-body list-icons pb-0">
+                        <div class="clearfix">
+                            <div class="float-left  mt-2">
+                                <span class="text-white ">
+                                    <i class="fa fa-twitch "></i>
+                                </span>
+                            </div>
+                            <div class="float-right text-right">
+                                <h4 class="card-text text-muted mb-2 text-white">Open Quotations</h4>
+                                <h1 class="text-white">@ViewBag.OpenQuotation</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row ">
+            <div class="col-sm-12 col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-primary br-tr-7 br-tl-7">
+                        <h3 class="card-title text-white">Streak Data</h3>
+                        <div class="card-options ">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up text-white"></i></a>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            @foreach (var sd in ViewBag.StreakData)
+                            {
+
+                                    <li class="list-group-item justify-content-between pointer_cursor" onclick="GetStreakUserData(@sd.Type)">
+                                        @sd.Name
+                                        <span class="badgetext badge badge-primary badge-pill">@sd.ID</span>
+                                    </li>
+                                }
+
+                       
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+  
+    <div class="row" id="OpenEnquiryTable">
+        <div class="col-sm-12 col-lg-12 card">
+            <h5 class="m-2">Open Enquiries</h5>
+            <div class="table-responsive">
+                <table id="tblEnquiry" class="table table-striped table-bordered compact" style="width:100%">
+                    <thead>
+                        <tr>
+                            <td style="width: 1px!important"></td>
+                            <td style="width: 1px!important">No</td>
+                            <td style="width: 145px;">Added On</td>
+                            <td>Company</td>
+                            <td>Location</td>
+                            <td>Sales Coordinator</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var list in ViewBag.Enqlist)
+                        {
+                            <tr>
+                                <th>
+                                    <button class="btn btn-info btn-sm" onclick="showEnquiryDetails(@list.EnqNO)"><i class="fa fa-eye"></i></button>
+                                </th>
+                                <td>@list.EnqNO</td>
+                                <td>@list.DisplayDate</td>
+                                <td>@list.Company</td>
+                                <td>@list.Location</td>
+                                <td>@list.SalesCoordinatorName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="OpenQuotationTable">
+        <div class="col-sm-12 col-lg-12 card">
+            <h5 class="m-2">Open Quotation</h5>
+            <div class="table-responsive">
+                <table id="tblQuotation" class="table table-striped table-bordered compact" style="width:100%">
+                    <thead>
+                        <tr>
+                            @*<td style="width: 1px!important"></td>*@
+                            <td style="width: 1px!important">No</td>
+                            <td>Added On</td>
+                            <td>Company</td>
+                            <td>Location</td>
+                            <td>Sales Coordinator</td>
+                            <td>Total Amount</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var list in ViewBag.QuotList)
+                        {
+                            <tr>
+                                @*<th>
+                                        <button class="btn btn-info btn-sm"><i class="fa fa-eye"></i></button>
+                                    </th>*@
+                                <td>@list.QuotID</td>
+                                <td>@list.QuotCreated</td>
+                                <td>@list.Company</td>
+                                <td>@list.Location</td>
+                                <td>@list.SalesCoordinatorName</td>
+                                <td>@list.Total</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="EnquiryView"></div>
+<div id="StreakData"></div>
+<div id="EditStreakData"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#tblEnquiry').DataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bFilter": false,
+            "paging": false,
+            "aaSorting": [],
+            "columnDefs": [{
+                "targets": [0, 1],
+                "orderable": false
+            }]
+        });
+        $('#tblQuotation').DataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bFilter": false,
+            "paging": false,
+            "aaSorting": [],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false
+            }]
+        });
+        $('#OpenEnquiryTable').hide();
+        $('#OpenQuotationTable').hide();
+        $('#ToDashBoard').hide();
+
+    });
+
+</script>
+<script>
+    function showOpenEnquiry() {
+        $('#OpenEnquiryTable').show();
+        $('#ToDashBoard').show();
+        $('#Dashboard').hide();
+    }
+    function showOpenQuotation() {
+        $('#OpenQuotationTable').show();
+        $('#ToDashBoard').show();
+        $('#Dashboard').hide();
+    }
+    function getBack() {
+        $('#OpenEnquiryTable').hide();
+        $('#OpenQuotationTable').hide();
+        $('#ToDashBoard').hide();
+        $('#Dashboard').show();
+    }
+    function getBackToView() {
+        $('#EnquiryView').hide();
+        $('#HeaderLabel').show();
+    }
+</script>
+<script>
+    function showEnquiryDetails(id) {
+        var data = { 'id': id };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Enquiry/EnquiryDetail',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $('#EnquiryView').html(response);
+                $('#EnquiryView').show();
+                $('#HeaderLabel').hide();
+
+            },
+            error: function (error) {
+                alert(error.responseText)
+            }
+        });
+    }
+
+
+    function GetStreakUserData(ID) {
+        $("#global-loader").fadeIn("slow");
+
+        tempIDC = ID;
+        var data = { 'ID': ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/StreakDataView",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                //$("#cute-loader").fadeIn("slow");
+                $('#HeaderLabel').hide();
+                $('#StreakData').html(response);
+                $('#StreakData').show();
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function ValidateData(ID) {
+        var data = { 'ID': ID }
+        $("#global-loader").fadeIn("slow");
+
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/StreakDataCheck",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#EditStreakData').html(response);
+                $('#EditStreakData').show();
+                $('#StreakData').hide();
+                $("#global-loader").fadeOut("slow");
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+
+    function getBackToDashboard1() {
+        $("#global-loader").fadeIn("slow");
+        $('#tblStreakData').DataTable({
+            "destroy": true,
+
+        });
+        $('#StreakData').hide();
+        $('#HeaderLabel').show();
+        $("#global-loader").fadeOut("slow");
+
+    }
+</script>

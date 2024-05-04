@@ -1,0 +1,155 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.SearchResult>
+
+
+@{
+    var temp = 0;
+
+}
+<div class="list-group hide" id="type_x">
+    @foreach (var d in Model)
+    {
+        ViewBag.allCount = Model.Count();
+        <div class="list-group-item list-group-item-action flex-column align-items-start " href="#">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@d.Header</h5>
+            </div>
+            <p class="mb-1">@d.Body</p>
+            <small class="text-primary">Matched In @d.Icon</small>
+        </div>
+    }
+
+</div>
+<div class="list-group hide" id="type_0">
+    @{
+        temp = 0;
+    }
+    @foreach (var d in Model)
+    {
+        if (d.TypeID == 0)
+        {
+            temp++;
+            ViewBag.ContactCount = temp;
+            var url = "/Enquiry/AddorEditEnquiry?ContactPersonID=" + d.SecondaryID + "&EnquiryNo=" + 0 + "&Status=0";
+            var url1 = "/Quotation/AddOrEditQuotation?FromEnquiry=0&QuotationID=' + 0 + '&TemplateID=0&EnquiryID=' + 0 + '&CPID=' + d.SecondaryID + '&IsCopy=' + 0";
+
+            <div class="list-group-item list-group-item-action flex-column align-items-start ">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@d.Header</h5>
+                    <div class="btn-list">
+                        <a class="btn btn-sm btn-info" href="@url" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Generate Enquiry"><i class="fe fe-file"></i></a>
+                        <a class="btn btn-sm btn-warning" href="@url1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Generate Quotation"><i class="fe fe-file"></i></a>
+                    </div>
+
+                </div>
+                <p class="mb-1">@d.Body</p>
+                <small class="text-primary">Matched In @d.Icon</small>
+
+            </div>
+        }
+
+    }
+
+</div>
+<div class="list-group hide" id="type_1">
+    @{
+        temp = 0;
+    }
+    @foreach (var d in Model)
+    {
+        if (d.TypeID == 1)
+        {
+            temp++;
+            ViewBag.EnquiryCount = temp;
+            var url = "/Enquiry/AddorEditEnquiry?ContactPersonID=" + d.SecondaryID + "&EnquiryNo=" + @d.PrimaryID + "&Status=2";
+
+            <div class="list-group-item list-group-item-action flex-column align-items-start " href="@url">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@d.Header</h5>
+                    <a class="btn btn-sm btn-info" href="@url" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Enquiry"><i class="fe fe-eye"></i></a>
+                </div>
+                <p class="mb-1">@d.Body</p>
+                <small class="text-primary">Matched In @d.Icon</small>
+
+            </div>
+        }
+    }
+
+</div>
+
+
+<div class="list-group hide" id="type_2">
+    @{
+        temp = 0;
+    }
+    @foreach (var d in Model)
+    {
+        if (d.TypeID == 2)
+        {
+            temp++;
+            ViewBag.QuoteCount = temp;
+            <div class="list-group-item list-group-item-action flex-column align-items-start " href="#">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@d.Header</h5>
+                    <a class="btn btn-sm btn-info" href="#" data-toggle="tooltip" data-placement="bottom" title="" onclick="viewQuotationDetails(@d.PrimaryID,@d.SecondaryID)" data-original-title="View Quotation"><i class="fe fe-eye"></i></a>
+
+                </div>
+                <p class="mb-1">@d.Body</p>
+                <small class="text-primary">Matched In @d.Icon</small>
+
+            </div>
+        }
+    }
+
+</div>
+
+
+
+<div class="list-group hide" id="type_3">
+    @{
+        temp = 0;
+    }
+    @foreach (var d in Model)
+    {
+        if (d.TypeID == 3)
+        {
+            temp++;
+            ViewBag.ItemCount = temp;
+            <div class="list-group-item list-group-item-action flex-column align-items-start " href="#">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@d.Header</h5>
+                    @*<a class="btn btn-sm btn-info" href="#" data-toggle="tooltip" data-placement="bottom" title="" onclick="viewQuotationDetails(@d.PrimaryID,@d.SecondaryID)" data-original-title="View Quotation"><i class="fe fe-eye"></i></a>*@
+
+                </div>
+                <p class="mb-1">@d.Body</p>
+                <small class="text-primary">Matched In @d.Icon</small>
+
+            </div>
+        }
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".hide").addClass("d-none");
+        $("#type_x").removeClass("d-none");
+        $("#btn_type_x").addClass("active");
+        $("#resultCount").html("About "+@ViewBag.allCount+ " results");
+
+    });
+
+    function showSelectedResult(params) {
+        params = params.value;
+        $(".hide").addClass("d-none");
+        $("#type_" + params).removeClass("d-none");
+        @*if (params == 'x') {
+            $("#resultCount").html("About " +@ViewBag.allCount+ " results");
+        } else if (params == 0) {
+            $("#resultCount").html("About " +@ViewBag.ContactCount+ " results");
+        } else if (params == 1) {
+            $("#resultCount").html("About " +@ViewBag.EnquiryCount+ " results");
+        } else if (params == 2) {
+            $("#resultCount").html("About " +@ViewBag.QuoteCount+ " results");
+        }*@
+    }
+</script>

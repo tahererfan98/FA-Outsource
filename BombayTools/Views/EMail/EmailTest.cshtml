@@ -1,0 +1,232 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+@{
+    ViewBag.Title = "EmailTest";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div id="cute-loader"></div>
+
+<div class=" content-area" id="Dashboard">
+    <div class="page-header">
+        <h4 class="page-title">Email Inbox</h4>
+        <div class="breadcrumb">
+            <button onclick="LogoutEmail()">Logout</button>
+            <button id="backButton" class=" btn btn-primary" onclick="getBackToList()"><i class="fa fa-arrow-left"></i></button>
+            <button id="goBackButton" class=" btn btn-primary" onclick="getBackToPartialList()"><i class="fa fa-arrow-left"></i></button>
+        </div>
+    </div>
+    <div class="row gutters-xs">
+        <div class="col">
+            @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "SearchText", name = "SearchText", autocomplete = "off" })
+        </div>
+        <span class="col-auto">
+            <button class="btn btn-primary" type="button" onclick="LoadSearchResult()"><i class="fe fe-search"></i></button>
+        </span>
+    </div>
+    <div class="row" id="Inbox">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-inbox table-hover">
+
+                    <tbody>
+                        @foreach (var d in Model)
+                        {
+                            <tr>
+                                <td class="view-message dont-show" style="width:150px;">@Html.DisplayFor(m => d.FromName)</td>
+                                <td class="view-message" onclick="ShowBodyTag('@d.ID','@d.ThreadID')">@Html.DisplayFor(m => d.Subject)</td>
+                                <td class="view-message text-right" style="width:150px;">@Html.DisplayFor(m => d.Display)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="SearchList"></div>
+    <div id="MessageBody">
+        <div class="row">
+            <div class="col-sm-12 col-lg-4">
+
+                <div class="form-group">
+                    <label class="form-label">Quotation No</label>
+                    @Html.TextBox("QuotNo", null, new { @class = "form-control", @id = "QuotNo", name = "QuotNo", autocomplete = "on", placeholder = "" })
+                </div>
+                <button class="btn btn-success mb-2" onclick="SaveEmailAganistQuotaion()">
+                    Add To Quotation
+                </button>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                @*D:\Sanmesh\MVC\BombayTools\BombayTools\images\laptop.png*@
+                <div class="card" style="background:url(https://sigparser.com/images/laptop.png); height: 469px;
+    background-size: 100% 92%;
+    padding: 49px 0;
+    width: 100%;
+    max-width: 870px;
+    background-position: center;
+    margin: 0 auto;
+    display: table;
+    background-repeat: no-repeat;">
+                    <iframe id="MailText" width="630px" height="397px" style="height:600px;border:none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var QuotList = [];
+    var List = [];
+
+    $(document).ready(function () {
+        $("#backButton").hide();
+        $("#MessageBody").hide();
+        $("#goBackButton").hide();
+        $("#cute-loader").fadeOut("slow");
+
+        QuotList = @Html.Raw(Json.Encode(@ViewBag.QuotList));
+        QuotList = JSON.parse(QuotList);
+        for (i = -0; i < QuotList.length; i++) {
+            var element = {};
+            element.QTNNO = QuotList.QTNNO;
+            element.QuotID = QuotList.QuotID;
+            List.push(element);
+        }
+    });
+
+
+    $("#QuotNo").keyup(function () {
+
+        $("#QuotNo").autocomplete({
+            source: List
+        });
+    });
+    var MessageID;
+    function ShowBodyTag(body,ThreadID) {
+        MessageID = body;
+        $("#Inbox").hide();
+        $("#MessageBody").show();
+        var data = { 'ID': body, 'ThreadID': ThreadID };
+        data = JSON.stringify(data);
+        $("#backButton").show();
+
+        $.ajax({
+            url: "/EMail/GetEMailBody",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#Inbox').hide();
+
+                $("#MessageBody").show();
+                var ifrm = $('#MailText')[0].contentWindow.document;
+                $('body', ifrm).html(response.Body);
+                $('#MailText').show();
+                //$('#text').text(response.PlainText);
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+        //var ifrm = $('#MailText')[0].contentWindow.document;
+        //$('body', ifrm).html(body);
+    }
+
+    function getBackToList() {
+        $("#backButton").hide();
+
+        $("#Inbox").show();
+        $("#MessageBody").hide();
+        $('#MailText').empty();
+        $('#text').empty();
+    }
+    function getBackToPartialList() {
+        $("#goBackButton").hide();
+
+        $("#SearchList").show();
+        $("#MessageBody").hide();
+        $('#MailText').empty();
+        $('#text').empty();
+    }
+
+    function LoadSearchResult() {
+        var searchText = document.getElementById("SearchText").value;
+        if (searchText != "" || searchText != undefined) {
+            var data = { 'searchText': searchText };
+            data = JSON.stringify(data);
+            $("#cute-loader").fadeIn("slow");
+
+            $.ajax({
+                url: "/EMail/SearchEmailList",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //  dataType: "json",
+                success: function (response) {
+                    $('#Inbox').hide();
+
+
+                    $('#SearchList').html(response);
+                    $('#SearchList').show();
+                    $("#cute-loader").fadeOut("slow");
+
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
+    function SaveEmailAganistQuotaion() {
+        var QuotID = document.getElementById("QuotNo").value;
+        var data = {
+            'QuotID': QuotID,
+            'MessageID': MessageID,
+            //'AddedOn': new Date(),
+            'IsACtive':1
+        }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/EMail/SaveEMailAganistQuotation",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                alert(response);
+                document.getElementById("QuotNo").value = "";
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>
+<script>
+    function LogoutEmail() {
+        document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http:/http://localhost:44951";
+        //$.ajax({
+        //    url: "https://mail.google.com/mail/?logout&hl=en",
+        //    //data: data,
+        //    type: "POST",
+        //    //contentType: "application/json; charset=utf-8",
+        //    //  dataType: "json",
+        //    success: function (response) {
+        //        alert(response);
+        //        document.getElementById("QuotNo").value = "";
+        //    },
+        //    error: function (errormessage) {
+        //        alert("error");
+        //        alert(errormessage.responseText);
+        //    }
+        //});
+    }
+</script>

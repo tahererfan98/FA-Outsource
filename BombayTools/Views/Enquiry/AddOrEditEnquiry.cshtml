@@ -1,0 +1,216 @@
+﻿@model BombayToolsEntities.BusinessEntities.Enquiry
+@{
+    ViewBag.Title = "AddOrEditEnquiry";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="page-header">
+    <h4 class="page-title">
+        <i class="fe fe-arrow-left" onclick="GetBack()"></i>
+        Enquiry
+    </h4>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-4 col-lg-3">
+        <h4>@ViewBag.CompanyName</h4>
+        <div>
+            <p>Location
+            <br />
+            <strong>@ViewBag.Location</strong>
+            </p>
+        </div>
+        <div>
+            <p>Contact Person
+            <br />
+            <strong>@ViewBag.ContactPersonName</strong>
+            </p>
+        </div>
+        <div>
+            <p>Email
+            <br />
+            <strong>@ViewBag.EmailID</strong>
+            </p>
+        </div>
+        <div>
+            <p>Contact No
+            <br />
+            <strong>@ViewBag.ContactNo</strong>
+            </p>
+        </div>
+        <div>
+            <p>Mobile No
+            <br />
+            <strong>@ViewBag.MobileNo</strong>
+            </p>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+            <div class="card-header text-center" style="background:linear-gradient(269deg, #32cafe,#867efc)">
+                <h4 class="card-title text-white" style="flex:auto;">Add New Enquiry</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="form-label">Enquiry No: @Model.EnquiryNO</label>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label">Enquiry Reference</label>
+                            @Html.TextBox("Reference", null, new { @class = "form-control", @id = "Reference", name = "Refernce", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label">Sales Person</label>
+                            @Html.DropDownList("SalesPersonID", (IEnumerable<SelectListItem>)ViewBag.SalesPersonList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesPersonDropdown", name = "ddlSalesPersonDropdown", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label">Sales Co-Ordinator</label>
+                            @Html.DropDownList("SalesCoordinatorID", (IEnumerable<SelectListItem>)ViewBag.SalesCoordinatorList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesCoordinatorList", name = "ddlSalesCoordinatorList", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            @Html.TextArea("Desc", new { @class = "form-control", @id = "Desc", name = "Desc", autocomplete = "off", @height=6 })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="btn-list pull-right">
+                            @if (ViewBag.StatusID != 2)
+                            {
+                                <button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>
+                                if (ViewBag.StatusID == 1)
+                                {
+                                    <button class="btn btn-info btn-sm" id="edit-btn" onclick="EditEnquiry()"><i class="fa fa-edit"></i></button>
+                                }
+                                <button class="btn btn-success btn-sm" onclick="AddOrEditEnquiry()"><i class="fa fa-save"></i></button>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-5">
+        <div class="card">
+            <div class="card-header text-center" style="background:linear-gradient(269deg, #32cafe,#867efc)">
+                <h4 class="card-title text-white" style="flex:auto;">Add Follow-ups</h4>
+            </div>
+            <div class="card-body content scroll-1" style="max-height:450px ; height:450px">
+                <div id="followUpEnquiry"></div>               
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var EnquiryNo =@Model.EnquiryNO;
+    var ContactPersonID =@ViewBag.ContactPersonID;
+    var Status = @ViewBag.StatusID;
+    $(document).ready(function () {
+        onBackAdjustHeight();
+        if (Status == 1) {
+            $(".form-control").attr('disabled', true);
+        }
+        ShowTimeline();
+        if (Status == 2) {
+            $(".form-control").attr('disabled', true);
+            $("#newComment").attr('disabled', true);
+        }
+    });
+
+    function EditEnquiry() {
+        $(".form-control").attr('disabled', false);
+        $("#edit-btn").hide();
+    }
+
+    function ShowTimeline() {
+        var data = { 'ID': EnquiryNo };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/EnquiryTimeline",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $('#followUpEnquiry').html(response);
+                $('#followUpEnquiry').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function AddOrEditEnquiry() {
+        var element = {};
+        element.Reference = $("#Reference").val();
+        element.SalesPersonID = $("#ddlSalesPersonDropdown").val();
+        element.SalesCoordinatorID = $("#ddlSalesCoordinatorList").val();
+        element.Desc = $("#Desc").val();
+        if (element.Reference == "") {
+            $("#Reference").addClass("is-invalid state-invalid");
+            return false;
+        } else {
+            $("#Reference").removeClass("is-invalid state-invalid");
+        }
+        if (element.Desc == "") {
+            $("#Desc").addClass("is-invalid state-invalid");
+            return false;
+        } else {
+            $("#Desc").removeClass("is-invalid state-invalid");
+        }
+        element.EnquiryNo = EnquiryNo;
+        element.ContactPersonID = ContactPersonID;
+        element.AddedON = new Date();
+        var data = { 'data': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/AjaxAddOrEditEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                if (response.Status==0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.Message,
+                        icon: 'error'
+                    });
+                } else {
+                    EnquiryNo = response.Data;
+                    ShowTimeline();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.Message,
+                        icon: 'success'
+                    });
+                }
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+    }
+
+    function GetBack() {
+        window.location = "@Url.Action("Summary","Enquiry")"
+    }
+
+</script>

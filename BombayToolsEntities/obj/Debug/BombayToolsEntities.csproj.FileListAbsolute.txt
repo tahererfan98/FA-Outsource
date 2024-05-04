@@ -1,0 +1,30 @@
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\bin\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\bin\Debug\BombayToolsEntities.pdb
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.AssemblyReference.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.CoreCompileInputs.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\obj\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsEntities\obj\Debug\BombayToolsEntities.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.AssemblyReference.cache
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.CoreCompileInputs.cache
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\obj\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\obj\Debug\BombayToolsEntities.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\bin\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsEntities\bin\Debug\BombayToolsEntities.pdb
+D:\MVC\FACRM\BombayToolsEntities\bin\Debug\BombayToolsEntities.dll
+D:\MVC\FACRM\BombayToolsEntities\bin\Debug\BombayToolsEntities.pdb
+D:\MVC\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.AssemblyReference.cache
+D:\MVC\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.CoreCompileInputs.cache
+D:\MVC\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.dll
+D:\MVC\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\bin\Debug\BombayToolsEntities.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\bin\Debug\BombayToolsEntities.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.AssemblyReference.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.CoreCompileInputs.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsEntities\obj\Debug\BombayToolsEntities.pdb
+D:\FAOutsource\BombayToolsEntities\bin\Debug\BombayToolsEntities.dll
+D:\FAOutsource\BombayToolsEntities\bin\Debug\BombayToolsEntities.pdb
+D:\FAOutsource\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.AssemblyReference.cache
+D:\FAOutsource\BombayToolsEntities\obj\Debug\BombayToolsEntities.csproj.CoreCompileInputs.cache
+D:\FAOutsource\BombayToolsEntities\obj\Debug\BombayToolsEntities.dll
+D:\FAOutsource\BombayToolsEntities\obj\Debug\BombayToolsEntities.pdb

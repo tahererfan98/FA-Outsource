@@ -1,0 +1,114 @@
+﻿
+
+<style>
+    html {
+        background-color: white !important;
+    }
+
+    body {
+        color: #000000 !important;
+        background-color: white !important;
+    }
+
+    /*.TEXT_BOLD {
+        font-weight: bold;
+        font-size: 14px;
+        color: black;
+    }
+
+    .TEXT_UNBOLD {*/
+    /*font-family: Poppins;*/
+    /*font-size: 12px;
+        color: black;
+    }*/
+</style>
+<style>
+    .page-count {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+    }
+</style>
+
+
+<a href="~/fonts/Poppins/Poppins-Black.ttf"></a>
+
+
+
+@*<hr class=" m-0" style=" background-color: black !important; height:2px;border: dotted" />*@
+<hr class="mt-0 mb-1" style="border-top: dotted 1px;" />
+
+<table class="mt-0 mb-0 pl-0" height="100%" width="100%" style="border:none;">
+    <tbody>
+        <tr>
+            <td class=" " style="color: #008080; font-weight: bold; font-size: 15px; border: none; text-align: left; font-family: Poppins; width: 35% ">Future Architectural Glass LLC</td>
+
+            <td class="text-black " style="font-weight: bold; font-size: 13px; color: black; border: none; text-align: left; font-family: Poppins; width: 35%" colspan="2">BANK PAYMENT TRANSFER DETAILS :</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 9%"></td>
+            <td class="text-black pull-right" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 22%"><span id="pageCount"></span></td>
+        </tr>
+        <tr>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 31%">Plot Nos P278, Al Ghail Industrial Area, PO Box: 86001</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 12%">BANK NAME</td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 23%">: @ViewBag.BankName</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 9%">BANK A/C NO</td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 22%">: @ViewBag.AccountNo</td>
+        </tr>
+        <tr>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 31%">Ras Al Khaimah, UAE</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 12%">BANK BRANCH</td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 23%">: @ViewBag.Branch</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 9%">SWIFT CODE</td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 22%">: @ViewBag.SwiftCode</td>
+        </tr>
+        <tr>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 31%">Email: sales@faglass.com | www.faglass.com</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 12%">IBAN NO</td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 23%">: @ViewBag.IBANno</td>
+
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 9%"></td>
+            <td class="text-black" style="font-size: 12px; color: black; border: none; text-align: left; font-family: Poppins; width: 22%"></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<script>
+
+    // script.js
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the total height of the content and the viewport height
+        const totalHeight = document.body.scrollHeight;
+        const viewportHeight = window.innerHeight;
+
+        // Calculate the total number of pages
+        const pageCount = Math.ceil(totalHeight / viewportHeight);
+
+        // Display the page count
+        const pageCountElement = document.getElementById("pageCount");
+        pageCountElement.innerText = `Page ${getCurrentPage()} of ${pageCount}`;
+
+        // Function to get the current page number
+        function getCurrentPage() {
+            const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+            return Math.ceil((scrollTop + viewportHeight) / viewportHeight);
+        }
+
+        // Update page count on scrolling
+        window.addEventListener("scroll", function () {
+            pageCountElement.innerText = `Page ${getCurrentPage()} of ${pageCount}`;
+        });
+    });
+
+
+
+
+</script>
+
+

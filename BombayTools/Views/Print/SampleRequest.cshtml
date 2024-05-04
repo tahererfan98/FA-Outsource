@@ -1,0 +1,235 @@
+﻿@model BombayToolsEntities.BusinessEntities.SampleRequestInfo
+
+@{
+    ViewBag.Title = "Sample Request Print";
+}
+
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:display=swap');
+</style>
+
+<style>
+
+    html {
+        background-color: white !important;
+    }
+
+    body {
+        color: #000000 !important;
+        background-color: white !important;
+    }
+
+    .table-responsive {
+        border: 1px;
+    }
+
+    pre {
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    .table td {
+        padding: 0.5rem !important;
+        vertical-align: top;
+        border-color: black;
+    }
+
+    .table th {
+        border-color: black;
+    }
+
+    .table thead th, .text-wrap table thead th {
+        vertical-align: bottom;
+        border-color: black;
+    }
+
+    #Itemtable {
+        /*font-family: Arial;*/
+        border-collapse: collapse;
+    }
+
+        #Itemtable td {
+            border: 2px solid black;
+            padding: 2px;
+        }
+
+        #Itemtable th {
+            border: 2px solid black;
+            padding: 2px;
+        }
+    /*FontContainer*/
+    #FontContainer {
+        font-family: Poppins !important;
+        padding: 0px;
+    }
+
+    .ItemTblFont {
+        font-family: Poppins !important;
+        color: black;
+    }
+</style>
+
+@*<a href="~/fonts/Poppins/Poppins-Black.ttf"></a>
+    <a href="~/fonts/Poppins/Poppins-Bold.ttf"></a>*@
+
+<div class="col-sm-12 col-md-12 col-lg-12 " style="background-color:white;border: solid 3px;padding: 0px;" id="FontContainer">
+    <div class="page-head " style="text-align: center ;background-color:white;padding: 0px;">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="row ">
+                <div class="col-sm-4 col-md-4 col-lg-4 text-left" style="margin-left:-20px">
+                    <img class="mt-4" src="~/images/FG_Logo-01.png" style="height: 98px;" />
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8 text-left" style="MARGIN-TOP: 18PX;">
+                    <span class="mt-4" style="font-family:poppins !important;font-size:50px;font-weight: bolder;">SAMPLE REQUEST</span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-12" style="padding: 0px;" id="FontContainer">
+        <div class="row mt-3 pl-2" style="MARGIN-BOTTOM: -20PX;">
+            <div class="col-md-9">
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">CUSTOMER:</span> <label style="font-size:18px;">@Model.Customer</label></p>
+            </div>
+            <div class="col-md-3">
+                <p class="ml-3"><span style="font-weight:bold;font-size:18px;">REQ NO:</span> <label style="font-size:18px;">@Model.SMPNo</label></p>
+            </div>
+        </div>
+        <div class="row mt-0 pl-2" style="MARGIN-BOTTOM: -20PX;">
+            <div class="col-md-9">
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">PROJECT:</span> <label style="font-size:18px;">@Model.Project</label></p>
+            </div>
+            <div class="col-md-3">
+                <p class="ml-3"><span style="font-weight:bold;font-size:18px;">REQ DATE:</span> <label style="font-size:18px;">@Model.SMPDate</label></p>
+            </div>
+        </div>
+        <div class="row mt-0 pl-2" style="MARGIN-BOTTOM: -20PX;">
+            <div class="col-md-5">
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">REQUIRED LOCATION:</span> <label style="font-size:18px;">@Model.RequiredLocation</label></p>
+            </div>
+            <div class="col-md-4">
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">REQUIRED DATE:</span> <label style="font-size:18px;">@Model.RequiredDate</label></p>
+            </div>
+            <div class="col-md-3">
+                <p class="ml-3"><span style="font-weight:bold;font-size:18px;">MODE:</span> <label style="font-size:18px;">@Model.ModeName</label></p>
+            </div>
+        </div>
+        <div class="row mt-0 pl-2" style="MARGIN-BOTTOM: -20PX;">
+            <div class="col-md-5">
+
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">SAMPLE TYPE:</span> <label style="font-size:18px;">@Model.SampleType</label></p>
+            </div>
+
+            <div class="col-md-4">
+
+                <p class="m-0"><span style="font-weight:bold;font-size:18px;">MOCKUP TYPE:</span> <label style="font-size:18px;">@Model.MockupType</label></p>
+            </div>
+
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="">
+                    <table class="table " style="width:101%;border-top: solid 1px;border-bottom: solid 1px;font-size:18px;" id="Itemtable">
+
+                        <thead>
+                            <tr class="ItemTblFont">
+                                <th class="text-center" style="width:15px !important;font-weight:bold;font-size:18px;color:black;border-left:0px">SNO</th>
+                                <th style="font-weight:bold;font-size:18px;color:black;width:300px !important" class="text-center">DESCRIPTION</th>
+                                <th style="font-weight:bold;font-size:18px;color:black;width:100px !important" class="text-center">QTY</th>
+                                <th style="font-weight:bold;font-size:18px;color:black;width:100px !important" class="text-center">HEIGHT</th>
+                                <th style="font-weight:bold;font-size:18px;color:black;width:100px !important" class="text-center">WIDTH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SRDetails)
+                            {
+                                <tr>
+                                    <td class="text-center" style="border-left:0px">@item.SrNo</td>
+                                    <td class="text-left">@item.Description</td>
+                                    <td class="text-center">@item.Qty</td>
+                                    <td class="text-center">@item.Height</td>
+                                    <td class="text-center">@item.Width</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*item ends*@
+
+        @if (Model.IsDone == 1)
+        {
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <p class="ml-3 mb-0"><span style="font-weight:bold;font-size:18px;">PI NO:</span> <label style="font-size:18px;">@Model.PINo</label></p>
+                    <p class="ml-3"><span style="font-weight:bold;font-size:18px;">REMARKS:</span> <label style="font-size:18px;">@Model.DoneRemarks</label></p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12">
+
+                    <p class="ml-3"><span style="font-weight:bold;font-size:18px;">REMARKS:</span> <label style="font-size:18px;">@Model.Remarks</label></p>
+                </div>
+            </div>
+        }
+
+
+        <br /><br /><br /><br />
+        <div class="row">
+            <div class="col-md-6" style="font-size:18px;visibility:hidden">
+                <span class="ml-5" style="text-align:left;font-size:18px;">SARJERAO SHINGARE</span>
+                <br />
+                <span class="ml-5" style="text-align:left;font-weight:bold;font-size:18px;">STORE INCHARGE </span>
+
+            </div>
+
+            <div class="col-md-3" style="text-align:right;font-size:18px;">
+
+                @if (Model.IsDone == 1)
+                {
+                    <span style="text-align:right;font-size:18px;">@Model.DoneBy</span>
+                    <br />
+                    <span class="mr-5" style="text-align:right;font-weight:bold;font-size:18px;">DONE BY</span>
+                }
+            </div>
+            <div class="col-md-3" style="text-align:right;font-size:18px;">
+                <span class="mr-5" style="text-align:right;font-size:18px;">@Model.UserName</span>
+                <br />
+                <span class="mr-5" style="text-align:right;font-weight:bold;font-size:18px;">PREPARED BY</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+@*<script>
+        setTimeout(function () {
+            window.onload = window.print();
+
+
+        }, 1000);
+        window.onload = function () {
+
+        };
+
+    </script>*@
+
+@*<script>
+        setTimeout(function () {
+            window.onload = window.close();
+        }, 1000);
+        window.onload = function () {
+
+        };
+    </script>*@

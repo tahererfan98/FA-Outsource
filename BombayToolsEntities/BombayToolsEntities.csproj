@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CFB497EA-A1F4-4BE8-9807-CD21BEE253DC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BombayToolsEntities</RootNamespace>
+    <AssemblyName>BombayToolsEntities</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessEntities\Account.cs" />
+    <Compile Include="BusinessEntities\ActivityLog.cs" />
+    <Compile Include="BusinessEntities\AdminDashboard.cs" />
+    <Compile Include="BusinessEntities\AdminDashboardCount.cs" />
+    <Compile Include="BusinessEntities\AssignMenu.cs" />
+    <Compile Include="BusinessEntities\AssignToIncentive.cs" />
+    <Compile Include="BusinessEntities\AtAGlanceEnquiry.cs" />
+    <Compile Include="BusinessEntities\AtAGlanceLocationBussiness.cs" />
+    <Compile Include="BusinessEntities\AtAGlanceQuotation.cs" />
+    <Compile Include="BusinessEntities\ATAGlanceSalesPersonDetail.cs" />
+    <Compile Include="BusinessEntities\AttachmentM.cs" />
+    <Compile Include="BusinessEntities\Attendance.cs" />
+    <Compile Include="BusinessEntities\AttendanceCalendarView.cs" />
+    <Compile Include="BusinessEntities\BillForM.cs" />
+    <Compile Include="BusinessEntities\BillingLocation.cs" />
+    <Compile Include="BusinessEntities\CalendarEvent.cs" />
+    <Compile Include="BusinessEntities\CampaignDetails.cs" />
+    <Compile Include="BusinessEntities\Category.cs" />
+    <Compile Include="BusinessEntities\CategoryData.cs" />
+    <Compile Include="BusinessEntities\Costing.cs" />
+    <Compile Include="BusinessEntities\Customer.cs" />
+    <Compile Include="BusinessEntities\CustomerDeskM.cs" />
+    <Compile Include="BusinessEntities\CustomerM.cs" />
+    <Compile Include="BusinessEntities\DailyVisitReport.cs" />
+    <Compile Include="BusinessEntities\DCTIDetails.cs" />
+    <Compile Include="BusinessEntities\DeliveryInfo.cs" />
+    <Compile Include="BusinessEntities\Dispatches.cs" />
+    <Compile Include="BusinessEntities\DispatchesList.cs" />
+    <Compile Include="BusinessEntities\EmailEntity.cs" />
+    <Compile Include="BusinessEntities\EnquiryD.cs" />
+    <Compile Include="BusinessEntities\EnquiryInfo.cs" />
+    <Compile Include="BusinessEntities\EnquiryM.cs" />
+    <Compile Include="BusinessEntities\ExportInvoiceCharges.cs" />
+    <Compile Include="BusinessEntities\ExportInvoiceD.cs" />
+    <Compile Include="BusinessEntities\ExportInvoiceM.cs" />
+    <Compile Include="BusinessEntities\ExportInvoicePacking.cs" />
+    <Compile Include="BusinessEntities\Finance.cs" />
+    <Compile Include="BusinessEntities\FollowUpAttachmentsM.cs" />
+    <Compile Include="BusinessEntities\GetBillingLocation.cs" />
+    <Compile Include="BusinessEntities\ImportDVReport.cs" />
+    <Compile Include="BusinessEntities\ImportOIS.cs" />
+    <Compile Include="BusinessEntities\InActiveStock.cs" />
+    <Compile Include="BusinessEntities\InActiveStockList.cs" />
+    <Compile Include="BusinessEntities\IncentiveAssignToM.cs" />
+    <Compile Include="BusinessEntities\IndentD.cs" />
+    <Compile Include="BusinessEntities\IndentInfo.cs" />
+    <Compile Include="BusinessEntities\Ledger.cs" />
+    <Compile Include="BusinessEntities\LiveProjectOrCustomerDetails.cs" />
+    <Compile Include="BusinessEntities\MailCampaign.cs" />
+    <Compile Include="BusinessEntities\Company.cs" />
+    <Compile Include="BusinessEntities\CompanyDetail.cs" />
+    <Compile Include="BusinessEntities\CompanyHierarchy.cs" />
+    <Compile Include="BusinessEntities\CompanyNotes.cs" />
+    <Compile Include="BusinessEntities\CompanySearchData.cs" />
+    <Compile Include="BusinessEntities\CompanyStatus.cs" />
+    <Compile Include="BusinessEntities\ContactPerson.cs" />
+    <Compile Include="BusinessEntities\Country.cs" />
+    <Compile Include="BusinessEntities\CurrencyCodeInfo.cs" />
+    <Compile Include="BusinessEntities\CustomerQuickAdd.cs" />
+    <Compile Include="BusinessEntities\DailyQuotationCount.cs" />
+    <Compile Include="BusinessEntities\Department.cs" />
+    <Compile Include="BusinessEntities\Designation.cs" />
+    <Compile Include="BusinessEntities\DRColumn.cs" />
+    <Compile Include="BusinessEntities\DRGroupBy.cs" />
+    <Compile Include="BusinessEntities\DropDownMaster.cs" />
+    <Compile Include="BusinessEntities\DROperator.cs" />
+    <Compile Include="BusinessEntities\DRQueryConditionParameter.cs" />
+    <Compile Include="BusinessEntities\DRQueryResult.cs" />
+    <Compile Include="BusinessEntities\DRQuerySortByParameter.cs" />
+    <Compile Include="BusinessEntities\DRSort.cs" />
+    <Compile Include="BusinessEntities\DynamicReportFields.cs" />
+    <Compile Include="BusinessEntities\DynamicReportM.cs" />
+    <Compile Include="BusinessEntities\DynamicReportOperator.cs" />
+    <Compile Include="BusinessEntities\DynamicReportTables.cs" />
+    <Compile Include="BusinessEntities\EmailBodyTemplate.cs" />
+    <Compile Include="BusinessEntities\EmailScanner.cs" />
+    <Compile Include="BusinessEntities\Email_Attachment.cs" />
+    <Compile Include="BusinessEntities\Employee.cs" />
+    <Compile Include="BusinessEntities\EmployeeAttachments.cs" />
+    <Compile Include="BusinessEntities\EmployeeDetails.cs" />
+    <Compile Include="BusinessEntities\Enquiry.cs" />
+    <Compile Include="BusinessEntities\EnquiryCount.cs" />
+    <Compile Include="BusinessEntities\EnquiryFollowUp.cs" />
+    <Compile Include="BusinessEntities\EnquiryList.cs" />
+    <Compile Include="BusinessEntities\EnquirySummary.cs" />
+    <Compile Include="BusinessEntities\EnquiryVSQuotation.cs" />
+    <Compile Include="BusinessEntities\FieldMaster.cs" />
+    <Compile Include="BusinessEntities\FollowUP.cs" />
+    <Compile Include="BusinessEntities\FullQuotation.cs" />
+    <Compile Include="BusinessEntities\GraphData.cs" />
+    <Compile Include="BusinessEntities\GRNDetailsData.cs" />
+    <Compile Include="BusinessEntities\GRNInfo.cs" />
+    <Compile Include="BusinessEntities\GstList.cs" />
+    <Compile Include="BusinessEntities\HolidayList.cs" />
+    <Compile Include="BusinessEntities\Industry.cs" />
+    <Compile Include="BusinessEntities\Item.cs" />
+    <Compile Include="BusinessEntities\ItemBOM.cs" />
+    <Compile Include="BusinessEntities\ItemList.cs" />
+    <Compile Include="BusinessEntities\ItemSetDetail.cs" />
+    <Compile Include="BusinessEntities\LeavePlan.cs" />
+    <Compile Include="BusinessEntities\LinkingEnquiry.cs" />
+    <Compile Include="BusinessEntities\Location.cs" />
+    <Compile Include="BusinessEntities\LoggedDetails.cs" />
+    <Compile Include="BusinessEntities\LoginEntites.cs" />
+    <Compile Include="BusinessEntities\MailCampaignTemplate.cs" />
+    <Compile Include="BusinessEntities\MapRequirementSalesOrder.cs" />
+    <Compile Include="BusinessEntities\MentorM.cs" />
+    <Compile Include="BusinessEntities\ModeOfShipment.cs" />
+    <Compile Include="BusinessEntities\ModeOfTransport.cs" />
+    <Compile Include="BusinessEntities\MonthlyReportM.cs" />
+    <Compile Include="BusinessEntities\NotificationData.cs" />
+    <Compile Include="BusinessEntities\OutsourcePartner.cs" />
+    <Compile Include="BusinessEntities\PIDetails.cs" />
+    <Compile Include="BusinessEntities\PIMaster.cs" />
+    <Compile Include="BusinessEntities\PIStages.cs" />
+    <Compile Include="BusinessEntities\POCount.cs" />
+    <Compile Include="BusinessEntities\Principal.cs" />
+    <Compile Include="BusinessEntities\ProductionDetails.cs" />
+    <Compile Include="BusinessEntities\Production_detailed_view.cs" />
+    <Compile Include="BusinessEntities\Production_Details.cs" />
+    <Compile Include="BusinessEntities\Prod_Details.cs" />
+    <Compile Include="BusinessEntities\ProformaInvoice.cs" />
+    <Compile Include="BusinessEntities\ProformaList.cs" />
+    <Compile Include="BusinessEntities\Project.cs" />
+    <Compile Include="BusinessEntities\ProjectDetails.cs" />
+    <Compile Include="BusinessEntities\PurchaseOrderConditions.cs" />
+    <Compile Include="BusinessEntities\PurchaseOrderD.cs" />
+    <Compile Include="BusinessEntities\PurchaseOrderDXML.cs" />
+    <Compile Include="BusinessEntities\PurchaseOrderPaymentTerm.cs" />
+    <Compile Include="BusinessEntities\QCWarehouse.cs" />
+    <Compile Include="BusinessEntities\QuotationAganistEmail.cs" />
+    <Compile Include="BusinessEntities\QuotationMaster.cs" />
+    <Compile Include="BusinessEntities\QuotationTermsTemplate.cs" />
+    <Compile Include="BusinessEntities\Recieved_Emails.cs" />
+    <Compile Include="BusinessEntities\Report.cs" />
+    <Compile Include="BusinessEntities\ResponseMessage.cs" />
+    <Compile Include="BusinessEntities\RMItemWise.cs" />
+    <Compile Include="BusinessEntities\RMThickness.cs" />
+    <Compile Include="BusinessEntities\Role.cs" />
+    <Compile Include="BusinessEntities\SalesCoordinator.cs" />
+    <Compile Include="BusinessEntities\SalesDashboard.cs" />
+    <Compile Include="BusinessEntities\SalesOrderD.cs" />
+    <Compile Include="BusinessEntities\SalesOrderData.cs" />
+    <Compile Include="BusinessEntities\SalesOrderForm.cs" />
+    <Compile Include="BusinessEntities\SalesOrderM.cs" />
+    <Compile Include="BusinessEntities\SalesOrderTax.cs" />
+    <Compile Include="BusinessEntities\SalesPerson.cs" />
+    <Compile Include="BusinessEntities\SalesPersonDashboard.cs" />
+    <Compile Include="BusinessEntities\SalesPersonWeeklyCount.cs" />
+    <Compile Include="BusinessEntities\SalesPipeline.cs" />
+    <Compile Include="BusinessEntities\SalesPipelineDashboard.cs" />
+    <Compile Include="BusinessEntities\SalesReport.cs" />
+    <Compile Include="BusinessEntities\SampleRequestDetails.cs" />
+    <Compile Include="BusinessEntities\SampleRequestInfo.cs" />
+    <Compile Include="BusinessEntities\ScheduleMaster.cs" />
+    <Compile Include="BusinessEntities\SearchResult.cs" />
+    <Compile Include="BusinessEntities\Sector.cs" />
+    <Compile Include="BusinessEntities\SetItem.cs" />
+    <Compile Include="BusinessEntities\ShippingLocation.cs" />
+    <Compile Include="BusinessEntities\SOCount.cs" />
+    <Compile Include="BusinessEntities\SOPipelineM.cs" />
+    <Compile Include="BusinessEntities\SOTimeline.cs" />
+    <Compile Include="BusinessEntities\Stages.cs" />
+    <Compile Include="BusinessEntities\StandardTemplateDetails.cs" />
+    <Compile Include="BusinessEntities\State.cs" />
+    <Compile Include="BusinessEntities\StockReport.cs" />
+    <Compile Include="BusinessEntities\StreakData.cs" />
+    <Compile Include="BusinessEntities\SubmenuInfo.cs" />
+    <Compile Include="BusinessEntities\SupplierBillDetailsData.cs" />
+    <Compile Include="BusinessEntities\SupplierBillM.cs" />
+    <Compile Include="BusinessEntities\SupplierInfoAttach.cs" />
+    <Compile Include="BusinessEntities\TargetMonthWise.cs" />
+    <Compile Include="BusinessEntities\TaskFollowUpM.cs" />
+    <Compile Include="BusinessEntities\TaxInvoice.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceD.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceData.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceList.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceM.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceMonthly.cs" />
+    <Compile Include="BusinessEntities\TaxInvoiceTax.cs" />
+    <Compile Include="BusinessEntities\TendorM.cs" />
+    <Compile Include="BusinessEntities\TransMode.cs" />
+    <Compile Include="BusinessEntities\TransportM.cs" />
+    <Compile Include="BusinessEntities\TurnOver.cs" />
+    <Compile Include="BusinessEntities\User.cs" />
+    <Compile Include="BusinessEntities\UserDetail.cs" />
+    <Compile Include="BusinessEntities\UserDetails.cs" />
+    <Compile Include="BusinessEntities\UserIssueM.cs" />
+    <Compile Include="BusinessEntities\Users.cs" />
+    <Compile Include="BusinessEntities\Vendor.cs" />
+    <Compile Include="BusinessEntities\VendorD.cs" />
+    <Compile Include="BusinessEntities\VendorM.cs" />
+    <Compile Include="BusinessEntities\VendorTerms.cs" />
+    <Compile Include="BusinessEntities\Vertical.cs" />
+    <Compile Include="BusinessEntities\VisitReport.cs" />
+    <Compile Include="BusinessEntities\VisitReportData.cs" />
+    <Compile Include="BusinessEntities\VisitReportM.cs" />
+    <Compile Include="BusinessEntities\WO.cs" />
+    <Compile Include="BusinessEntities\WODetailsFOrPI.cs" />
+    <Compile Include="BusinessEntities\WorkOrder.cs" />
+    <Compile Include="BusinessEntities\WorkOrderList.cs" />
+    <Compile Include="BusinessEntities\YearDataList.cs" />
+    <Compile Include="BusinessEntities\YearList.cs" />
+    <Compile Include="BusinessEntities\Zone.cs" />
+    <Compile Include="Enums\UserRoleEnum.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BusinessEntities\PurchaseOrderM.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

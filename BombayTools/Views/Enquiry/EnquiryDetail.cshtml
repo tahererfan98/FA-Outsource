@@ -1,0 +1,127 @@
+﻿<div class=" content-area overflow-hidden" id="EnquiryView">
+    <div class="page-header">
+        <h4 class="page-title">Enquiry OverView</h4>
+        <div class="breadcrumb" id="ShowSummary">
+            <button class="btn btn-success" onclick="getBackToView()">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <table class="m-2" style="width:400px">
+                            <tbody>
+                                <tr>
+                                    <th>Enquiry No </th>
+                                    <td id="EnqNo_q">@ViewBag.EnquiryNo</td>
+                                </tr>
+                                <tr>
+                                    <th>Date </th>
+                                    <td>@ViewBag.DisplayDate</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <table class="m-2" style="width:200px">
+                            <tbody>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>@ViewBag.Reference</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>@ViewBag.Status</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr class="m-1" />
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <table class="m-2" style="width:200px">
+                            <tbody>
+                                <tr>
+                                    <th>Company</th>
+                                    <td id="CompanyName_q">@ViewBag.Company</td>
+                                </tr>
+                                <tr>
+                                    <th>Location</th>
+                                    <td id="Address_q">@ViewBag.Location</td>
+                                </tr>
+                                <tr>
+                                    <th>Person</th>
+                                    <td id="ContactPersonName_q">@ViewBag.EnqFrom</td>
+                                </tr>
+                                <tr>
+                                    <th>Contact</th>
+                                    <td id="ContactNo_q">@ViewBag.Contact</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td id="EmailID_q">@ViewBag.CPEmailID</td>
+                                </tr>      
+                                <tr style="visibility:collapse">
+                                    <th>Email</th>
+                                    <td id="ContactPersonID_q">@ViewBag.ContactPersonID</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr class="m-1" />
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12">
+                        <div class="m-2">
+                            <h6><strong>Description </strong> </h6>
+                            <p>@ViewBag.DisplayDesc</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="m-1" />
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12">
+                        <button class="btn btn-success float-right m-2" onclick="CreateNewQuotation()">Generate Quotation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var EnqNo_q = document.getElementById('EnqNo_q').innerHTML;
+    var CompanyName_q = document.getElementById('CompanyName_q').innerHTML;
+    var Address_q = document.getElementById('Address_q').innerHTML;
+    var ContactPersonName_q = document.getElementById('ContactPersonName_q').innerHTML;
+    var EmailID_q = document.getElementById('EmailID_q').innerHTML;
+    var ContactNo_q = document.getElementById('ContactNo_q').innerHTML;
+    var ContactPersonID_q = document.getElementById('ContactPersonID_q').innerHTML;
+
+        function CreateNewQuotation() {
+        var data = { 'EnqNo':EnqNo_q,'CompanyName': CompanyName_q, 'Address': Address_q, 'ContactPersonName': ContactPersonName_q, 'EmailID': EmailID_q, 'ContactNo': ContactNo_q, 'ContactPersonID': ContactPersonID_q }
+            data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/GenerateQuot",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var i = response;
+                if (response == 1) {
+                    document.location = '@Url.Action("NewQuotation", "Quotation")';
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

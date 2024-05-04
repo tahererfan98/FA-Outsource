@@ -1,0 +1,875 @@
+﻿<html>
+<head>
+
+    <style>
+        .vl {
+            border-left: 3px solid black;
+            height: 90px;
+        }
+
+        .print td {
+            padding: 0.15rem !important;
+        }
+
+        .m-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .p-0 {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .cell {
+            padding: 0.15rem !important;
+        }
+
+        th, tr, td {
+            padding: 0px;
+        }
+
+        #text-big {
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        #text-small {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        #text-med {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        #text-num {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        #Systemdiv {
+            page-break-before: always;
+        }
+
+        #displayTable {
+            font-weight: 900;
+        }
+
+        #PrintStyle {
+            font-size: 12px;
+            font-weight: bolder;
+        }
+    </style>
+    <style>
+        #btnJCBack {
+            background-color: black;
+            border-color: black;
+        }
+
+        #center {
+            text-align: center;
+            border-bottom: none;
+        }
+
+        #right {
+            text-align: right;
+            border-bottom: none;
+        }
+
+        #left {
+            text-align: left;
+            border-bottom: none;
+        }
+        /*.table thead th, .text-wrap table thead th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }
+        .table tbody th, .text-wrap table tbody th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }*/
+    </style>
+</head>
+<body>
+    <div id="margine" style="background-color:white;">
+        <page size="A4">
+            <div style="background-color:white;">
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <table class="table card-table table-vcenter text-wrap print p-0">
+                            <tr>
+                                <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">BILL TO</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">@ViewBag.PIMasterData[0].Customer</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="width: 190px; color: black; border: none; font-weight: 500; font-family: 'Mulish', sans-serif; line-height: 1"><b class="p-0" id="text-small">@ViewBag.PIMasterData[0].BillToAddrs</b></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="width: 150px; color: black; border: none; font-family: 'Mulish', sans-serif;"> <strong id="text-big">SHIP TO </strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="width:150px;color:black;border: none;font-weight:500;font-family: 'Mulish', sans-serif;line-height:1"><b class="p-0" id="text-small">@ViewBag.PIMasterData[0].ShiftToAddrs</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6 m-0">
+                        <table class="table card-table table-vcenter text-wrap p-0 m-0">
+                            <tr>
+                                <td class="text-black" style="padding-top: 0.2rem;padding-bottom: 0;padding-left: 0;width:200px;height:5px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left;margin-left:-10%">&nbsp;<b id="text-big">CLIENT CONTACT</b></td>
+                                <td style="padding-top: 0;padding-bottom: 0;padding-left: 0;width:300px;height:5px;text-align:left;color:black;border: none;font-family: 'Mulish', sans-serif"><b id="text-small">@ViewBag.PIMasterData[0].MobileNo</b></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="padding-top: 0.2rem;padding-bottom: 0;padding-left: 0;height:5px;width:200px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left;margin-left:-10%">&nbsp;<b id="text-big">BILL TO GSTIN NO</b></td>
+                                <td style="padding-top: 0;padding-bottom: 0;width:300px;padding-left: 0;height:5px;text-align:left;color:black;border: none;font-weight: 500;font-family: 'Mulish', sans-serif;margin-top:6px"><b id="text-small" style="margin-top: 2px !important;letter-spacing:0.5px;text-align:left;margin-top:100px">@ViewBag.PIMasterData[0].BillGSTNo</b></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="padding-top: 0.2rem;padding-bottom: 0;padding-left: 0;height:5px;width:200px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left;margin-left:-10%">&nbsp;<b id="text-big">SHIP TO GSTIN NO</b></td>
+                                <td style="padding-top: 0;padding-bottom: 0;padding-left: 0;width:300px;height:5px;text-align:left;color:black;border: none;font-weight: 500;font-family: 'Mulish', sans-serif;text-align:left"><b id="text-small" style="margin-top: 2px !important;letter-spacing:1px;margin-top:2%">@ViewBag.PIMasterData[0].ShiftGSTNo</b></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="vertical-align:top;padding:0.15rem !important;width:200px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left">&nbsp;<b id="text-big">PROJECT</b></td>
+                                <td class="m-0" style="padding-top: 0.20rem;padding-bottom:0;padding-left: 0;width:300px;text-align:left;color:black;border: none;font-weight: 500;font-family: 'Mulish', sans-serif;text-align:left;line-height:1;margin-top:2%"><b style="margin-top: 2px !important;" id="text-small">@ViewBag.PIMasterData[0].ProjectName</b></td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="padding:0.15rem !important;width:200px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left">&nbsp;<b id="text-big">REFERENCE</b><br /></td>
+                                <td class="m-0" style="padding-top: 0;padding-left: 0;width:300px;text-align:left;color:black;border: none;font-weight: 500;font-family: 'Mulish', sans-serif;text-align:left;margin-top:2%">
+                                    <b id="text-small">@ViewBag.PIMasterData[0].CustRefNo</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-black" style="vertical-align:top;padding-top: 0.2rem;padding-bottom: 0;padding-left: 0;height:5px;width:200px;color:black;border: none;text-align:left;font-family:Poppins;text-align:left">&nbsp;<b id="text-big">PROJECT TEAM</b><br /></td>
+                                <td style="padding-top: 0;padding-left: 0;padding-right: 0;height:5px;padding-bottom:0;width:300px;text-align:left;color:black;border: none;font-weight: 500;font-family: 'Mulish', sans-serif;text-align:left;margin-top:2%">
+                                    <b id="text-small">@ViewBag.PIMasterData[0].ProjectTeam</b>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mt-0">
+                    <div class="col-12">
+                        <div class="mt-1">
+                            <div class="mt-1">
+                                <div class="row mt-1" id="displayTable">
+                                    <div class="col-12">
+                                        <table class="table text-wrap border" style="width:100%; border-color:black;border-left:none;border-right:none;color:black">
+                                            <thead>
+
+                                                <tr class="text-black  p-0" style="border-top: 4px solid #000000; border-bottom: 3px solid #000000">
+                                                    <th class="text-black  p-0" id="left" style="width:5% !important;font-family:Poppins;"><b id="text-big" style="font-weight:bolder;color:black"> &nbsp;&nbsp;SNO</b></th>
+                                                    <th class="text-black p-0" id="left" style="font-family:Poppins"><b id="text-big" style="font-weight:bolder;color:black;padding-bottom:0;padding-top:0;padding-right:0;padding-left:-10px">GLASS SPECIFICATION</b></th>
+                                                    <th class="text-black  p-0" id="right" style="font-family:Poppins"><b id="text-big" style="font-weight:bolder;color:black">QTY</b></th>
+                                                    <th class="text-black  p-0" id="right" style="font-family:Poppins"><b id="text-big" style="font-weight:bolder;color:black">AREA (SQM)</b></th>
+                                                    <th class="text-black  p-0" id="right" style="font-family:Poppins"><b id="text-big" style="font-weight:bolder;color:black">UNIT PRICE</b></th>
+                                                    <th class="text-black  p-0" id="right" style="font-family:Poppins"><b id="text-big" style="font-weight:bolder;color:black">TOTAL PRICE</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="color:black">
+                                                @{int A = 0;}
+                                                @{decimal Q = 0;}
+                                                @{decimal S = 0;}
+                                                @{decimal T = 0;}
+
+                                                @foreach (var d1 in ViewBag.PISpecData)
+                                                {
+
+                                                    A++;
+                                                    Q = Q + d1.Qty;
+                                                    S = S + d1.SQM;
+                                                    T = T + d1.InvoiceAmount;
+                                                    <tr>
+                                                        <td class="text-black  p-0" style="width:5% !important; font-family:Poppins" id="left"><b id="text-big">&nbsp;&nbsp;@A</b></td>
+                                                        <td class="text-black p-0" style="width:15px;padding-bottom:0;padding-top:0;padding-right:0;padding-left:-10px" colspan="5"><b id="text-big" style="font-weight:bolder;font-size:18px;font-family:Poppins">@d1.Product UNIT</b><br /><b id="text-small" style="font-family: 'Mulish', sans-serif;line-height:1">@d1.GlassDesc</b></td>
+
+                                                    </tr>
+
+                                                    <tr style="margin-top:-3%">
+                                                        <td class="text-black  p-0" style="width:15px;" id="left"> </td>
+                                                        <td class="text-black  p-0" style="width:15px;" id="left"> </td>
+                                                        <td class="text-black  p-0" style="width:15px;" id="right"><b id="text-big" style="font-family: 'Mulish', sans-serif"> @d1.Qty</b></td>
+                                                        <td class="text-black  p-0" style="width:15px;" id="right"><b id="text-big" style="font-family: 'Mulish', sans-serif"> @d1.SQM</b></td>
+                                                        <td class="text-black  p-0" style="width:15px;" id="right"><b id="text-big" style="font-family: 'Mulish', sans-serif"><i class="fa fa-inr" aria-hidden="true"></i> @d1.DisplayUnit</b></td>
+                                                        <td class="text-black  p-0" style="width:15px;" id="right"><b id="text-big" style="font-family: 'Mulish', sans-serif"><i class="fa fa-inr" aria-hidden="true"></i> @d1.DisplayAmount</b></td>
+
+
+                                                    </tr>
+                                                }
+                                                <tr style="border-top: 3px solid #000000; border-bottom: 3px solid #000000">
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="left"><b id="text-big">&nbsp;&nbsp;TOTAL</b></td>
+
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="center"></td>
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="right"><b id="text-big"> @Q</b></td>
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="right"><b id="text-big">@S</b></td>
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="center"></td>
+                                                    <td class="text-black  p-0" style="width:15px;font-family: 'Mulish', sans-serif" id="right"><b id="text-big" style=""><i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.PIMasterData[0].DisplayBasicAmt</b></td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (ViewBag.PIMasterData[0].WstgAmt != 0)
+                {
+                    <div class="row" style="margin-top:-5px">
+                        <div class="col-md-1">
+                            <table class="table card-table table-vcenter text-nowrap print" style="margin-top:-4px">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;vertical-align:top">&nbsp;<strong id="text-small">SHEET OPT</strong><b id="text-small" style="margin-left:44px;vertical-align:top;margin-top:-10px">:</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-5">
+                            <table class="table card-table table-vcenter text-wrap print" style="margin-left:65px">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:200px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:left;line-height:1"><strong id="text-small">@ViewBag.PIMasterData[0].ItemName</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print" style="margin-left:-24px;margin-top:-4px">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><b id="text-small">@ViewBag.PIMasterData[0].Wastage_Calc</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2" @*style="margin-left: -90px"*@>
+                            <table class="table card-table table-vcenter text-nowrap print" style="margin-left:-32px;margin-top:-4px">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayGlassRate</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print" style="margin-top:-4px">
+                                <tbody>
+                                    <tr>
+
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayWstgAmt</b></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+                @if (@ViewBag.PIFrieghtData[0].DisplayFrieghtAmount != "0.00")
+                {
+                    <div class="row mt-0">
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif"><strong id="text-small">ADMIN CHARGES</strong></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none"><b id="text-small"></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins">&nbsp;<b id="text-big"></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2" @*style="margin-left: -90px"*@>
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif">&nbsp;<b id="text-small" style="letter-spacing:1px;font-size:20px"></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIFrieghtData[0].DisplayFrieghtAmount</b></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                @if (ViewBag.PIFrieghtData[5].DisplayFrieghtAmount != "0.00")
+                {
+                    <div class="row" style="margin-top:-3px">
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><strong id="text-small">PACKING CHARGES</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none"><b id="text-small"></b></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:right"><b id="text-big"></b></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2" @*style="margin-left: -90px"*@>
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif">&nbsp;<b id="text-small" style="letter-spacing:1px;font-size:20px"></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <table class="table card-table table-vcenter text-nowrap print">
+                                <tbody>
+                                    <tr>
+                                        <td style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIFrieghtData[5].DisplayFrieghtAmount</b></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                <hr class="m-0" style=" background-color: black !important; height:3px" />
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">PAYMENT TERMS</strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print" style="margin-left:-3px">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;text-transform:uppercase;text-align:left">
+                                        <b id="text-small">@ViewBag.PIMasterData[0].PaymentTerms</b>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" @*style="margin-left:1px"*@>
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">FREIGHT CHARGES </strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong>&nbsp; </strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print" style="float:right">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i> &nbsp;<b id="text-small">@ViewBag.PIFrieghtData[14].DisplayFrieghtAmount</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row ">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">DELIVERY PERIOD</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-wrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:left;line-height:1">
+
+                                        <b id="text-small">WILL BE COMMUNICATED ONCE THE ORDER IS CONFIRMED</b>
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">UNLOADING CHARGES</strong></td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong>&nbsp; </strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print" @*style="margin-left:35px"*@>
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small"> @ViewBag.PIFrieghtData[11].DisplayFrieghtAmount </b></td>
+
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">PACKING TYPE</strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;text-transform:uppercase;text-align:left">
+                                        <b id="text-small">@ViewBag.PIMasterData[0].PackingType</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-3px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins">
+                                        <strong id="text-big">
+                                            TRANSIT INSURANCE
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong>&nbsp; </strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-8px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIFrieghtData[12].DisplayFrieghtAmount</b> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">UNLOADING</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;text-transform:uppercase;text-align:left">
+                                        <b id="text-small">@ViewBag.PIMasterData[0].Unloading</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins">
+                                        <strong id="text-big">
+                                            TOTAL
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong>&nbsp; </strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-3px;">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right"><i class="fa fa-inr" id="text-small" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].TotalBasic</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">FG GST NO</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;"><strong id="text-big">FG TAN NO</strong></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:left">
+                                        <b id="text-small">27AADCM7716R1ZR</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;">
+                                        <b id="text-small">PNEF01797F</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                @if (ViewBag.PIMasterData[0].ApplicableGST == "CGST" || ViewBag.PIMasterData[0].ApplicableGST == "SGST")
+                                {
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">CGST </strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">SGST </strong></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins"><strong id="text-big">&nbsp;IGST </strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1" style="margin-top:-5px">
+
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                @if (ViewBag.PIMasterData[0].ApplicableGST == "CGST" || ViewBag.PIMasterData[0].ApplicableGST == "SGST")
+                                {
+
+                                    <tr>
+                                        @*@{int d = 0;}
+                                d=parseInt(@ViewBag.PIMasterData[0].GSTPer)/2;*@
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif"><b id="text-small"> @ViewBag.CGSTPer% </b></td>
+                                    </tr>
+                                    <tr>
+                                        @*@{int e = 0;}
+                                e=parseInt(@ViewBag.PIMasterData[0].GSTPer)/2;*@
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif"><b id="text-small">@ViewBag.CGSTPer% </b></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif">&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].GSTPer% </b></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-2" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                @if (ViewBag.PIMasterData[0].ApplicableGST == "CGST" || ViewBag.PIMasterData[0].ApplicableGST == "SGST")
+                                {
+
+                                    <tr>
+                                        @*@{int b = 0;}
+                                b = parseInt(@ViewBag.PIMasterData[0].GSTPer) / 2;*@
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayCGST</b> </td>
+                                    </tr>
+                                    <tr>
+                                        @*@{int c = 0;}
+                                c = parseInt(@ViewBag.PIMasterData[0].GSTPer) / 2;*@
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayCGST</b> </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-black" style="color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayIGST </b></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr style="visibility:hidden">
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;"><strong id="text-big">FG TAN NO</strong></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr style="visibility:hidden">
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;">
+                                        <b id="text-small">PNEF01797F</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;">
+                                        <strong id="text-big">
+                                            TCS
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-small">@ViewBag.PIMasterData[0].TCSPer% </strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-5px">
+                        <table class="table card-table table-vcenter text-nowrap print" @*style="margin-left:55px"*@>
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small">@ViewBag.PIMasterData[0].DisplayTCS</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;visibility:hidden;text-align:left"><strong id="text-big">PACKING TYPE</strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5">
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:250px;color:black;border: none;font-family: 'Mulish', sans-serif;visibility:hidden">
+                                        <b id="text-small">@ViewBag.PIMasterData[0].PackingType</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <hr class="m-0" style=" background-color: black !important; height:3px;width:500px" />
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;">
+                                        <strong id="text-big">
+                                            GRANDTOTAL
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <hr class="m-0" style=" background-color: black !important; height:3px" />
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif"><strong>&nbsp; </strong></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="margin-top:-2px">
+
+                        <table class="table card-table table-vcenter text-nowrap print">
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:right">&nbsp;<i class="fa fa-inr" aria-hidden="true"></i>&nbsp;<b id="text-small" style="font-weight: 900;">@ViewBag.PIMasterData[0].DisplayGrandTotal</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <hr class="m-0" style=" background-color: black !important; height:3px" />
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <table class="table card-table table-vcenter text-wrap print">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family:Poppins;text-align:left"><strong id="text-big">SPECIAL NOTES RELATED TO THIS PROFORMA INVOICE</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:150px;color:black;border: none;font-family: 'Mulish', sans-serif;text-align:left"><b id="text-small">@ViewBag.PIMasterData[0].RemarksForLandedCost</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </page>
+    </div>
+</body>
+</html>

@@ -1,0 +1,682 @@
+﻿
+
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0.8rem;
+        position: relative;
+    }
+
+    #tblTentativeSchedule td {
+        padding: 0rem;
+        vertical-align: top;
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Generate Costing Sheet</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Entry No</label>
+                    @Html.TextBox("txtEANO", null, new { @class = "form-control", @id = "txtEANO", name = "txtEANO", autocomplete = "off", disabled = "off", placeholder = " NEW" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Date</label>
+                    @Html.TextBox("txtEADate", null, new { @class = "form-control datePickerD", @id = "txtEADate", name = "txtEADate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">ENQ No</label>
+                    @Html.TextBox("txtENQNO", null, new { @class = "form-control", @id = "txtENQNO", name = "txtENQNO", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.TextBox("txtCustomerName", null, new { @class = "form-control", @id = "txtCustomerName", name = "txtCustomerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Outsource Partner</label>
+                    @Html.TextBox("txtPartnerName", null, new { @class = "form-control", @id = "txtPartnerName", name = "txtPartnerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Req Vehicle</label>
+                    @Html.TextBox("txtNoOfVehicle", null, new { @class = "form-control", @id = "txtNoOfVehicle", name = "txtNoOfVehicle", autocomplete = "off", Type = "number" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Destination </label>
+                    @Html.TextBox("txtDestination", null, new { @class = "form-control", @id = "txtDestination", name = "txtDestination", autocomplete = "off" })
+                </div>
+            </div>
+
+
+            @*<div class="col-sm-12 col-md-1 col-lg-1">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">PI List</label>
+                        <div class="row gutters-xs">
+                            <div class="col">
+                                <span class="col-auto">
+                                    <button id="btnPIList" class="btn btn-primary" style="font-size: 0.55rem;" href="#" onclick="searchPINOList()" title="Fill serial no"><i class="fa fa-list"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+
+                @*<button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>*@
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+
+        @*<div class="card-body mt-0">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">Received Qty</label>
+                        @Html.TextBox("txtReceivedQty", null, new { @class = "form-control", @id = "txtReceivedQty", name = "txtReceivedQty", autocomplete = "off", Type = "number" })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">Tentative Schedule Date</label>
+                        @Html.TextBox("txtScheduleDate", null, new { @class = "form-control datePickerD", @id = "txtScheduleDate", name = "txtScheduleDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                    </div>
+                </div>
+                <div class="col-lg-1 col-sm-12">
+                    <div class="form-group">
+                        <label class="form-label" style="visibility:hidden"> add</label>
+                        <div class="row gutters-xs">
+                            <div class="col">
+                                <button class="btn btn-sm btn-success" id="Savebtn" onclick="AddTentativeScheduleList()" data-toggle="tooltip" title="Add"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-1" id="">
+                <div class="col-sm-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblTentativeSchedule" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th width="7%" class="all text-center text-white">#</th>
+                                    <th width="7%" class="all text-center text-white"><b>SrNo</b></th>
+                                    <th width="10%" class="all text-right text-white"><b>Rec. Qty</b></th>
+                                    <th width="76%" class="all text-left text-white"><b>Tentative Date</b></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+    </div>
+
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("Remarks", null, new { @class = "form-control", @id = "Remarks", name = "Remarks", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 mt-2">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;">Upload Attachment</label>
+                <a @*href="#"*@ onclick="AddAttachmentForPhoto()">
+                    <i class="fa fa-paperclip fa-2x	" style="color:#070884" aria-hidden="true" title="Upload Attachments"></i>
+                    <span class="custom-switch-description" style="font-size:17px;color:#6c4cbb"><b><label id="lblAttachmentForPhoto">0</label></b></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card-footer">
+        <div class="float-right">
+            @*<button class="btn btn-sm btn-warning" id="Genbtn" onclick="GenerateTemplate()"><i class="fa fa-table"></i> Gen Template</button>*@
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="OnSave()"><i class="fa fa-check-square-o"></i> Approved</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+
+
+
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var CustomerD = [];
+    var poItemM = [];
+    var PIItemList = [];
+    var PIItemListSearch = [];
+
+    var ScheduleList = [];
+    var IsPointEdit = 0;
+    var EditPointSrNo = 0;
+
+    var EANO = "0";
+    var isDraft = 0;
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+        e.preventDefault();
+        return false;
+    });
+
+    $(document).ready(function () {
+        debugger;
+       $("#txtENQNO").val('@ViewBag.ENQNO');
+       $("#txtCustomerName").val('@ViewBag.CustomerName');
+       $("#txtPartnerName").val('@ViewBag.PartnerName');
+
+        @* poItemM = [];
+        poItemM = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+        poItemM = JSON.parse(poItemM);
+        addCOItemToTable();*@
+    });
+
+    function EditItem(id) {
+        var i = ScheduleList.findIndex(p => p.SrNo == id);
+        var ReceivedQty = ScheduleList[i].ReceivedQty;
+        var ScheduleDate = ScheduleList[i].ScheduleDate;
+        $('#txtReceivedQty').val(ReceivedQty);
+        $('#txtScheduleDate').val(ScheduleDate);
+        IsPointEdit = 1;
+        EditPointSrNo = id;
+    }
+
+    function AddTentativeScheduleList() {
+        //// Need to check total qty
+        debugger;
+        var ReceivedQty = $('#txtReceivedQty').val();
+        var ScheduleDate = $('#txtScheduleDate').val();
+
+        if (ReceivedQty == "" || ReceivedQty == 0) {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please enter Received Qty",
+                icon: 'error'
+            });
+
+            $("#txtReceivedQty").focus();
+            $("#txtReceivedQty").val('');
+            return false;
+        }
+        if (ScheduleDate == "" ) {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please select date",
+                icon: 'error'
+            });
+
+            $("#txtScheduleDate").focus();
+            return false;
+        }
+
+
+        if (IsPointEdit == 1) {
+            var i = ScheduleList.findIndex(p => p.SrNo == EditPointSrNo );
+            ScheduleList[i].ReceivedQty = ReceivedQty;
+            ScheduleList[i].ScheduleDate = ScheduleDate;
+            $("#txtReceivedQty").val('');
+            $("#txtReceivedQty").val('');
+            IsPointEdit = 0;
+            EditPointSrNo = 0;
+            BindTable();
+        }
+        else {
+
+            var element = {};
+            element.ReceivedQty = ReceivedQty;
+            element.ScheduleDate = ScheduleDate;
+
+            var y = 0
+            var y = ScheduleList.findIndex(p => p.ReceivedQty == ReceivedQty && p.ScheduleDate == ScheduleDate);
+
+            if (y == -1) {
+                ScheduleList.push(element);
+                SetSrNo();
+                $("#txtReceivedQty").val('');
+
+            } else {
+                $("#txtReceivedQty").val('');
+                alert('already exist ..');
+                return false;
+            }
+
+            BindTable();
+        }
+
+    }
+
+    function SetSrNo() {
+        var rowNum = 1;
+        for (var i = 0; i < ScheduleList.length; i++) {
+            ScheduleList[i].SrNo = rowNum++;
+        }
+    }
+
+    function CancelItem(id) {
+
+        var r = confirm("Are you sure you want to delete this item?");
+        if (r == true) {
+
+            for (i = 0; i < ScheduleList.length; i++) {
+                if (ScheduleList[i].SrNo == id) {
+                    ScheduleList.splice(i, 1);
+                }
+            }
+
+            BindTable();
+            var table = $('#tblTentativeSchedule').DataTable();
+            $('#tblTentativeSchedule tbody').on('click', '.removebutton', function () {
+                table
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+        }
+    }
+
+    function BindTable() {
+        SetSrNo();
+        $('#tblTentativeSchedule').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": ScheduleList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "aaSorting": [],
+            "searching": false,
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<div class=\"btn-list text-center\"><button type=\"button\" class=\"btn btn-sm btn-danger\" name=\"removebutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"CancelItem(' + row.SrNo + ')\" ><i class=\"fa fa-trash\" style=\"font-size: 16px;\"></i></button> <button type=\"button\" class=\"btn btn-primary btn-sm\" name=\"editbutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"EditItem(' + row.SrNo + ')\" ><i class=\"fa fa-edit\" style=\"font-size: 16px;\"></i></button></div>';
+                        return data;
+                    }
+
+                },
+                { "data": "SrNo", "class": "text-center" },
+                { "data": "ReceivedQty" },
+                { "data": "ScheduleDate" }
+            ]
+        });
+    }
+
+
+
+    function OnSave() {
+        debugger;
+        var basicElement = {};
+        basicElement.EANO = '0';
+        basicElement.EAID = 0;
+        basicElement.ESNO = '@ViewBag.ESNO';
+        basicElement.ENQNO = '@ViewBag.ENQNO';
+        basicElement.EADate = $("#txtEADate").val();
+        basicElement.CustomerID = '@ViewBag.CustomerID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.PartnerID = '@ViewBag.PartnerID';
+        basicElement.NoOfVehicle = $("#txtNoOfVehicle").val();
+        basicElement.Destination = $("#txtDestination").val();
+        basicElement.Remarks = $("#Remarks").val();
+
+        if (basicElement.NoOfVehicle == "" || basicElement.NoOfVehicle == null || basicElement.NoOfVehicle == undefined || basicElement.NoOfVehicle == 0) {
+            basicElement.NoOfVehicle = 0;
+        }
+
+        //if (basicElement.NoOfVehicle == "" || basicElement.NoOfVehicle == null || basicElement.NoOfVehicle == undefined|| basicElement.NoOfVehicle == 0) {
+        //    Swal.fire({
+        //        title: 'Error',
+        //        text: "Please enter no of vehicle",
+        //        icon: 'error'
+        //    });
+
+        //    $("#NoOfVehicle").focus();
+        //    return false;
+        //}
+        //if (basicElement.Destination == "" || basicElement.Destination == null || basicElement.Destination == undefined || basicElement.Destination == 0) {
+        //    Swal.fire({
+        //        title: 'Error',
+        //        text: "Please enter  Destination",
+        //        icon: 'error'
+        //    });
+
+        //    $("#txtDestination").focus();
+        //    return false;
+        //}
+
+        if (ScheduleList.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add tentative schedule to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        $("#global-loader").fadeIn("slow");
+        var data = { 'BasicDetails': basicElement, 'ScheduleList': ScheduleList };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/SaveEnquiryApproveDetails',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#Savebtn").prop("disabled", true);
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("EnquirySentSummary", "Enquiry")';
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+
+</script>
+
+@* *** Upload Attachment *@
+
+<script>
+    function AddAttachmentForPhoto() {
+        debugger;
+        //  var data = {'name': name };
+        //data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/_AddAttachmentForENQSendToPartner",
+            //  data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        })
+    }
+</script>
+
+@* *** Generate Template  *@
+
+<script>
+    function GenerateTemplate() {
+        debugger;
+    var ENQNO = '@ViewBag.ENQNO'
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        //var flatPINOArrayString = Array.prototype.map.call(poItemM, function (item) { return "'" + item.PINO + "'"; }).join(', ');
+        //var flatPINOArrayString = JSON.stringify(poItemM);
+        //var itemListJson = JSON.stringify(poItemM);
+        //window.location = "/Enquiry/ExportToExcelWODetailsTemplate?ENQNO=" + ENQNO + "&ItemListD=" + itemListJson;
+
+        var data = { 'ENQNO': ENQNO, 'ItemListD': poItemM  };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/StorePINoInTemp',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                document.location = '@Url.Action("ExportToExcelWODetailsTemplate", "Enquiry")';
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+
+            }
+        });
+
+    }
+
+
+</script>
+
+<script>
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    jQuery('.txtInput').click(function () { selectAllText(jQuery(this)) });
+
+</script>
+
+

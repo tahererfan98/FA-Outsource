@@ -1,0 +1,60 @@
+﻿<div class="row">
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header bg-grad_head br-tr-7 br-tl-7">
+                <h3 class="card-title text-white">Quotation Created Today</h3>
+                <div class="card-options ">
+                    <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up text-white"></i></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach (var sd in ViewBag.Quotation)
+                    {
+
+                        <li class="list-group-item justify-content-between pointer_cursor" onclick="GetQuotationListData(@sd.UserID)">
+                            @sd.EmployeeName
+                            <span class="badgetext badge badge-primary badge-pill">@sd.Count</span>
+                        </li>
+
+
+                    }
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("QuotationReport", "DynamicReport")"> View More</a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-grad_head br-tr-7 br-tl-7">
+                <h3 class="card-title text-white">Quotation Added To Pipeline</h3>
+                <div class="card-options ">
+                    <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up text-white"></i></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach (var sd in ViewBag.Pipleine)
+                    {
+
+                        <li class="list-group-item justify-content-between pointer_cursor" onclick="GetQuotationListData(@sd.UserID)">
+                            @sd.EmployeeName
+                            <span class="badgetext badge badge-primary badge-pill">@sd.Count</span>
+                        </li>
+
+
+                    }
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-12 col-lg-6">
+
+
+    </div>
+
+</div>

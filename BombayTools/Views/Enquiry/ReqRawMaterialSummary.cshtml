@@ -1,0 +1,678 @@
+﻿
+@{
+    ViewBag.Title = "ReqRawMaterialSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<style>
+        pre {
+            color: white;
+            padding: 0;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            border-left: none;
+            background-color: white;
+            border-radius: 3px;
+            /*        -moz-tab-size: 4;
+    */ -o-tab-size: 4;
+            tab-size: 4;
+            text-shadow: 0 1px white;
+            -webkit-hyphens: none;
+            -moz-hyphens: none;
+            -ms-hyphens: none;
+            hyphens: none;
+        }
+
+        .isSavedAsDraft_1 {
+            background-color: #ffb2b6;
+        }
+
+        #tblPOSummary th,
+        #tblPOSummary td {
+            height: 0.7rem;
+            padding: 5px;
+            vertical-align: middle;
+            line-height: 1.5 !important;
+        }
+</style>
+
+<div id="summary">
+    <div class="page-header">
+        <h4 class="page-title">Required Raw Material Summary <label class="bg-primary text-white br-7 pl-3 pr-3" id="poCount"></label></h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-sm-12 col-md-2">
+            <div class="row no-gutters">
+                <div class="col-4">
+                    <label class="form-label mt-1">From <i class="fa fa-calendar"></i></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(-20).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-2">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">To <i class="fa fa-calendar"></i></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.AddDays(1).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Criteria</label>
+                </div>
+                <div class="col-9">
+                    @Html.DropDownList("ddlcriteria", new List<SelectListItem>
+                                { new SelectListItem { Text = "--Select--", Value = "0"},
+                                    new SelectListItem { Text = "ENQ NO", Value = "ENQ NO"},
+                                    new SelectListItem { Text = "Customer Name", Value = "Customer Name"},
+
+                                  }, new { @class = "form-control", autocomplete = "off", @id = "ddlcriteria", onchange = "getCriteria()" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-3" id="hid">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Search</label>
+                </div>
+                <div class="col-auto">
+                    @Html.TextBox("Textsearch", null, new { @class = "form-control", @id = "Textsearch", name = "Textsearch", autocomplete = "off" })
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-12 col-md-1">
+            <button class="btn btn-primary" onclick="GetGRNSummary()"><i class="fa fa-search" style="font-size:14px"></i></button>
+        </div>
+
+        <div class="col-sm-12 col-md-2" style="display:none">
+            <div class="row no-gutters">
+                <div class="col-1">
+                    @*<label class="form-label mt-1">Search</label>*@
+                </div>
+                <div class="col-10">
+                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", autocomplete = "off", placeholder = "Search" })
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card mt-3 p-1">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" id="tblPOSummary">
+                    <thead class="head bg-primary">
+                        <tr>
+                            <th class="text-center text-white">Action</th>
+                            <th class="text-center text-white">RRM No</th>
+                            <th class="text-center text-white">ENQ No</th>
+                            <th class="text-center text-white">Date</th>
+                            <th class="text-left text-white">Customer Name</th>
+                            <th class="text-left text-white">Project</th>
+                            <th class="text-left text-white">Item Group</th>
+                            <th class="text-left text-white">Tot Qty</th>
+                            <th class="text-left text-white">Tot SQM</th>
+                            <th class="text-left text-white">Tot Weight</th>
+                            <th class="text-left text-white">Closing Remark</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="GRNForm"></div>
+<div id="ViewForm"></div>
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ModalStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(269deg, #32cafe,#867efc);display:inherit">
+                <h4 class="page-title" style="color:black" id="exampleModalLongTitle">Update Closing Remark For - <span id="DisplayRRMNO"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @*onclick="setKeyTerms()"*@>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-sm-12 col-md-12 col-lg-12">
+
+                    <div class="row mt-2">
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="row no-gutters">
+                                <div class="col-8">
+                                    <label class="form-label mt-1" style="color:black">Closing Remark</label>
+                                </div>
+                                <div class="col-10">
+                                    @Html.DropDownList("ddlClosingRemark", (IEnumerable<SelectListItem>)ViewBag.ClosingRemarkList, "--Select--", new { @class = "form-control", @id = "ddlClosingRemark", name = "ddlClosingRemark", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" onclick="OnSaveStatusDetails()"></button>*@
+                <button class="btn btn-sm btn-success " title="Update Status" onclick="UpdateClosingRemarkStatus()" style="height:30px;width:120px"><i class="fa fa-save"></i><span id="btnSave"></span> Update Status </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    var BillAttachment = [];
+    var MasterAttachment = [];
+    var RRMNOForStatus = "";
+
+    $(document).ready(function () {
+        getCriteria()
+         GetGRNSummary();
+        var tablePOItem = $('#tblPOSummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+            "ordering": false,
+        });
+    });
+
+
+    function GetGRNSummary() {
+        debugger;
+        var FromDate = document.getElementById("fromDate").value;
+        var ToDate = document.getElementById("toDate").value;
+        var date1 = new Date(FromDate);
+        var date2 = new Date(ToDate);
+        var Today = new Date();
+        if (date1 >= date2) {
+            document.getElementById('toDate').style.borderColor = "red";
+            // alert('Please enter valid from date');
+            Swal.fire({
+                title: 'Error',
+                text: "To Date should not be less than from date ",
+                icon: 'error'
+            })
+            return false;
+        } else {
+            document.getElementById('toDate').style.borderColor = "Gainsboro";
+        }
+        var element = {};
+        element.FromDate = document.getElementById("fromDate").value;
+        element.ToDate = document.getElementById("toDate").value;
+
+
+        if (element.FromDate == "" || element.ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+
+        element.SearchCriteria = document.getElementById("ddlcriteria").value;
+        element.Search = document.getElementById("Textsearch").value;
+        element.Search = (element.Search).trim();
+
+        var data = { 'data1': element }
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn("slow");
+        $.ajax({
+            url: "/Enquiry/GetReqRawMaterialSummary",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                $('#tblPOSummary').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"f>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+                    "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                        $('td', row).css('color', 'black');
+                        $('td', row).css('font-weight', 'bold');
+                    },
+                    "columnDefs": [{
+                        "targets": '_all',
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "ENQNO",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div class=\"btn-list text-center\"> <button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewReqRawMaterial('" + row.RRMNO + "','" + row.ENQNO + "')\"><i class=\"fe fe-eye\"></i></button> <button class=\"btn btn-sm btn-info\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Send Mail To Purchase\" onclick=\"SendReqRawMaterialDetailsMail('" + row.RRMNO + "','" + row.ENQNO + "')\"><i class=\"fa fa-envelope-o\"></i></button> <button class=\"btn btn-sm btn-secondary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Closing Remark\" onclick=\"OpenClosingRemarkModal('" + row.RRMNO + "','" + row.ENQNO + "')\"><i class=\"fa fa-bars\"></i></button>   ";
+
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "RRMNO" },
+                        { "data": "ENQNO" },
+                        { "data": "RRMDate" },
+                        {
+                            "data": "CustomerName",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "ProjectName",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "ItemGroupName",
+                            className: 'text-left'
+                        },
+                        {
+                            "data": "Qty",
+                            className: 'text-right'
+                        },
+                        {
+                            "data": "SQM",
+                            className: 'text-right'
+                        },
+                        {
+                            "data": "Weight",
+                            className: 'text-right'
+                        },
+                        {
+                            "data": "ClosingRemark",
+                            className: 'text-left'
+                        },
+
+                    ],
+                    mark: true
+                });
+                var table = $('#tblPOSummary').DataTable();
+                //$('#searchText').on('keyup', function () {
+                //    table.search(this.value).draw();
+                //});
+
+                table = $('#tblPOSummary').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert(error.responseText);
+            }
+        });
+    }
+
+    function ViewReqRawMaterial(RRMNO, ENQNO) {
+        var data = { 'RRMNO': RRMNO,  'ENQNO': ENQNO , 'Action': "View" };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Enquiry/_AddReqRawMaterialDetails",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+
+                $('#summary').hide();
+                $('#ViewForm').html(response);
+                $('#ViewForm').show();
+                $("#global-loader").fadeOut();
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+   
+    function OpenClosingRemarkModal(RRMNO, ENQNO) {
+        RRMNOForStatus = RRMNO;
+        $("#ModalStatus").modal("show");
+        document.getElementById('DisplayRRMNO').innerHTML = RRMNO;
+
+    }
+
+    function UpdateClosingRemarkStatus() {
+        debugger;
+        var RemarkID = $('#ddlClosingRemark option:selected').val();
+        var ddlClosingRemark = $('#ddlQuotStatus option:selected').text();
+        if (RemarkID == "") {
+            // alert("Please select status.");
+            document.getElementById("ddlClosingRemark").style.borderColor = "red";
+            return false;
+        }
+
+        var data = { 'RRMNO': RRMNOForStatus, 'RemarkID': RemarkID };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/UpdateClosingRemarkStatus",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                //debugger
+                if (data.Status == 1) {
+                    Swal.fire({
+                        title: 'success',
+                        text: data.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("ReqRawMaterialSummary", "Enquiry")';
+                    });
+
+                }
+                else {
+                    alert(data.Message);
+                }
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+
+    }
+
+    function getBack() {
+        $('#ViewForm').hide();
+        $('#GRNForm').hide();
+        $('#summary').show();
+    }
+
+    function getBack2() {
+        $('#ViewForm').hide();
+        $('#GRNForm').hide();
+        $('#summary').show();
+    }
+    function PrintExportInvoice(EXINO) {
+        var url = '/Print/ExportInvoicePdf?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function PrintPackingList(EXINO) {
+        var url = '/Print/PackingListPrint?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function getCriteria() {
+        var x = $('#ddlcriteria option:selected').text();
+        if (x == "--Select--") {
+            $("#hid").hide();
+        }
+        else {
+            $("#hid").show();
+        }
+    }
+
+</script>
+
+<script>
+    /////////////////////////////////// MAIL
+
+     //FOR Mail
+    var IndentM2 = 0;
+    var ENQNO01 ='0';
+    var RevNo_M = 0;
+    var str_UserName = 0;
+    var str_PIN = "";
+    var str_Vendor = "";
+    var PartnerName = "";
+    var itemDetails = [];
+    var itemDetailsM = [];
+    var EmailM = [];
+    var BasicD = [];
+
+    var TRRMNO = "";
+    var TENQNO = "";
+    var ItemGroupID = 0;
+    var UserName = "";
+
+    function SendReqRawMaterialDetailsMail(RRMNO, ENQNO) {
+    }
+
+    function SendReqRawMaterialDetailsMail(RRMNO, ENQNO) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to send " + RRMNO + " No Req Raw material to purchase ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                GetEmailTableData(RRMNO, ENQNO);
+            }
+            else {
+                @* document.location = '@Url.Action("EnquiryEntrySummary", "Enquiry")';*@
+            }
+        });
+
+    }
+
+    function GetEmailTableData(RRMNO, ENQNO) {
+        debugger;
+
+        var data = { 'RRMNO': RRMNO, 'ENQNO': ENQNO  };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/GetReqRawMaterialDetailsForMail",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                BasicD = response;
+                itemDetails = response.ENQItemD;
+                EmailM = response.EmailM;
+                ItemGroupID = response.ItemGroupID;
+                UserName = response.UserName;
+                console.log(response);
+                console.log(itemDetails);
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        }).done(function () { //use this
+            //alert("DONE!");
+            SendEmailToPurchase();
+        });
+    }
+
+
+
+    function SendEmailToPurchase() {
+        debugger;
+        $("#global-loader").fadeIn("slow");
+
+        var strVendorName = str_Vendor;
+        var strBodyText = "";
+        //var strBodyMsg = document.getElementById('body-text2').value;
+        var strBodyMsg = "";
+        //str_PIN = "";
+        var today = new Date();
+        //str_PIN = (parseInt(today.getHours()) + 10) + "" + (parseInt(today.getMinutes()) + 10) + "" + parseInt((today.getSeconds()) + 10);
+        //console.log(str_PIN);
+        var strText = "";
+        strText = "Please find the Required Raw Material details.";
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Dear Sir/Mam, " + " </font> <br> <br>"
+
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText + " </font> <br><br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b><b>Outsource No :</b> " + BasicD.ENQNO + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>Outsource Partner :</b> " + BasicD.PartnerName + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>Customer Name :</b> " + BasicD.CustomerName + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>Project Name :</b> " + BasicD.ProjectName + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>PINO :</b> " + BasicD.PINO + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>WONO :</b> " + BasicD.WONO + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>Total Qty :</b> " + BasicD.Qty + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><b>Total SQM :</b> " + BasicD.SQM + " </font> <br> <br>"
+
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + "<b>Please find below Amount against Item </b> </font> <br><br>"
+        if (ItemGroupID == 1) {
+            strBodyText = strBodyText + "<table border=\"1\" width=\"100%\" style=\"text-wrap:normal;\">"
+            strBodyText = strBodyText + "<tr bgcolor='#4da6ff'>"
+            strBodyText = strBodyText + "<th>SrNo</th><th>Item Code</th><th>Item Description</th><th>Unit</th><th>Qty</th><th>Weight</th></tr>"
+
+            for (i = 0; i < itemDetails.length; i++) {
+                strBodyText = strBodyText + "<tr>"
+                strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"5%\"> " + itemDetails[i].SrNo + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:left;\" width=\"15%\"> " + itemDetails[i].ItemCode + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"50%\"> " + itemDetails[i].ItemDescription + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:center\" width=\"5%\"> " + itemDetails[i].Unit + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"7%\"> " + itemDetails[i].Qty + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"8%\"> " + itemDetails[i].Weight + " </td>"
+                strBodyText = strBodyText + "</tr>"
+            }
+            strBodyText = strBodyText + "</table><br/>"
+        } else if (ItemGroupID == 5) {
+            strBodyText = strBodyText + "<table border=\"1\" width=\"100%\" style=\"text-wrap:normal;\">"
+            strBodyText = strBodyText + "<tr bgcolor='#4da6ff'>"
+            strBodyText = strBodyText + "<th>SrNo</th><th>Item Code</th><th>Item Description</th><th>Unit</th><th>Height</th><th>Width</th><th>Qty</th><th>SQM</th><th>Weight</th></tr>"
+
+            for (i = 0; i < itemDetails.length; i++) {
+                strBodyText = strBodyText + "<tr>"
+                strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"5%\"> " + itemDetails[i].SrNo + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:left;\" width=\"15%\"> " + itemDetails[i].ItemCode + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"30%\"> " + itemDetails[i].ItemDescription + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:center\" width=\"5%\"> " + itemDetails[i].Unit + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"8%\"> " + itemDetails[i].Height + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"8%\"> " + itemDetails[i].Width + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"7%\"> " + itemDetails[i].Qty + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"10%\"> " + itemDetails[i].SQM + " </td>"
+                strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"10%\"> " + itemDetails[i].Weight + " </td>"
+
+                strBodyText = strBodyText + "</tr>"
+            }
+            strBodyText = strBodyText + "</table><br/>"
+        }
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Best Regards,  </font> <br>"
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "[" + UserName + "]" + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=4><B>" + "Future Architectural Glass, LLC" + "</B></font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Plot # P278-P284 | Al Ghail Industrial Area PO Box: 86001 - Ras Al Khaimah - UAE" + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "T: +971 7 258 9274 / +971 7 258 9071 " + "| E: sales@faglass.com" + "</font> <br>"
+
+        //document.getElementById('message-text2').value = strBodyText;
+
+        //var to = document.getElementById('recipient-name2').value;
+        //var from = 'FG';
+        //var cc = document.getElementById('recipient-cc2').value;
+        //var bcc = document.getElementById('recipient-bcc2').value;
+        //var subject = document.getElementById('recipient-Subject2').value;
+        //var To = document.getElementById('recipient-Dear2').value;
+        //var message = document.getElementById('message-text2').value;
+        var to = "software@faglass.com";
+        var from = 'FG';
+        var cc = "";
+        var bcc = "";
+        var subject = "Required Raw Material details";
+        var To = "ABC";
+        var message = "Hello";
+
+        var data = {
+            'data': EmailM, 'Subject': subject, 'Body': strBodyText, 'MasterAttachment': MasterAttachment
+        };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/SendMailToPurchase",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                 Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("ReqRawMaterialSummary", "Enquiry")';
+                });
+
+                //MasterAttachment = [];
+                //$("#LinkQuotationData2").empty();
+                $("#global-loader").fadeOut("slow");
+                //$('#exampleModal32').modal('hide');
+               // OnSave();
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+
+
+
+</script>

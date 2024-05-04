@@ -1,0 +1,1387 @@
+﻿<!doctype html>
+
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#0061da">
+    <meta name="theme-color" content="#1643a3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    @* <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />*@
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/images/Bombay_Tools_LOGO_black.png" />*@
+    @if (@Session["Project"].ToString() == "FA")
+    {
+        <link rel="shortcut icon" type="image/x-icon" href="~/images/DD-IconColour-[PNG].png" />
+    }
+    else
+    {
+        <link rel="shortcut icon" type="image/x-icon" href="~/images/fg logo.png" />
+    }
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/images/fg logo.png" />*@
+    @*<img src="~/images/fg logo.png" />*@
+    <!-- Title -->
+    <title> @ViewBag.Title | @Session["Project"] </title>
+    <link rel="stylesheet" href="~/fonts/fonts/font-awesome.min.css">
+    <!-- Font Family-->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Sidemenu Css -->
+    <link href="~/plugins/fullside-menu/css/style.css" rel="stylesheet" />
+    <link href="~/plugins/fullside-menu/waves.min.css" rel="stylesheet" />
+    <!-- Dashboard Css -->
+    <link href="~/css/dashboard.css" rel="stylesheet" />
+    <!-- Tabs Style -->
+    <link href="~/plugins/tabs/style.css" rel="stylesheet" />
+    <!-- c3.js Charts Plugin -->
+    <link href="~/plugins/charts-c3/c3-chart.css" rel="stylesheet" />
+    <!-- forn-wizard css-->
+    @*<link href="~/plugins/forn-wizard/css/material-bootstrap-wizard.css" rel="stylesheet" />*@
+    <link href="~/plugins/forn-wizard/css/demo.css" rel="stylesheet" />
+    <!-- Morris.js Charts Plugin -->
+    <link href="~/plugins/morris/morris.css" rel="stylesheet" />
+    <!-- Custom scroll bar css-->
+    <link href="~/plugins/scroll-bar/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <!---Font icons-->
+    <link href="~/plugins/iconfonts/plugin.css" rel="stylesheet" />
+    <!-- Data table css -->
+    <link href="~/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <!-- Slect2 css -->
+    <link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+    <!-- Accordion Css -->
+    <link href="~/plugins/accordion/accordion.css" rel="stylesheet" />
+    <link href="~/plugins/scroll-bar/jquery.mCustomScrollbar.css" rel="stylesheet" />
+
+    <!-- Tags Input -->
+    @*<link href="~/css/tagsinput.css" rel="stylesheet" />
+        <script src="~/js/tagsinput.js"></script>
+        <script src="~/js/TypeHead.js"></script>*@
+
+    <!-- Tags Input -->
+    @*added for order controller*@
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.2.0/css/searchPanes.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+    @{ string mode = Convert.ToString(Session["mode"]);
+        if (mode != "default")
+        {
+            <style>
+                html {
+                    border: 4px solid red;
+                }
+
+                @@media (min-width: 1400px) {
+                    .modal-lg {
+                        max-width: 175vw;
+                    }
+                }
+
+                #divDVT_tags {
+                    width: 1250px !important;
+                    height: 650px !important;
+                    margin: auto;
+                }
+            </style>
+        } }
+</head>
+<body class="">
+    <div id="global-loader"></div>
+    <div class="page">
+        <div class="page-main" id="page-main">
+            <div class="app-header1 header py-1 d-flex">
+                <div class="container-fluid">
+                    <div class="d-flex">
+                        <a class="header-brand" href="#">
+                            <div class="float-left ml-2">
+                                @*<img src="~/images/btc/Logo_Infinity_White.svg" class="header-brand-img" alt="FG" />*@
+                                @*<img src="~/images/btc/FG_Logo.tif" class="header-brand-img" alt="FG" />*@
+                                @*<img src="~/images/btc/glassPro_500px_PNG.png" class="header-brand-img" alt="FG" />*@
+                                <label style="color: #0E1A52;; font-size: 27px; ">OutSource</label>
+                            </div>
+                            <div class="mt-2">
+                                <span style="font-size:12px; color:black; font-family:Comic Sans MS"><u>V-1.0.0</u></span>
+                            </div>
+                        </a>
+
+                        <div class="menu-toggle-button">
+                            <a class="nav-link wave-effect" href="#" id="sidebarCollapse">
+                                <img src="~/images/btc/Icon_Menu.svg" />
+                            </a>
+                        </div>
+                        <div class="mt-1">
+                            <div class="searching mt-3 ml-2">
+
+                                <a href="javascript:void(0)" class="search-open mt-3">
+                                    <i class="fa fa-search text-white"></i>
+                                </a>
+
+
+                                <div class="search-inline">
+                                    @using (Html.BeginForm("handleSearch", "Dashboard", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.TextBox("searchTextContactGlobal", null, new { @class = "form-control", name = "searchTextContactGlobal", autocomplete = "off", @placeholder = "Search here" })
+                                        <button type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <a href="javascript:void(0)" class="search-close">
+                                            <i class="fa fa-times"></i>
+                                        </a>}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex order-lg-2 ml-auto">
+                            <p id="demo"></p>
+
+                            <input type="text" id="SPSelectedName_" hidden />
+                            <input type="text" id="SPSelectedID_" hidden />
+                            @*<div class="dropdown d-none d-md-flex mt-1">*@
+                            <div class="dropdown mt-1">
+                                <a class="nav-link icon" data-toggle="dropdown">
+                                    <i class="fa fa-map-marker" onclick="getLocation()"></i>
+                                </a>
+                            </div>
+                            @*Visit mark code end*@
+                            <div class="dropdown d-none d-md-flex mt-1">
+                                <a class="nav-link icon full-screen-link">
+                                    <i class="fe fe-maximize floating" id="fullscreen-button"></i>
+                                </a>
+                            </div>
+                            <div class="dropdown d-none d-md-flex mt-1">
+                                <a class="nav-link icon" data-toggle="dropdown">
+                                    <i class="fe fe-bell floating"></i>
+                                    <span id="bell_noti" class="nav-unread bg-danger"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                    @*@{ Html.RenderAction("Notication", "Home");}*@
+
+                                    @*<a href="#" class="dropdown-item d-flex pb-3">
+                                            <div class="notifyimg">
+                                                <i class="fa fa-thumbs-o-up"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Someone likes our posts.</strong>
+                                                <div class="small text-muted">3 hours ago</div>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="dropdown-item d-flex pb-3">
+                                            <div class="notifyimg">
+                                                <i class="fa fa-commenting-o"></i>
+                                            </div>
+                                            <div>
+                                                <strong> 3 New Comments</strong>
+                                                <div class="small text-muted">5  hour ago</div>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="dropdown-item d-flex pb-3">
+                                            <div class="notifyimg">
+                                                <i class="fa fa-cogs"></i>
+                                            </div>
+                                            <div>
+                                                <strong> Server Rebooted.</strong>
+                                                <div class="small text-muted">45 mintues ago</div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item text-center">View all Notification</a>*@
+                                </div>
+                            </div>
+                            @*<div class="dropdown d-none d-md-flex mt-1">
+                                    <a class="nav-link icon" data-toggle="dropdown">
+                                        <i class="fe fe-grid floating"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow p-0">
+                                        <ul class="drop-icon-wrap p-0 m-0">
+                                            <li><a class="font-weight-semibold" style="font-size: 15px;" href="#" onclick="SetMenuForUserType('admin')">Admin</a></li>
+                                            <li><a class="font-weight-semibold" style="font-size: 15px;" href="#" onclick="SetMenuForUserType('HR')">HR</a></li>
+                                            <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">SalesPerson</a></li>
+                                            <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">SalesCordinator</a></li>
+                                            <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">Other</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>*@
+                            <div class="dropdown mt-1">
+                                <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                                    @{ if (Session["userid"] != null)
+                                        {
+                                            <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span> @*<span class="avatar avatar-md brround" style="background-image: url(@Session["UserFullName"].ToString())"></span>*@ }
+                                        else
+                                        {
+                                            <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span> } }
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow ">
+                                    <div class="text-center">
+                                        @{ if (Session["username"] != null)
+                                            {
+                                                <a href="#" class="dropdown-item text-center font-weight-sembold user">@Session["username"].ToString()</a> }
+                                            else
+                                            {
+                                                <a href="#" class="dropdown-item text-center font-weight-sembold user">Guest</a> } }
+                                        @{ if (Session["username"] != null)
+                                            { @*<span class="text-center user-semi-title text-dark">@Session["Designation"].ToString()</span>*@ }
+                                        else
+                                        {
+                                            <span class="text-center user-semi-title text-dark">Guest</span> } }
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                    @if ("admin" == @Session["usertype"].ToString() || "navigation" == @Session["mode"].ToString())
+                                    {
+                                        <a class="dropdown-item" href="@Url.Action("SwitchUserControl", "User")">
+                                            <i class="fa fa-user-secret mr-2"></i>
+                                            View as user
+                                        </a> } @*<a class="dropdown-item" href="@Url.Action("SwitchUserControl", "User")">
+                                            <i class="fa fa-user-secret mr-2"></i>
+                                            View as user
+                                        </a>*@
+                                    <a class="dropdown-item" href="@Url.Action("Logout", "Home")">
+                                        <img src="~/images/btc/Icon_log-out.svg" class="text-primary" />
+                                        Sign out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <!-- Sidebar Holder -->
+                <nav id="sidebar" class="nav-sidebar">
+                    <ul class="list-unstyled components" id="accordion">
+                        <div class="user-profile">
+                            <div class="dropdown user-pro-body">
+                                <div>
+                                    @{ if (Session["userid"] != null)
+                                        {
+                                            <img src="~/images/img_avatar.png" alt="user-img" class="img-circle"> @*<img src="@Session["UserFullName"].ToString()" alt="user-img" class="img-circle">*@ }
+                                        else
+                                        {
+                                            <img src="~/images/img_avatar.png" alt="user-img" class="img-circle"> } }
+                                </div>
+                                <div class="mb-2">
+                                    @*   <a href="#" class="" data-toggle="" aria-haspopup="true" aria-expanded="false">*@
+                                    @{ if (Session["username"] != null)
+                                        {
+                                            <span class="font-weight-semibold">@Session["username"].ToString()</span> if (mode != "default")
+                                            {
+                                                <br />
+                                                <span class="text-center user-semi-title text-white" onclick="resetUserNavigation()">(@Session["mode"].ToString())</span> }
+                                        }
+                                        else
+                                        {
+                                            <span class="font-weight-semibold">Guest</span> } }
+                                    @*</a>*@
+                                    <br>
+
+                                </div>
+
+                                <a class="user-button" title="logout" href="@Url.Action("Logout", "Home")">
+                                    <i class="fa fa-sign-out"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @{ Html.RenderAction("SideMenu", "Home");}
+                    </ul>
+                </nav>
+                <div class="content-area">  @RenderBody() </div>
+            </div>
+
+        </div>
+    </div>
+    <!--footer-->
+    <!--<footer class="footer">
+        <div class="container">
+            <div class="row align-items-center flex-row-reverse">
+                <div class="col-lg-12 col-sm-12 mt-3 mt-lg-0 text-center">
+                    <a href="https://digidisruptors.com/" target="_blank">
+                        Copyright © <span id="year">TEXT</span> Digital Disruptors Pvt Ltd. All rights reserved.<br />
+                        application is best viewed with Google Chrome <i class="fa fa-chrome" aria-hidden="true"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </footer>-->
+
+
+    <div class="modal fade" id="divDVT_tags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalPOTitle"> Tag Info <label class="bg-primary text-white br-7 pl-3 pr-3" id="quotCount__"></label></h3>
+                    <button type="button" class="close" aria-label="Close" onclick="refreshCurrentPG()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <h4 class="ml-3"> Daily Visit Info</h4>
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="row mt-2">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover w-100 m-0 text-nowrap" id="tblDVTagsM">
+                                            <thead class="bg-primary">
+                                                <tr>
+                                                    <th class="text-white">Daily Visit No</th>
+                                                    <th class="text-white">Visit Date</th>
+                                                    <th class="text-white">Company</th>
+                                                    <th class="text-white">Location</th>
+                                                    <th class="text-white">Contact Person</th>
+                                                    <th class="text-white">Contact No</th>
+                                                    <th class="text-white">Email-ID</th>
+                                                    <th class="text-white">Vertical</th>
+                                                    <th class="text-white">Added By</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:1px solid gray" />
+
+                    <div class="row">
+                        <h4 class="ml-3"> Visit Plan Info</h4>
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="row mt-2">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover w-100 m-0 text-nowrap" id="tblVPTagsM">
+                                            <thead class="bg-primary">
+                                                <tr>
+                                                    <th class="text-white">Visit No</th>
+                                                    <th class="text-white">Visit ID</th>
+                                                    <th class="text-white">Date</th>
+                                                    <th class="text-white">Company</th>
+                                                    <th class="text-white">Location</th>
+                                                    <th class="text-white">Contact Person</th>
+                                                    <th class="text-white">Contact No</th>
+                                                    <th class="text-white">Email-ID</th>
+                                                    <th class="text-white">Designation</th>
+                                                    <th class="text-white">Department</th>
+                                                    <th class="text-white">Added By</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr style="border:1px solid gray" />
+
+                    <div class="row">
+                        <h4 class="ml-3"> Follow-Up Info</h4>
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="row mt-2">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover w-100 m-0 text-nowrap" id="tblFUTagsM">
+                                            <thead class="bg-primary">
+                                                <tr>
+                                                    <th class="text-white">Requirement</th>
+                                                    <th class="text-white">Date</th>
+                                                    <th class="text-white">Company</th>
+                                                    <th class="text-white">Location</th>
+                                                    <th class="text-white">Contact Person</th>
+                                                    @*<th class="text-white">Contact No</th>
+                                                        <th class="text-white">Email-ID</th>*@
+                                                    <th class="text-white">Note</th>
+                                                    <th class="text-white">Sales Person</th>
+                                                    <th class="text-white">Added By</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="refreshCurrentPG()">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var user_id1 = 0;
+
+        function getDailyVisitDetails(userId) {
+            user_id1 = userId;
+            $("#divDVT_tags").modal("show");
+
+            var data = { 'UserID': user_id1, 'Type': 'Daily Visit' };
+            data = JSON.stringify(data);
+
+            $("#global-loader").fadeIn("slow");
+            $.ajax({
+                url: "/DailyVisitReport/GetDailyVisitTagSummary",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    //$("#quotCount__").html(response.length);
+                    $('#tblDVTagsM').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "aaData": response,
+                        "bPaginate": true,
+                        "bInfo": false,
+                        "paging": false,
+                        //scrollX: true,
+                        fixedHeader: true,
+                        order: [],
+                        "searching": false,
+                        ordering: true,
+                        "columns": [
+
+                            //{
+                            //    "data": "DailyVisitNo",
+                            //    "orderable": false,
+                            //    "render": function (data, type, row, meta) {
+                            //        if (type === 'display') {
+                            //            if (row.IsEditable == 1) {
+                            //                data = "<div class=\"btn-list text-center\"><button data-toggle=\"tooltip\" class=\"btn btn-sm btn-danger\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"CancelDailyVisit('" + row.DailyVisitNo + "')\"><i class=\"fa fa-trash\"></i></button><button data-toggle=\"tooltip\" class=\"btn btn-sm btn-info\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addNewDVReport(" + row.DailyVisitID + ",'" + row.DailyVisitNo + "', " + row.IsEditable + ")\"><i class=\"fa fa-edit\"></i></button></div> ";
+                            //            } else {
+
+                            //                data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-danger\"data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\"  onclick=\"CancelDailyVisit('" + row.DailyVisitNo + "')\"><i class=\"fa fa-trash\"></i></button><button data-toggle=\"tooltip\" style=\"visibility: hidden;\" class=\"btn btn-sm btn-info\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addNewDVReport(" + row.DailyVisitID + ",'" + row.DailyVisitNo + "', " + row.IsEditable + ")\"><i class=\"fa fa-edit\"></i></button></div> ";
+                            //            }
+                            //        }
+                            //        return data;
+                            //    }
+                            //},
+                            { "data": "DailyVisitNo" },
+                            { "data": "DisplayDailyVisitDate", 'type': 'date', },
+                            //{ "data": "Time" },
+                            { "data": "CompanyName" },
+                            { "data": "Location" },
+                            { "data": "ContactPerson" },
+                            //{ "data": "Designation" },
+                            //{ "data": "Department" },
+                            { "data": "ContactNo" },
+                            { "data": "EmailID" },
+                            { "data": "Vertical" },
+                            { "data": "AddedByName" },
+                            //{ "data": "Discussion" },
+                            //{ "data": "NextAction" },
+                            //{ "data": "DisplayNextActionDate", 'type': 'date', },
+
+                        ],
+
+                        //"sScrollY": "55vh",
+                        //"sScrollX": "100%",
+                        //"sScrollXInner": "100%",
+                        //"bScrollCollapse": true,
+                        mark: true
+                    });
+
+                    $("#global-loader").fadeOut();
+
+                },
+                error: function (error) {
+                    $("#global-loader").fadeOut();
+                    alert(error.responseText);
+                }
+            });
+            getVisitPlanDetails(userId);
+            getFollowUpDetails(userId);
+        }
+
+        function getVisitPlanDetails(userId) {
+
+            var data = { 'UserID': user_id1, 'Type': 'Visit Plan' };
+            data = JSON.stringify(data);
+
+            $("#global-loader").fadeIn("slow");
+            $.ajax({
+                url: "/DailyVisitReport/GetVisitPlanTagSummary",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    //$("#quotCount__").html(response.length);
+                    $('#tblVPTagsM').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "aaData": response,
+                        "bPaginate": true,
+                        "bInfo": false,
+                        "paging": false,
+                        //scrollX: true,
+                        fixedHeader: true,
+                        order: [],
+                        "searching": false,
+                        ordering: true,
+                        "columns": [
+                            { "data": "VisitNo" },
+                            { "data": "VisitID" },
+                            { "data": "Date", 'type': 'date', },
+                            { "data": "CompanyName" },
+                            { "data": "Location" },
+                            { "data": "ContactPerson" },
+                            { "data": "ContactNo" },
+                            { "data": "EmailID" },
+                            { "data": "Designation" },
+                            { "data": "Department" },
+                            { "data": "AddedByName" },
+
+                        ],
+
+                        //"sScrollY": "55vh",
+                        //"sScrollX": "100%",
+                        //"sScrollXInner": "100%",
+                        //"bScrollCollapse": true,
+                        mark: true
+                    });
+
+                    $("#global-loader").fadeOut();
+
+                },
+                error: function (error) {
+                    $("#global-loader").fadeOut();
+                    alert(error.responseText);
+                }
+            });
+
+        }
+
+        function getFollowUpDetails(userId) {
+
+            var data = { 'UserID': user_id1, 'Type': 'Follow Up' };
+            data = JSON.stringify(data);
+
+            $("#global-loader").fadeIn("slow");
+            $.ajax({
+                url: "/DailyVisitReport/GetFollowUpTagSummary",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    //$("#quotCount__").html(response.length);
+                    $('#tblFUTagsM').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "aaData": response,
+                        "bPaginate": true,
+                        "bInfo": false,
+                        "paging": false,
+                        scrollX: true,
+                        fixedHeader: true,
+                        order: [],
+                        "searching": false,
+                        ordering: true,
+                        "columns": [
+                            { "data": "Requirement" },
+                            { "data": "Date", 'type': 'date', },
+                            { "data": "CompanyName" },
+                            { "data": "Location" },
+                            { "data": "ContactPerson" },
+                            { "data": "Note" },
+                            { "data": "SalesPerson" },
+                            { "data": "AddedByName" },
+
+                        ],
+
+                        //"sScrollY": "55vh",
+                        //"sScrollX": "100%",
+                        //"sScrollXInner": "100%",
+                        //"bScrollCollapse": true,
+                        mark: true
+                    });
+
+                    $("#global-loader").fadeOut();
+
+                },
+                error: function (error) {
+                    $("#global-loader").fadeOut();
+                    alert(error.responseText);
+                }
+            });
+
+        }
+
+        function refreshCurrentPG() {
+            location.reload();
+        }
+
+    </script>
+
+
+    <!-- End Footer-->
+    <!-- Back to top -->
+    <a href="#top" id="back-to-top" style="display: inline;"><i class="fa fa-angle-up"></i></a>
+    <!-- Dashboard Core -->
+    <script src="~/js/vendors/jquery-3.2.1.min.js"></script>
+    @* code for autocomplete*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    @*<script src="~/plugins/Jquery_Offline/jquery-ui.js"></script>
+        <script src="~/plugins/Jquery_Offline/jquery_3.0.0_jquery.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    @* code for autocomplete*@
+    @*fullcalendar libary*@
+
+    <link href="~/assets/plugins/fullcalendar/fullcalendar.css" rel="stylesheet" />
+    <script src="~/plugins/fullcalendar/moment.min.js"></script>
+    <script src="~/plugins/fullcalendar/fullcalendar.min.js"></script>
+    @*fullcalendar libary end*@
+    @*<script src="~/plugins/timeline/js/jquery.timelify.js"></script>*@
+    <script src="~/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="~/js/vendors/jquery.sparkline.min.js"></script>
+    <script src="~/js/vendors/selectize.min.js"></script>
+    <script src="~/js/vendors/jquery.tablesorter.min.js"></script>
+    <script src="~/js/vendors/circle-progress.min.js"></script>
+    <script src="~/plugins/rating/jquery.rating-stars.js"></script>
+
+    <!-- Fullside-menu Js-->
+    <script src="~/plugins/fullside-menu/jquery.slimscroll.min.js"></script>
+    <script src="~/plugins/fullside-menu/waves.min.js"></script>
+    <!---Tabs JS-->
+    <script src="~/plugins/tabs/jquery.multipurpose_tabcontent.js"></script>
+    <!-- forn-wizard js-->
+    <script src="~/plugins/forn-wizard/js/material-bootstrap-wizard.js"></script>
+    <script src="~/plugins/forn-wizard/js/jquery.validate.min.js"></script>
+    <script src="~/plugins/forn-wizard/js/jquery.bootstrap.js"></script>
+    <!-- Echarts Js-->
+    <script src="~/plugins/echarts/echarts.js"></script>
+    <script src="~/js/index1.js"></script>
+    <!--Morris.js Charts Plugin -->
+    <script src="~/plugins/am-chart/amcharts.js"></script>
+    <script src="~/plugins/am-chart/serial.js"></script>
+    <!-- Custom scroll bar Js-->
+    <script src="~/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Data tables -->
+    <script src="~/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.6/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/1.2.0/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="~/js/ellipsisDatatable.js"></script>
+    @*Export to exel ,pdf and csv for Datatable *@
+    <link href="~/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/js/jszip.min.js"></script>
+    <script src="~/js/dataTables.buttons.min.js"></script>
+    <script src="~/js/pdfmake.min.js"></script>
+    @*<script src="~/js/vfs_fonts.js"></script>*@
+    <script src="~/js/buttons.html5.min.js"></script>
+    @*<script src="~/js/buttons.print.min.js"></script>*@
+    @*Export to exel ,pdf and csv for Datatable *@
+
+
+
+    <!-- Select2 js -->
+    <script src="~/plugins/select2/select2.full.min.js"></script>
+    <script src="~/js/select2.js"></script>
+    <!-- Custom Js-->
+    <script src="~/js/custom.js"></script>
+    <!---Accordion Js-->
+    <script src="~/plugins/accordion/accordion.min.js"></script>
+    <script>
+        $(function (e) {
+            $(".demo-accordion").accordionjs();
+            // Demo text. Let's save some space to make the code readable. ;)
+            // $('.acc_content').not('.nodemohtml').html('<p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Fusce aliquet neque et accumsan fermentum. Aliquam lobortis neque in nulla  tempus, molestie fermentum purus euismod.</p>');
+        });
+    </script>
+    <!-- Data table js -->
+
+    <script>
+        $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+    </script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>*@
+    <link href="~/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    @*Code for multiselect checkbox dropdown*@
+    <link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-multiselect.js"></script>
+    @*Code for multiselect checkbox dropdown*@
+    <script src="~/js/sweet-alert.min.js"></script>
+    <link href="~/css/DateTimePickerBL.css" rel="stylesheet" />
+    <script src="~/js/DateTimePickerForBL.js"></script>
+    <!-- Bootstrap DatePicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha512-mhbv5DqBMgrWL+32MmsDOt/OAvqr/cHimk6B8y/bx/xS88MVkYGPiVv2ixKVrkywF2qHplNRUvFsAHUdxZ3Krg==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.mark.js@2.0.1/dist/datatables.mark.min.js"></script>
+    <script type="text/javascript">
+
+
+
+        $(function () {
+
+            $('#datePicker')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd M yyyy',
+                    language: "tr",
+                    changeMonth: true,
+                    changeYear: true,
+                })
+                .on('changeDate', function (e) {
+
+                    $('.datepicker').hide();
+                });
+            $('.datePickerD')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd M yyyy',
+                    language: "tr",
+                    changeMonth: true,
+                    changeYear: true,
+
+                });
+
+        });
+
+    </script>
+    @*New Script tag*@
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            setDefaultHeight();
+
+        });
+        function setDefaultHeight() {
+            var elmnt = document.getElementById("page-main");
+            var height = 0;
+
+            if (elmnt.scrollHeight) {
+                height = elmnt.scrollHeight;
+            }
+            else {
+                height = $("#page-main").height();
+
+            }
+            ////height = $(".page-main").height();
+            height = height - 62;
+            $("#sidebar").height(height + "px");
+        }
+
+        $(window).on("scroll", function (e) {
+            var elmnt = document.getElementById("page-main");
+            var height = 0;
+            height = elmnt.scrollHeight;
+            if ($(this).scrollTop() > height) {
+                setDefaultHeight();
+            } else {
+                setDefaultHeight();
+            }
+        });
+
+
+
+    </script>
+
+    <script>
+        $(function () {
+            var currDate = new Date();
+            $(".form_datetime1").datetimepicker({
+                autoclose: true,
+                todayHighlight: true,
+                format: 'dd M yyyy hh:ii',
+                language: "tr",
+                changeMonth: true,
+                changeYear: true,
+                forceParse: true,
+                // endDate: currDate
+            })
+                .on('changeDate', function (e) {
+                    // Revalidate the date field
+                    // $('#eventForm').formValidation('revalidateField', 'date');
+                    $('.datetimepicker').hide();
+                });
+
+        });
+    </script>
+    <!---Tabs scripts-->
+    <script>
+        $(function (e) {
+            $(".first_tab").champ();
+            $(".accordion_example").champ({
+                plugin_type: "accordion",
+                side: "left",
+                active_tab: "3",
+                controllers: "true"
+            });
+
+            $(".second_tab").champ({
+                plugin_type: "tab",
+                side: "right",
+                active_tab: "1",
+                controllers: "false"
+            });
+
+        });
+    </script>
+    <script>
+        function resetUserNavigation() {
+        var element = {};
+        element.ID = @Convert.ToInt32(Session["mainuserid"]);
+
+        var data = { 'User': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/User/AjaxSetUserDataForUserControl',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                                     document.location = '@Url.Action("NavigationMode", "User")';
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+        }
+
+    </script>
+
+
+    <script>
+
+        var x = document.getElementById("demo");
+        function getLocation() {
+            debugger
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            debugger
+            //x.innerHTML = "Latitude: " + position.coords.latitude +
+            //    "<br>Longitude: " + position.coords.longitude;
+            var canvas = $("#map_canvas");
+
+            var latitude = "latlng=" + position.coords.latitude + "," + position.coords.longitude;
+            var longitude = position.coords.longitude;
+            var key = "&key=AIzaSyAO2V51k7ky4l2CoyRGAc3g64djTEoMLRM"
+
+            //// https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+            var GEOCODE_BASE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+            url = GEOCODE_BASE_URL + '?' + latitude + key;
+            //url = "_" + url;
+            $.ajax({
+
+                type: 'post',
+                url: url,
+                success: function (response) {
+                    debugger
+                    var Location = (response.results[0].formatted_address);
+                    //alert(Location);
+                    SaveDailyVisitReport(Location)
+                    //document.getElementById("Location").value = Location;
+                    //AddVisitLocation(Location, position.coords.latitude, longitude);
+
+                },
+                error: function (errormessage) {
+                    console.log(errormessage);
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+
+    function SaveDailyVisitReport(Location) {
+
+         $("#global-loader").fadeIn("slow");
+        var element = {};
+        debugger
+        element.DailyVisitID = 0;
+        if (element.DailyVisitID == 0 || element.DailyVisitID == '0' || element.DailyVisitID == "") {
+            element.DailyVisitNo = "-";
+        }
+        else {
+            element.DailyVisitNo = $("#DailyVisitNo").val();
+        }
+        element.DailyVisitDate = new Date();
+        element.VerticalID = 0;
+        element.CompanyName = "";
+        element.Location = Location;
+        element.Designation = "";
+        element.Department = "";
+        element.EmailID = "";
+        element.ContactPerson = "";
+        element.ContactNo = "";
+        element.Discussion = "";
+        element.NextAction = "";
+        element.NextActionDate = new Date();
+
+        if (element.DailyVisitDate == "") {
+            element.DailyVisitDate == ""
+        }
+
+        if (element.VerticalID == "--Select--") {
+            element.VerticalID == ""
+        }
+
+        if (element.NextAction == "") {
+            element.NextAction = "";
+        }
+        if (element.Designation == "") {
+            element.Designation = "";
+        }
+        if (element.EmailID == "") {
+            element.EmailID = "";
+        }
+        if (element.Department == "") {
+            element.Department = "";
+        }
+        if (element.ContactPerson == "") {
+            element.ContactPerson = "";
+        }
+        if (element.ContactNo == "") {
+            element.ContactNo = "";
+        }
+        if (element.CompanyName == "") {
+            element.CompanyName == ""
+        }
+        if (element.Discussion == "") {
+            element.Discussion == ""
+        }
+        if (element.Location == "") {
+            element.Location == ""
+        }
+
+        var data = { 'Master': element};
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/DailyVisitReport/AjaxAddOrEditDailyVisitReport',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.Message != "Record saved successfully.") {
+                    swal.fire({
+                        title: 'Alert',
+                        text: response.Message,
+                        icon: 'warning'
+                    })
+                    $("#global-loader").fadeOut("slow");
+                }
+                else {
+                    $("#global-loader").fadeOut("slow");
+                    if (response.Status != 0) {
+                        swal.fire({
+                            title: 'Success',
+                            text: response.Message,
+                            icon: 'success'
+                        }).then((response) => {
+                            debugger;
+                             document.location = '@Url.Action("DailyVisitReportSummary", "DailyVisitReport")';
+                        })
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.Message,
+                            icon: 'error'
+                        })
+                    }
+                }
+
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+    }
+
+    </script>
+    <script>
+
+
+    function PrintDetailsForPI(PINo) {
+
+        $("#global-loader").fadeIn();
+        var data = { 'PINo': PINo };
+        data = JSON.stringify(data)
+        $.ajax({
+            url: '/Print/StorePINoInTemp',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            data: data,
+           success: function (responce) {
+               var PISpecList = responce;
+               var PISpecCombination = [];
+               var PISpecGlassDesc = [];
+               var PIMasterArray = [];
+               console.log(PISpecList);
+
+               for (i = 0; i < PISpecList.length; i++) {
+                   var element = {};
+                   if (PISpecList[i].Combination.trim().toUpperCase().includes("+")) {
+                       element.Combination = PISpecList[i].Combination.split('+');
+                       element.GlassDescription = PISpecList[i].GlassDescription.split('+');
+                   } else {
+                       element.Combination = PISpecList[i].Specification.split('+');
+                       element.GlassDescription = PISpecList[i].GlassDescription.split('+');
+                   }
+                   debugger;
+                   element.SrNo1 = PISpecList[i].SrNo1;
+                   PISpecCombination.push(element);
+                   var element2 = {};
+                   element2.GlassDesc = PISpecList[i].GlassDesc.split('\r\n');
+                   element2.SrNo1 = PISpecList[i].SrNo1;
+                   PISpecGlassDesc.push(element2);
+
+               }
+               console.log(PISpecCombination);
+               console.log(PISpecGlassDesc);
+               for (i = 0; i < PISpecCombination.length; i++) {
+
+                   var combArr = [];
+                   var GlassDescArray = [];
+                   combArr = PISpecCombination[i].Combination;
+                   GlassDescArray = PISpecCombination[i].GlassDescription;
+                   for (j = 0; j < combArr.length; j++) {
+
+                       if (combArr[j].trim().toUpperCase().includes("GLASS A")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "GLASS A";
+
+                           var combArr2 = [];
+
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("GLASS A"));
+                           if (z1 == -1) {
+                                element.Thickness = 0;
+                               //var d = GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1);
+
+                               //var Thickness = 0;
+                               //if (GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               //    Thickness = GlassDescArray[j].trim().substring((parseInt(d) - 2), d);
+                               //    element.Thickness = Thickness.trim();
+                               //} else {
+                               //    element.Thickness = 0;
+                               //}
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+
+                               var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   element.Thickness = Thickness.trim();
+                               } else {
+                                   element.Thickness = 0;
+                               }
+
+                           }
+
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("GLASS B")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "GLASS B";
+                           var combArr2 = [];
+                           var GlassDescArray = [];
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+                           GlassDescArray = PISpecGlassDesc[z].GlassDescription;
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("GLASS B"));
+                           if (z1 == -1) {
+                               element.Thickness = 0;
+                               //var d = GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1);
+
+                               //var Thickness = 0;
+                               //if (GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               //    Thickness = GlassDescArray[j].trim().substring((parseInt(d) - 2), d);
+                               //    element.Thickness = Thickness.trim();
+                               //} else {
+                               //    element.Thickness = 0;
+                               //}
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+                               var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   element.Thickness = Thickness.trim();
+                               } else {
+                                   element.Thickness = 0;
+                               }
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("GLASS C")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "GLASS C";
+                           var combArr2 = [];
+                           var GlassDescArray = [];
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+                           GlassDescArray = PISpecGlassDesc[z].GlassDescription;
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("GLASS C"));
+                           if (z1 == -1) {
+                               element.Thickness = 0;
+                               //var d = GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1);
+
+                               //var Thickness = 0;
+                               //if (GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               //    Thickness = GlassDescArray[j].trim().substring((parseInt(d) - 2), d);
+                               //    element.Thickness = Thickness.trim();
+                               //} else {
+                               //    element.Thickness = 0;
+                               //}
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+                               var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   element.Thickness = Thickness.trim();
+                               } else {
+                                   element.Thickness = 0;
+                               }
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("GLASS D")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "GLASS D";
+                           var combArr2 = [];
+                           var GlassDescArray = [];
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+                           GlassDescArray = PISpecGlassDesc[z].GlassDescription;
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("GLASS D"));
+                           if (z1 == -1) {
+                               element.Thickness = 0;
+                               //var d = GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1);
+
+                               //var Thickness = 0;
+                               //if (GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               //    Thickness = GlassDescArray[j].trim().substring((parseInt(d) - 2), d);
+                               //    element.Thickness = Thickness.trim();
+                               //} else {
+                               //    element.Thickness = 0;
+                               //}
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+                               var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   element.Thickness = Thickness.trim();
+                               } else {
+                                   element.Thickness = 0;
+                               }
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("GLASS E")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "GLASS E";
+                           var combArr2 = [];
+                           var GlassDescArray = [];
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+                           GlassDescArray = PISpecGlassDesc[z].GlassDescription;
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("GLASS E"));
+                           if (z1 == -1) {
+                               element.Thickness = 0;
+                               //var d = GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1);
+
+                               //var Thickness = 0;
+                               //if (GlassDescArray[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               //    Thickness = GlassDescArray[j].trim().substring((parseInt(d) - 2), d);
+                               //    element.Thickness = Thickness.trim();
+                               //} else {
+                               //    element.Thickness = 0;
+                               //}
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+                               var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   element.Thickness = Thickness.trim();
+                               } else {
+                                   element.Thickness = 0;
+                               }
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("SILICON")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "SILICON";
+                           var d = combArr[j].trim().toUpperCase().indexOf("MM", 1);
+                           var Thickness = 0;
+                           if (combArr[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               Thickness = combArr[j].trim().substring(0, d);
+                               element.Thickness = Thickness.trim();
+                           } else {
+                               element.Thickness = 0;
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("AIR GAP")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "AIRGAP";
+                           var d = combArr[j].trim().toUpperCase().indexOf("MM", 1);
+                           var Thickness = 0;
+                           if (combArr[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               Thickness = combArr[j].trim().substring(0, d);
+                               element.Thickness = Thickness.trim();
+                           } else {
+                               element.Thickness = 0;
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("PVB")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "PVB";
+                           var d = combArr[j].trim().toUpperCase().indexOf("MM", 1);
+                           var Thickness = 0;
+                           if (combArr[j].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                               Thickness = combArr[j].trim().substring(0, d);
+                               element.Thickness = Thickness.trim();
+                           } else {
+                               element.Thickness = 0;
+                           }
+                           PIMasterArray.push(element);
+                       }
+                       if (combArr[j].trim().toUpperCase().includes("SENTRYGLAS")) {
+                           var element = {};
+                           element.SrNo1 = PISpecCombination[i].SrNo1;
+                           element.Type = "SENTRYGLAS";
+
+                           var combArr2 = [];
+                           var z = PISpecGlassDesc.findIndex(p => p.SrNo1 == PISpecCombination[i].SrNo1);
+                           combArr2 = PISpecGlassDesc[z].GlassDesc;
+                           var z1 = combArr2.findIndex(p => p.trim().toUpperCase().includes("SENTRYGLAS"));
+                           if (z1 == -1) {
+                               element.Thickness = 1.52;
+                           }
+                           else {
+                               var d = combArr2[z1].trim().toUpperCase().indexOf("MM", 1);
+                                var Thickness = 0;
+                               if (combArr2[z1].trim().toUpperCase().indexOf("MM", 1) > 0) {
+                                   Thickness = combArr2[z1].trim().substring((parseInt(d) - 2), d);
+                                   //element.Thickness = Thickness.trim();
+                                   element.Thickness = 1.52;
+                               } else {
+                                   element.Thickness = 1.52;
+                               }
+
+                           }
+                           PIMasterArray.push(element);
+                       }
+               }
+               }
+
+               console.log(PIMasterArray);
+               var data = { 'PINo': PINo, 'PIGlassList': PIMasterArray };
+               data = JSON.stringify(data);
+               $.ajax({
+                   url: '/Print/StorePINoGlassListInTemp',
+                   type: "POST",
+                   contentType: "application/json; charset=utf-8",
+                   async: true,
+                    data: data,
+                   success: function (responce) {
+                       $("#global-loader").fadeOut();
+                    window.open('@Url.Action("ProformaInvoicePdf", "Print", "_blank")');
+                   //  window.open('@Url.Action("PIPrintPreview", "Print", "_blank")');
+                    //   window.open('@Url.Action("GetFirstPIFooter", "Print", "_blank")');
+                    },
+                   error: function (error) {
+                       $("#global-loader").fadeOut();
+                       let str = error.responseText;
+                       var a = str.indexOf("<title>") + 7;
+                       var b = str.indexOf("</title>");
+                       str = str.substring(a, b);
+                       Swal.fire("Error!", "Something went wrong: " + str, "error");
+                   }
+               });
+            },
+           error: function (error) {
+               $("#global-loader").fadeOut();
+               let str = error.responseText;
+               var a = str.indexOf("<title>") + 7;
+               var b = str.indexOf("</title>");
+               str = str.substring(a, b);
+               Swal.fire("Error!", "Something went wrong: " + str, "error");
+           }
+        });
+    }
+
+
+    </script>
+    <script>
+
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "currency-pre": function (a) {
+                a = (a === "-") ? 0 : a.replace(/[^\d\-\.]/g, "");
+                return parseFloat(a);
+            },
+
+            "currency-asc": function (a, b) {
+                return a - b;
+            },
+
+            "currency-desc": function (a, b) {
+                return b - a;
+            }
+        });
+    </script>
+</body>
+</html>

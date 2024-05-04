@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BombayToolsEntities.BusinessEntities
+{
+    public class AtAGlanceQuotation
+    {
+        public AtAGlanceQuotation()
+        {
+            PrincipalCount = new List<Principal>();
+            SectorCount = new List<Sector>();
+            IndustryCount = new List<Industry>();
+        }
+
+        public List<Principal> PrincipalCount { get; set; }
+        public List<Sector> SectorCount { get; set; }
+        public List<Industry> IndustryCount { get; set; }
+    }
+}

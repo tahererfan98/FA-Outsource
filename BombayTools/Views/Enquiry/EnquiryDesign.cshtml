@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "EnquiryDesign";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class=" content-area overflow-hidden" id="EnquiryDashboard">
+
+    <div class="page-header">
+        <h4 class="page-title">Enquiry Dashboard</h4>
+    </div>
+
+    <div class="row ">
+        <div class="col-sm-12 col-md-6 ">
+            <div class="form-group">
+                <label class="form-label">Search By Email or Contact Number</label>
+                <div class="row gutters-xs">
+                    <div class="col">
+                        @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "SearchText", name = "SearchText", autocomplete = "off", placeholder = "Generate Enquiry for.." })
+                    </div>
+                    <span class="col-auto">
+                        <button class="btn btn-primary" type="button" onclick="LoadSearchResult()"><i class="fe fe-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-11">
+            <div id="CustomerDetail" style="display:none">
+                <div class="table-responsive">
+                    <table id="tblCustomerList" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:1px">#</th>
+                                <th>Company Name</th>
+                                <th class="">Location</th>
+                                <th class="">Contact Person</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function LoadSearchResult() {
+        var st = document.getElementById("SearchText").value;
+        st = st.trim();
+        if (st === "" || st == undefined) {
+            return;
+        }
+        var data = { 'SearchText': st };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/GetCompanyListForEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (data) {
+                if (data == null) {
+                    alert("Please enter proper details")
+                }
+                $('#CustomerDetail').show();
+                $('#tblCustomerList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "columns": [
+                        { "data": "index" },
+                        { "data": "CompanyName" },
+                        { "data": "Location" },
+                        { "data": "ContactPersonName" },
+                        {
+                            "data": "index",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \" name=\"removebutton\" style=\"height:35px;\" data-toggle=\"tooltip\" data-placement=\"bottom\"  data-original-title=\"Generate Enquiry\" onclick=\"NewEnquiry('" + row.CompanyName + "','" + row.Address + "','" + row.ContactPersonName + "','" + row.EmailID + "','" + row.ContactNo + "','" + row.ContactPersonID + "')\"><i class=\"fe fe-edit\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        }
+                    ]
+                });
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+
+    $(document).ready(function () {
+        $('#tblCustomerList').DataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            //"bFilter": false,
+            "paging": false,
+
+        });
+    });
+
+
+    function NewEnquiry(CompanyName, Address, ContactPersonName, EmailID, ContactNo, ContactPersonID) {
+
+        var data1 = { 'CompanyName': CompanyName, 'Address': Address, 'ContactPersonName': ContactPersonName, 'EmailID': EmailID, 'ContactNo': ContactNo, 'ContactPersonID': ContactPersonID }
+        var data = JSON.stringify(data1);
+
+
+        $.ajax({
+            url: "/Enquiry/GenerateQuot",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                var i = response;
+                if (response == 1) {
+                    document.location = '@Url.Action("NewEnquiry", "Enquiry")';
+
+                }
+              },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    $("#SearchText").keyup(function () {
+        var searchtext = document.getElementById("SearchText").value;
+        $('#saveCustomer').show();
+        $('#UpdateCustomer').hide();
+        CompanyID = 0;
+        LocationID = 0;
+        if (searchtext.length > 1) {
+            var data = { 'SearchText': searchtext };
+            data = JSON.stringify(data);
+            $.ajax({
+                type: 'post',
+                url: '/ManageContact/CompanyList',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function (list) {
+                    if (list.length != 0) {
+                        CompanyList = list;
+                        var itemList = [];
+                        var sortedList = [];
+                        var compID = 0;
+                        for (k = 0; k < list.length; k++) {
+                            if (compID != list[k].CompanyID) {
+                                compID = list[k].CompanyID;
+                                var element = {};
+                                element.CompanyName = list[k].CompanyName;
+                                sortedList.push(element);
+                            }
+                        }
+
+                        for (i = 0; i < sortedList.length; i++) {
+
+                            itemList[i] = sortedList[i].CompanyName;
+
+                        }
+
+                        $("#SearchText").autocomplete({
+                            source: itemList
+                        });
+                    }
+
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    });
+</script>
+
+

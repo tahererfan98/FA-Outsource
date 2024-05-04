@@ -1,0 +1,40 @@
+﻿
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h4>Total Contact Selected <label id="contactCount"></label></h4>
+    </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label class="form-label">
+                Template Name
+            </label>
+            @Html.DropDownList("ddlTemplateName", (IEnumerable<SelectListItem>)ViewBag.Template, "--Select--", new { @class = "form-control custom-select", @id = "ddlTemplateName", name = "ddlTemplateName", autocomplete = "off" })
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label class="form-label">
+                Campaign Name
+            </label>
+            @Html.TextBox("CampaignName", null, new { @class = "form-control", @id = "CampaignName", name = "CampaignName", autocomplete = "off", placeholder = "", @maxlength = 100 })
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label class="form-label">
+                Email ID
+            </label>
+            @Html.TextBox("EmailID", null, new { @class = "form-control", @id = "EmailID", name = "EmailID", autocomplete = "off", placeholder = "", @maxlength = 100 })
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label class="form-label">
+                Password
+            </label>
+            @Html.TextBox("CampaignPassword", null, new { @class = "form-control", @id = "CampaignPassword", name = "CampaignPassword", autocomplete = "off", placeholder = "", @type = "password" })
+        </div>
+    </div>
+</div>
+@*//USP_AddNewMailCampaign*@

@@ -1,0 +1,1299 @@
+﻿
+
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+    #tblOSPartnerD  td {
+        padding: 1px;
+        font-weight:500;
+        color:black;
+    }
+    #tblOSPartnerD th {
+        padding: 1px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Send Enquiry To Partner</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Entry No</label>
+                    @Html.TextBox("txtESNO", null, new { @class = "form-control", @id = "txtESNO", name = "txtESNO", autocomplete = "off", disabled = "off", placeholder = " NEW" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Sent Date</label>
+                    @Html.TextBox("txtESDate", null, new { @class = "form-control datePickerD", @id = "txtESDate", name = "txtESDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy"), disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.TextBox("txtCustomerName", null, new { @class = "form-control", @id = "txtCustomerName", name = "txtCustomerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">ENQ No</label>
+                    @Html.TextBox("txtENQNO", null, new { @class = "form-control", @id = "txtENQNO", name = "txtENQNO", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6" id="divOSPartnerDDL">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Outsource Partner</label>
+                    @Html.DropDownList("ddlPartnerDropdown", (IEnumerable<SelectListItem>)ViewBag.ddlOSPartnerDropdown, "--Select--", new { @class = "form-control", @id = "ddlPartnerDropdown", name = "ddlPartnerDropdown", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6" id="divOSPartnerTable" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600; visibility:hidden">.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblOSPartnerD" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th width="6%" class="all text-center text-white "><b>SrNo</b></th>
+                                    <th width="84%" class="all text-left text-white font-weight-bold"><b>Outsource Partner</b></th>
+                                    <th width="10%" class="all text-left text-white font-weight-bold"><b>Status</b></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            @*<div class="col-sm-12 col-md-1 col-lg-1">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">PI List</label>
+                <div class="row gutters-xs">
+                    <div class="col">
+                        <span class="col-auto">
+                            <button id="btnPIList" class="btn btn-primary" style="font-size: 0.55rem;" href="#" onclick="searchPINOList()" title="Fill serial no"><i class="fa fa-list"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+                @*<button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>*@
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPOItemData" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    @*<th class="all text-center"></th>*@
+                                    <th class="all text-center">#</th>
+                                    <th class="all text-center">GL No</th>
+                                    <th class="all text-center">PINO</th>
+                                    <th class="all text-center">WONO</th>
+                                    <th class="all text-center">Item Name</th>
+                                    <th class="all text-center">Unit</th>
+                                    <th class="all text-center">Qty</th>
+                                    <th class="all text-center">SQM</th>
+                                    <th class="all text-center">Out Qty</th>
+                                    <th class="all text-center">Out SQM</th>
+                                    <th class="all text-center">Type</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("ESRemarks", null, new { @class = "form-control", @id = "ESRemarks", name = "ESRemarks", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="col-lg-2 col-sm-12 mt-2">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;">Upload Attachment</label>
+                <a @*href="#"*@ onclick="AddAttachmentForPhoto()">
+                    <i class="fa fa-paperclip fa-2x	" style="color:#070884" aria-hidden="true" title="Upload Attachments"></i>
+                    <span class="custom-switch-description" style="font-size:17px;color:#6c4cbb"><b><label id="lblAttachmentForPhoto">0</label></b></span>
+                </a>
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 mt-2" id="divOpenFile" style="display:none">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;visibility:hidden">Open File</label>
+                @*<label class="form-label" style="font-weight: 600;">Upload Attachment</label>*@
+                <button class="btn btn-sm btn-success " style="height:10%" id="OpenFilebtn" onclick="OpenTemplateFile()"><i class="fa fa-file-excel-o"></i> Open Template File</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="float-right">
+            <button class="btn btn-sm btn-warning " id="Genbtn" onclick="GenerateTemplate()"><i class="fa fa-table"></i> Gen Template</button>
+            <button class="btn btn-sm btn-success " id="Savebtn" onclick="SendEnquiryMail('@ViewBag.ENQNO')"><i class="fa fa-share-square-o"></i> Send Enquiry Mail</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+<div class="modal fade" id="ApprovalUserListModal2" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content  modal-lg">
+            <div class="modal-header" style="padding-top: 7px;padding-bottom: 7px;">
+                <h4 class="modal-title">Contact Details</h4>
+                <div class="float-right" style="margin-left:58%">
+                    <div class="float-right" style="">
+                        <div class=""> </div>
+
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered th_Background" style="width:100%" id="tblUserList2">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="SaveApprovalUserList2()">Update</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* For Mail Box *@
+<div class="modal fade" id="exampleModal32" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-Modal32">Send Email</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name2" class="form-control-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name2">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name2" class="form-control-label">CC:</label>
+                            <input type="text" class="form-control" id="recipient-cc2">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name2" class="form-control-label">BCC:</label>
+                            <input type="text" class="form-control" id="recipient-bcc2">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name2" class="form-control-label">Subject:</label>
+                            <input type="text" class="form-control" id="recipient-Subject2">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name2" class="form-control-label">Dear:</label>
+                            <input type="text" class="form-control" id="recipient-Dear2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12" style="display:none;">
+                        <div class="form-group">
+                            <label for="message-text2" class="form-control-label">Message:</label>
+                            <textarea class="form-control" id="message-text2"></textarea>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="body-text2" class="form-control-label">Body Text:</label>
+                            <textarea class="form-control" id="body-text2"></textarea>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-2 col-md-2" style="display:none;">
+                        <div class="form-group">
+                            <label class="form-label">Indent copy</label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-12 col-md-12" style="display:none;">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label"></label>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover tbl-cart text-nowrap" style="width:100%" id="LinkQuotationData2">
+                                        <thead class="bg-joseph">
+                                            <tr>
+                                                <th>SR No</th>
+                                                <th>File Name</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="clearmail2()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="SendEmailToOSPartner()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var CustomerD = [];
+    var poItemM = [];
+    var OSPartnerM = [];
+
+    var ENQNO = "0";
+    var AllWONO = "0";
+    var isDraft = 0;
+    var IsTemplateGenerate = 0;
+    var TemplateFilePath = "";
+
+    var MasterAttachment = [];
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+        e.preventDefault();
+        return false;
+    });
+
+    $(document).ready(function () {
+        debugger;
+        var Action1 = '@ViewBag.Action';
+        $("#txtENQNO").val('@ViewBag.ENQNO');
+        $("#txtCustomerName").val('@ViewBag.CustomerName');
+        AllWONO = '@ViewBag.AllWONO';
+        poItemM = [];
+        poItemM = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+        poItemM = JSON.parse(poItemM);
+        addCOItemToTable();
+
+        $("#divOSPartnerTable").hide();
+
+
+        if (Action1 == 'View') {
+            $("#divOSPartnerDDL").hide();
+            $("#Genbtn").hide();
+            $("#Savebtn").hide();
+            $("#divOSPartnerTable").show();
+            $("#ESRemarks").val('@ViewBag.Remarks');
+            $("#ESRemarks").prop('disabled', true);
+
+            OSPartnerM = [];
+            OSPartnerM = @Html.Raw(Json.Encode(@ViewBag.ENQSentPartnerD));
+            OSPartnerM = JSON.parse(OSPartnerM);
+            BindOSPartnerTable();
+
+            BillAttachment = @Html.Raw(Json.Encode(@ViewBag.AttachmentD));
+            BillAttachment = JSON.parse(BillAttachment);
+
+            if (BillAttachment.length > 0) {
+                var RowCount = BillAttachment.length;
+                //$("#lblAttachmentForPhoto").val(RowCount);
+                document.getElementById('lblAttachmentForPhoto').innerHTML = RowCount;
+            } else {
+                document.getElementById('lblAttachmentForPhoto').innerHTML = 0;
+            }
+        }
+
+    });
+
+    function addCOItemToTable() {
+        debugger;
+        $('#tblPOItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": poItemM,
+            "bPaginate": false,
+            "bInfo": false,
+            "pa": false,
+            "bFilter": false, // Disable search box
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": false,
+            }],
+            "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                $('td', row).css('font-weight', 'bold');
+            },
+            "columns": [
+                //{
+                //    "data": "SrNo",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deleteSelectedCORow(' + row.SrNo + ', `' + row.DCNO + '`)" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                //        return data;
+                //    }
+                //},
+                { "data": "SrNo" },
+                { "data": "SpecID" },
+                //{
+                //    "data": "GLNO",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text"  class="form-control noborder width" style="text-transform:uppercase;" id="GLNO_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                //        return data;
+                //    }
+                //},
+                { "data": "PINO" },
+                { "data": "WONO" },
+                {
+                    "className": "ChkWidth", "data": "ItemDescription",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea disabled type="text" rows="2" class="form-control noborder width" style="text-transform:uppercase;" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" ></textarea> ';
+                        return data;
+                    }
+                },
+
+                { "data": "Unit" },
+
+                {
+                    "data": "Qty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "SQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="SQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "OutQty",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="OutQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "OutSQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" id="OutSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "className": "ChkWidthType", "data": "OutType",
+                    "render": function (data, type, row, meta) {
+                        data = '<input   class="form-control text-LEFT width" style="width=200px" id="OutType_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" disabled>';
+                        return data;
+                    }
+                },
+
+            ]
+        });
+
+        for (i = 0; i < poItemM.length; i++) {
+            var temp1 = "ItemDescription_" + poItemM[i].SrNo
+            document.getElementById(temp1).value = poItemM[i].ItemDescription;
+        }
+    }
+
+    function BindOSPartnerTable() {
+        debugger;
+        $('#tblOSPartnerD').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": OSPartnerM,
+            "bPaginate": false,
+            "bInfo": false,
+            "pa": false,
+            "bFilter": false, // Disable search box
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": false,
+            }],
+
+            "columns": [
+
+                { "data": "SrNo" },
+                {
+                    "data": "PartnerName",
+                    className: 'text-left'
+                },
+                {
+                    "data": "Status",
+                    className: 'text-left'
+                },
+            ]
+        });
+
+    }
+
+
+    //FOR Mail
+    var IndentM2 = 0;
+    var ENQNO01 ='0';
+    var RevNo_M = 0;
+    var str_UserName = 0;
+    var str_PIN = "";
+    var str_Vendor = "";
+    var PartnerName = "";
+    var UserName = '@ViewBag.UserName';
+    var itemDetails = [];
+
+    function SendEnquiryMail(ENQNO) {
+        var PartnerID = $("#ddlPartnerDropdown option:selected").val();
+        if (PartnerID == "" || PartnerID == null || PartnerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select outsource partner",
+                icon: 'error'
+            });
+            $("#ddlPartnerDropdown").focus();
+            return false;
+        }
+        var data = { 'ENQNO': ENQNO, 'PartnerID': PartnerID }
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'POST',
+            url: '/Enquiry/CheckIsEnquirySendToPartner',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (response) {
+                if (response.Status == 1) {
+
+                    if (IsTemplateGenerate == 0) {
+                        Swal.fire({
+                            title: 'Alert!',
+                            text: "Please Generate and check template for confirmation.",
+                            icon: 'error'
+                        });
+                        return false;
+                    }
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Do you want to send " + ENQNO + " Enquiry to selected outsource pratner?",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            Get_ApprovalUserList(ENQNO, PartnerID);
+                        }
+                        else {
+                            @* document.location = '@Url.Action("EnquiryEntrySummary", "Enquiry")';*@
+                        }
+                    });
+
+                } else if (response.Status == 2) {
+                    Swal.fire({
+                        title: 'Alert',
+                        text: response.Message,
+                        icon: 'error'
+                    }).then((result) => {
+                        $("#ddlPartnerDropdown").focus();
+
+                    });
+
+                }
+                else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+
+    function Get_ApprovalUserList(ENQNO, PartnerID) {
+        var data = { 'ENQNO': ENQNO, 'PartnerID': PartnerID }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Enquiry/GetContactPersonList',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (jsonResult) {
+                ENQNO01 = ENQNO;
+                //RevNo_M = RevNo;
+                //str_UserName = UserName;
+                //str_Vendor = EmployeeName;
+                UserApprovalList = [];
+                UserApprovalList = jQuery.parseJSON(jsonResult);
+                if (UserApprovalList.length > 0) {
+                    $("#ApprovalUserListModal2").modal('show');
+                    $("#tblUserList2").empty();
+                    RepTableDataJson2($("#tblUserList2"), jsonResult, "Sales Person Details", "ApprovalUser_List");
+                }
+                else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "No Data found",
+                        icon: 'error'
+                    });
+                    $("#tblUserList2").empty();
+                    $("#ApprovalUserListModal2").modal('show');
+                }
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+
+    }
+
+    function GetSelectedUser(AutoID, PartnerID, SrNo) {
+        $("#global-loader").fadeIn("slow");
+        debugger;
+        var UserApprovalList1 = UserApprovalList;
+        UserApprovalList = [];
+        for (i = 0; i < UserApprovalList1.length; i++) {
+            var element = {};
+            element.IsSelected = 0;
+            element.AutoID = UserApprovalList1[i].AutoID;
+            element.ContactPerson = UserApprovalList1[i].ContactPerson;
+            element.EmailID = UserApprovalList1[i].EmailID;
+            UserApprovalList.push(element);
+        }
+        var z = UserApprovalList.findIndex(p => p.AutoID == AutoID);
+        var ToUserMailID = UserApprovalList[z].EmailID;
+        PartnerName = UserApprovalList[z].ContactPerson;
+        UserApprovalList[z].IsSelected = 1;
+
+        var CcEmailList = "kiran@faglass.com,priyan@faglass.com,vijay.navale@fgglass.com";
+        //var CcEmailList = "";
+        //for (i = 0; i < UserApprovalList.length; i++) {
+        //    if (UserApprovalList[i].IsSelected != 1) {
+        //        CcEmailList = CcEmailList + UserApprovalList[i].EmailID + ";";
+        //    }
+        //}
+        //////////////////////////////////////////////////////////////////////////////////////// 04-04-24
+        var PartnerID = $("#ddlPartnerDropdown option:selected").val();
+        if (PartnerID == "" || PartnerID == null || PartnerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select outsource partner",
+                icon: 'error'
+            });
+            $("#ddlPartnerDropdown").focus();
+            return false;
+        }
+
+        $("#ApprovalUserListModal2").modal('hide');
+        var data = { 'ENQNO': ENQNO01, 'PartnerID': PartnerID }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Enquiry/GetApprovalMailDetails',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (response) {
+                debugger;
+                var strVendorName = str_Vendor;
+                var strBodyText = "";
+                var strBodyMsg = document.getElementById('body-text2').value;
+                str_PIN = "";
+                var today = new Date();
+                str_PIN = (parseInt(today.getHours()) + 10) + "" + (parseInt(today.getMinutes()) + 10) + "" + parseInt((today.getSeconds()) + 10);
+                var strText = "";
+                strText = "Attached here with copy of Template [" + ENQNO01 + "/" + 0 + "] of " + 0 + "."
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Dear Sir, " + " </font> <br> <br>"
+
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText + " </font> <br>"
+                //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Use this PIN No <B>" + str_PIN + "</B> to approve Purchase Order. </font> <br> <br> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strBodyMsg + ". </font> <br> <br> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Best Regards, " + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "[" + UserName + "]" + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=4><B>" + "Future Architectural Glass, LLC" + "</B></font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Plot # P278-P284 | Al Ghail Industrial Area PO Box: 86001 - Ras Al Khaimah - UAE" + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "T: +971 7 258 9274 / +971 7 258 9071 " + "| E: sales@faglass.com" + "</font> <br>"
+
+                document.getElementById('recipient-name2').value = ToUserMailID;
+                document.getElementById('recipient-Subject2').value = "Outsource Enquiry No.: [" + ENQNO01 + "] / [" + AllWONO + "]" ;
+                document.getElementById('message-text2').value = strBodyText;
+                document.getElementById('recipient-Dear2').value = ToUserMailID;
+                document.getElementById('recipient-cc2').value = CcEmailList;
+                document.getElementById('recipient-bcc2').value = "";
+
+                MasterQuoPDFList = JSON.parse(response.QuotationPDFList);
+                MasterAttachment = JSON.parse(response.QuotationPDFList);
+                //BillAttachment = JSON.parse(response.QuotationPDFList);
+                $('#LinkQuotationData2').dataTable({
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bPaginate": false,
+                    "bFilter": false,
+                    "paging": false,
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": MasterQuoPDFList,
+                    "columns": [
+                        { "data": "SrNo" },
+                        { "data": "DocName" }
+                    ]
+                });
+
+                $("#global-loader").fadeOut("slow");
+                $('#exampleModal32').modal('show');
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+
+    function SendEmailToOSPartner() {
+        debugger;
+        $("#global-loader").fadeIn("slow");
+
+        var strVendorName = str_Vendor;
+        var strBodyText = "";
+        var strBodyMsg = document.getElementById('body-text2').value;
+        //str_PIN = "";
+        var today = new Date();
+        //str_PIN = (parseInt(today.getHours()) + 10) + "" + (parseInt(today.getMinutes()) + 10) + "" + parseInt((today.getSeconds()) + 10);
+        //console.log(str_PIN);
+        var strText = "";
+        var strText1 = "";
+        //strText = "Attached here with copy of Enquiry template [" + ENQNO01 + "]"
+        strText = "Greetings of the day, Please find attached enquiry for your parusal."
+        strText1 = "I requested you to give us the best quote for the same with the best lead time for production"
+
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Dear Sir/Mam, " + " </font> <br> <br>"
+
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText1 + " </font> <br>"
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Use this PIN No <B>" + str_PIN + "</B> to approve Purchase Order. </font> <br>"
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Already Purchase Amount from  <B>" + itemDetails[0].VendorName + "</B> is <B>₹" + itemDetails[0].GrandTotal + "</B> </font> <br><br>"
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strBodyMsg + ". </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><B> " + strBodyMsg + " </B></font><br><br>"
+
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + "<b>Please find below Amount against Item </b> </font> <br><br>"
+        //strBodyText = strBodyText + "<table border=\"1\" width=\"100%\" style=\"text-wrap:normal;\">"
+        //strBodyText = strBodyText + "<tr bgcolor='#4da6ff'>"
+        //strBodyText = strBodyText + "<th>Sr. No.</th><th>Item Code</th><th>Item Description</th><th>Qty</th><th>Already Purchase Amount</th></tr>"
+
+        //for (i = 0; i < itemDetails.length; i++) {
+        //    strBodyText = strBodyText + "<tr>"
+        //    strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"5%\"> " + itemDetails[i].SrNo + " </td>"
+        //    strBodyText = strBodyText + "<td style=\"text-align:left;\" width=\"18%\"> " + itemDetails[i].ItemCode + " </td>"
+        //    strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"60%\"> " + itemDetails[i].ItemDesc + " </td>"
+        //    strBodyText = strBodyText + "<td style=\"text-align:center\" width=\"5%\"> " + itemDetails[i].ItemQty + " </td>"
+        //    strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"12%\">₹ " + itemDetails[i].NetAmount + " </td>"
+        //    strBodyText = strBodyText + "</tr>"
+        //}
+        //strBodyText = strBodyText + "</table><br/>"
+
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Best Regards,  </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "[" + UserName + "]" + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=4><B>" + "Future Architectural Glass, LLC" + "</B></font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Plot # P278-P284 | Al Ghail Industrial Area PO Box: 86001 - Ras Al Khaimah - UAE" + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "T: +971 7 258 9274 / +971 7 258 9071 " + "| E: sales@faglass.com" + "</font> <br>"
+
+        document.getElementById('message-text2').value = strBodyText;
+
+
+        var to = document.getElementById('recipient-name2').value;
+        var from = 'FG';
+        var cc = document.getElementById('recipient-cc2').value;
+        var bcc = document.getElementById('recipient-bcc2').value;
+        var subject = document.getElementById('recipient-Subject2').value;
+        var To = document.getElementById('recipient-Dear2').value;
+        var message = document.getElementById('message-text2').value;
+
+        // Attachment
+        var RunningID = MasterAttachment.length;
+        TotalAttchment = [];
+        TotalAttchment = BillAttachment;
+        for (i = 0; i < TotalAttchment.length; i++) {
+            var element2 = {};
+            element2.RunningID = RunningID+1;
+            element2.DocName = TotalAttchment[i].DocName;
+            element2.FilePath = TotalAttchment[i].FilePath;
+            element2.ContentType = TotalAttchment[i].ContentType;
+            MasterAttachment.push(element2);
+        }
+
+        //for (i = 0; i < TotalAttchment.length; i++) {
+        //    var element2 = {};
+        //    //element2.DocName = TotalAttchment[i].DocFileName;
+        //    element2.FilePath = TotalAttchment[i].FilePath;
+        //    //element2.ContentType = TotalAttchment[i].ContentType;
+        //    MasterAttachment.push(element2);
+        //}
+
+
+        var data = {
+            'To': to, 'From': from, 'CC': cc, 'BCC': bcc, 'Subject': subject, 'Body': strBodyText,
+            'RecordNo': ENQNO01, 'RevisionNo': 0, 'PINNo': 0,
+            'Dear': To, 'MasterAttachment': MasterAttachment
+        };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/SendEnquiryEmail",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                //MasterAttachment = [];
+                $("#LinkQuotationData2").empty();
+                $("#global-loader").fadeOut("slow");
+                $('#exampleModal32').modal('hide');
+
+                OnSave();
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+
+    function OnSave() {
+        debugger;
+
+        if (IsTemplateGenerate == 0) {
+            Swal.fire({
+                title: 'Alert!',
+                text: "Please Generate template first to proceed.",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        var basicElement = {};
+        basicElement.ESNO = '0';
+        basicElement.ESID = 0;
+        basicElement.ENQNO = '@ViewBag.ENQNO';
+        basicElement.ESDate = $("#txtESDate").val();
+        basicElement.CustomerID = '@ViewBag.CustomerID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.PartnerID = $("#ddlPartnerDropdown option:selected").val();
+        basicElement.Remarks = $("#ESRemarks").val();
+
+        if (basicElement.PartnerID == "" || basicElement.PartnerID == null || basicElement.PartnerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select outsource partner",
+                icon: 'error'
+            });
+
+            $("#ddlPartnerDropdown").focus();
+            return false;
+        }
+
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        //// Attachment
+        //TotalAttchment = [];
+        //TotalAttchment = BillAttachment;
+        //for (i = 0; i < TotalAttchment.length; i++) {
+        //    var element2 = {};
+        //    element2.DocName = TotalAttchment[i].DocFileName;
+        //    element2.FilePath = TotalAttchment[i].FilePath;
+        //    element2.ContentType = TotalAttchment[i].ContentType;
+        //    MasterAttachment.push(element2);
+        //}
+
+        $("#global-loader").fadeIn("slow");
+        var data = { 'BasicDetails': basicElement, 'AttachmentList': MasterAttachment };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/SaveEnquirySendToPartnerEntry',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#Savebtn").prop("disabled", true);
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("EnquirySentSummary", "Enquiry")';
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+</script>
+
+@* *** Upload Attachment *@
+
+<script>
+
+    function AddAttachmentForPhoto() {
+        debugger;
+        //  var data = {'name': name };
+        //data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/_AddAttachmentForENQSendToPartner",
+            //  data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        })
+    }
+
+    function OpenTemplateFile() {
+        debugger;
+        window.open(TemplateFilePath, '_blank');
+    }
+
+</script>
+
+@* *** Generate Template  *@
+
+<script>
+
+    function GenerateTemplate() {
+        debugger;
+        var ENQNO = '@ViewBag.ENQNO';
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+        var PartnerID = $("#ddlPartnerDropdown option:selected").val();
+        if (PartnerID == "" || PartnerID == null || PartnerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select outsource partner",
+                icon: 'error'
+            });
+            $("#ddlPartnerDropdown").focus();
+            return false;
+        }
+
+        //var flatPINOArrayString = Array.prototype.map.call(poItemM, function (item) { return "'" + item.PINO + "'"; }).join(', ');
+        //var flatPINOArrayString = JSON.stringify(poItemM);
+        //var itemListJson = JSON.stringify(poItemM);
+        //window.location = "/Enquiry/ExportToExcelWODetailsTemplate?ENQNO=" + ENQNO + "&ItemListD=" + itemListJson;
+
+        var data = { 'ENQNO': ENQNO, 'ItemListD': poItemM, 'PartnerID': PartnerID  };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/StorePINoInTemp',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                @*debugger;
+                IsTemplateGenerate = 1;
+                document.location = '@Url.Action("ExportToExcelWODetailsTemplate", "Enquiry")';*@
+
+                $.ajax({
+                    type: 'post',
+                    url: '/Enquiry/ExportToExcelWODetailsTemplate',
+                    //data: data,
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        debugger;
+                        IsTemplateGenerate = 1;
+                        TemplateFilePath = response;
+                        Swal.fire({
+                            title: 'success',
+                            text: "Template generated successfully.",
+                            icon: 'success'
+                        });
+                        //$("#divOpenFile").show();
+                        //document.location = '@Url.Action("ExportToExcelWODetailsTemplate", "Enquiry")';
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                        $("#global-loader").fadeOut("slow");
+                    }
+                });
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+            }
+        });
+
+    }
+
+</script>
+
+<script>
+
+    function RepTableDataJson2(tableName, data, title, fileName) {
+
+        try {
+            if (tableName == null) {
+                Swal.fire({ title: 'Error', text: " Table not exist.", icon: 'error' });
+            }
+
+            //Check Data Table has if already initialize then need to destroy first!
+            if ($.fn.DataTable.isDataTable(tableName)) {
+                tableName.DataTable().destroy();
+                tableName.empty();
+            }
+
+            var parseJSONResult = jQuery.parseJSON(data);
+
+            if (parseJSONResult != null && parseJSONResult.length > 0) {
+                //Get dynmmic column.
+                var dynamicColumns = [];
+                var i = 0;
+                $.each(parseJSONResult[0], function (key, value) {
+                    var obj = { sTitle: key };
+                    dynamicColumns[i] = obj;
+                    i++;
+                });
+                //fetch all records from JSON result and make row data set.
+                var rowDataSet = [];
+                var i = 0;
+                $.each(parseJSONResult, function (key, value) {
+                    var rowData = [];
+                    var j = 0;
+                    $.each(parseJSONResult[i], function (key, value) {
+                        rowData[j] = value;
+                        j++;
+                    });
+                    rowDataSet[i] = rowData;
+
+                    i++;
+                });
+                tableName.dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": rowDataSet,
+                    "bInfo": true,
+                    "bPaginate": true,
+                    "bFilter": true,
+                    "paging": true,
+                    //"order": [],
+                    "columns": dynamicColumns,
+                    "deferRender": true,
+                    "bSort": false,
+                    //"dom": 'Bfrtip',
+
+                    //"buttons": [
+
+                    //    {
+                    //        extend: 'excel',
+                    //        title: 'Job Card Summary',
+                    //        exportOptions: {
+                    //            columns: [3, 4, 5, 6, 7, 8, 9, 10]
+                    //        }
+                    //    }
+                    //]
+                });
+                $(".buttons-excel").addClass("btn btn-primary");
+                $(".buttons-excel>span").replaceWith('<i class="fa fa-file-excel-o" data-toggle="tooltip" data-placement="bottom" title="Export To Excel" data-original-title="Export To Excel"></i>');
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+
+
+        }
+        catch (ex) {
+            Swal.fire({ title: 'Error', text: "Something went wrong: " + ex.message, icon: 'error' });
+
+        }
+    }
+
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    jQuery('.txtInput').click(function () { selectAllText(jQuery(this)) });
+
+</script>

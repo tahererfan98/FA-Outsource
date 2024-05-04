@@ -1,0 +1,1110 @@
+﻿@*@model BombayToolsEntities.BusinessEntities.Vendor*@
+<style>
+    .bg-tab-active h4 {
+        color: white;
+    }
+
+    .bg-tab h4 {
+        color: rgba(0, 0, 0, 0.31);
+    }
+
+    .bg-tab-active {
+        color: !important;
+        background-image: linear-gradient(269deg, #32CAFE, #867EFC)
+    }
+
+    .br-btm {
+        border-bottom: 1px solid #F5F5F5;
+    }
+
+    #tblVendorContact tbody td {
+        padding:0 !important;
+    }
+</style>
+<div class="page-header" id="TopQ">
+    <h3 class="page-title">
+        <i class="fe fe-arrow-left" onclick="getBack()"></i>
+        New Vendor
+    </h3>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+            @*TAB HEADERS*@
+            <div class="row no-gutters br-btm">
+                <div class="col-sm-12 col-md-2 bg-tab-active data-tab-header" style="border-top-left-radius: 10px;" id="quot_tab1" onclick="changeTabSection(1)">
+                    <h4 class="m-0 p-5 text-center ">BASIC DETAILS</h4>
+                </div>
+                <div class="col-sm-12 col-md-2 bg-tab data-tab-header" onclick="changeTabSection(2)" id="quot_tab2">
+                    <h4 class="m-0 p-5 text-center">CONTACT DETAILS</h4>
+                </div>
+                <div class="col-sm-12 col-md-2 bg-tab data-tab-header" onclick="changeTabSection(3)" id="quot_tab3">
+                    <h4 class="m-0 p-5 text-center">GST</h4>
+                </div>
+                <div class="col-sm-12 col-md-2 bg-tab data-tab-header" style="border-top-right-radius: 10px;" onclick="changeTabSection(4)" id="quot_tab4">
+                    <h4 class="m-0 p-5 text-center">UPLOAD DOC</h4>
+                </div>
+                <div class="col-sm-12 col-md-2 bg-tab data-tab-header" style="border-top-right-radius: 10px;" onclick="changeTabSection(5)" id="quot_tab5">
+                    <h4 class="m-0 p-5 text-center">ACCOUNTING</h4>
+                </div>
+                <div class="col-sm-12 col-md-2 bg-tab data-tab-header" style="border-top-right-radius: 10px;" onclick="changeTabSection(6)" id="quot_tab6">
+                    <h4 class="m-0 p-5 text-center">PAYMENT TERMS</h4>
+                </div>
+            </div>
+            @*TAB PANEL 1: Basic Details*@
+            <div class="row data-tab-panel" id="quot_panel1">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="row p-6">
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <label class="form-label">Vendor ID</label>
+                                @Html.TextBox("TxtVendorID", null, new { @class = "form-control", @id = "TxtVendorID", name = "TxtVendorID", autocomplete = "off", placeholder = "NEW", disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <label class="form-label">Vendor Code</label>
+                                @Html.TextBox("TxtVendorCode", null, new { @class = "form-control", @id = "TxtVendorCode", name = "TxtVendorCode", autocomplete = "off", disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                @Html.TextBox("TxtVendorName", null, new { @class = "form-control", @id = "TxtVendorName", name = "TxtVendorName", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label class="form-label">Tally Ledger Name</label>
+                                @Html.TextBox("TxttallyName", null, new { @class = "form-control", @id = "TxttallyName", name = "TxttallyName", autocomplete = "off" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Address - 1</label>
+                                @Html.TextArea("Address", null, new { @class = "form-control", @id = "TxtAddress", name = "TxtAddress", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Address - 2</label>
+                                @Html.TextArea("Txtaddress2", null, new { @class = "form-control", @id = "Txtaddress2", name = "Txtaddress2", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Discountable</label>
+                                @Html.DropDownList("ddlDiscountable", new List<SelectListItem> {
+                               new SelectListItem {Text = "--Select--",Value="0"},
+                               new SelectListItem {Text = "Discount",Value="Discount"},
+                               new SelectListItem {Text = "Non-Discount",Value="Non-Discount"} }
+                         , new { @class = "form-control", autocomplete = "off", @id = "ddlDiscountable" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Creditors Group</label>
+                                @Html.TextBox("TxtCreditores", null, new { @class = "form-control", @id = "TxtCreditores", name = "TxtCreditores", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Related Persons</label>
+                                @Html.TextBox("TxtrelatedPerson", null, new { @class = "form-control", @id = "TxtrelatedPerson", name = "TxtrelatedPerson", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">GST Scheme</label>
+                                @Html.DropDownList("ddlGstscheme", new List<SelectListItem> {
+                               new SelectListItem {Text = "--Select--",Value="0"},
+                               new SelectListItem {Text = "Composite",Value="Composite"},
+                               new SelectListItem {Text = "Non-Composite",Value="Non-Composite"} }
+                         , new { @class = "form-control", autocomplete = "off", @id = "ddlGstscheme" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                @Html.DropDownList("ddlstatus", new List<SelectListItem> {
+                               new SelectListItem {Text = "--Select--",Value="0"},
+                               new SelectListItem {Text = "MSME",Value="MSME"},
+                               new SelectListItem {Text = "NON-MSME",Value="NON-MSME"} }
+                         , new { @class = "form-control", autocomplete = "off", @id = "ddlstatus" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label">Registrations NO.</label>
+                                @Html.TextBox("Txtregistration", null, new { @class = "form-control", @id = "Txtregistration", name = "Txtregistration", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Contact NO.</label>
+                                @Html.TextBox("TxtContactNo", null, new { @class = "form-control", @id = "TxtContactNo", name = "TxtContactNo", autocomplete = "off" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*TAB PANEL 2: Contact Details*@
+            <div id="quot_panel2" class="row data-tab-panel">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="row p-6">
+                        <div class="col-12">
+                            <button class="btn btn-success pull-right" id="addRow">Add</button>
+                        </div>
+                        <div class="col-sm-12 col-lg-12">
+                            <table class="table table-bordered text-wrap w-100" id="tblVendorContact">
+                                <thead>
+                                    <tr>
+                                        <td style="width:20px">#</td>
+                                        <td>Contact Person</td>
+                                        <td>Email-ID</td>
+                                        <td>Contact No</td>
+                                        <td>Location</td>
+                                        <td style="width:20px">Delete</td>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*TAB PANEL 3:GST Details*@
+            <div id="quot_panel3" class="row data-tab-panel">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="row p-6">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> Type of Registration </label>
+                                @Html.DropDownList("ddlRegisterType", (IEnumerable<SelectListItem>)ViewBag.GSTType, "--Select--", new { @class = "form-control", @id = "ddlRegisterType", name = "ddlRegisterType", autocomplete = "off", onchange = "SelectedGSTStatus()", })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> GST NO.</label>
+                                @Html.TextBox("txtGSTNo", null, new { @class = "form-control", @id = "txtGSTNo", name = "txtGSTNo", autocomplete = "off", @maxlength = 15 })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> PAN NO.</label>
+                                @Html.TextBox("txtPANNo", null, new { @class = "form-control", @id = "txtPANNo", name = "txtPANNo", autocomplete = "off", @maxlength = 50 })
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> Location</label>
+                                @Html.DropDownList("GstLocation", (IEnumerable<SelectListItem>)ViewBag.locationList, "--Select--", new { @class = "form-control", @id = "GstLocation", name = "GstLocation", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> GST Registration Date</label>
+                                @Html.TextBox("datePicker1", null, new { @class = "form-control datetimePicker", @id = "datePicker1", autocomplete = "off", @Value = DateTime.Now.ToString("dd MMM yyyy HH:mm") })
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> State</label>
+                                @Html.DropDownList("txtState", (IEnumerable<SelectListItem>)ViewBag.StateList, "--Select--", new { @class = "form-control", @id = "txtState", name = "txtState", autocomplete = "off", onblur = "OnBlurState()" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> Code</label>
+                                @Html.TextBox("txtCode", null, new { @class = "form-control", @id = "txtCode", name = "txtCode", autocomplete = "off", @maxlength = 400, @Readonly = "readonly", tabindex = "-1" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group label-floating">
+                                <label class="form-label">Address</label>
+                                @Html.TextArea("txtAddress", null, new { @class = "form-control", @id = "txtAddress", name = "txtAddress", autocomplete = "off", rows = "2", @maxlength = 500 })
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> Email ID</label>
+                                @Html.TextBox("tXtGStEmail", null, new { @class = "form-control", @id = "tXtGStEmail", name = "tXtGStEmail", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group label-floating">
+                                <label class="form-label"> Contact NO.</label>
+                                @Html.TextBox("txtContact", null, new { @class = "form-control", @id = "txtContact", name = "txtContact", autocomplete = "off" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*TAB PANEL 4:Upload Documents*@
+            <div id="quot_panel4" class="row data-tab-panel">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="row p-6">
+
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label mandatory">Document Type</label>
+                                <div class="row gutters-xs">
+                                    <div class="col">
+                                        @Html.DropDownList("ddlDocsType", (IEnumerable<SelectListItem>)ViewBag.VendorDocs, "--Select-- ", new { @class = "form-control", @id = "ddlDocsType", name = "ddlDocsType", autocomplete = "off" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label mandatory">Upload Files</label>
+                                <div class="row gutters-xs">
+                                    <div class="col">
+                                        <div class="form-group" id="divFileUpload">
+
+                                            <input type="file" id="fileJOAttachment" name="postedFile" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-12" id="divAddDriverss">
+                            <div class="form-group">
+                                <label class="form-label mandatory" style="visibility:hidden">.</label>
+                                <div class="row gutters-xs">
+                                    <div class="col">
+                                        <div class="form-group" id="divFileUpload">
+                                            <input type="Button" id="btnUpload" value="Upload" class="btn btn-primary" onclick="addAttchmentINFolder()" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <table id="tblVendorUpload" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>File Name</th>
+                                        <th>Download</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @*TAB PANEL 5:Accounting*@
+            <div id="quot_panel5" class="row data-tab-panel">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="row p-6">
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">Bank Name</label>
+                                @Html.DropDownList("ddlBankName", (IEnumerable<SelectListItem>)ViewBag.BankList, "--Select--", new { @class = "form-control", @id = "ddlBankName", name = "ddlBankName", autocomplete = "off" })
+
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">Account Number</label>
+                                <input id="txtAccountNumber" placeholder="Enter Account Number" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">IFSC Code</label>
+                                <input id="txtIFSCCode" placeholder="Enter IFSC Code" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">Account Name</label>
+                                <input id="txtAccountName" placeholder="Enter Account Name" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">Branch Name</label>
+                                <input id="txtBranchName" placeholder="Enter Branch Name" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                        <span class="col-auto">
+                            <button class="btn btn-success mt-5" onclick="addVendorAccountdetails()">ADD</button>
+                        </span>
+                        <div class="col-12">
+                            <table class="table table-bordered w-100" id="tblAccountDetails">
+                                <thead>
+                                    <tr>
+                                        <th class="wd-15p sorting">Bank Name</th>
+                                        <th class="wd-10p sorting">Account No</th>
+                                        <th class="wd-10p sorting">IFSC Code</th>
+                                        <th class="wd-10p sorting">Account Name</th>
+                                        <th class="wd-10p sorting">Branch Name</th>
+                                        <th class="wd-10p sorting"></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*TAB PANEL 6:Payment Terms*@
+            <div id="quot_panel6" class="row data-tab-panel">
+                <div class="col-sm-12 col-md-12">
+                    <div class="row p-6">
+                        <div class="col-sm-12 col-md-10 col-lg-10">
+                            <div class="form-group">
+                                <label class="form-label">Terms</label>
+                                <input class="form-control" id="term_id_" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <button class="btn btn-primary mt-5" onclick="addPaymentTerms()">ADD</button>
+                        </div>
+                        <div class="col-sm-12 col-lg-12">
+                            <table class="table table-bordered w-100" id="tblVendorTerm">
+                                <thead>
+                                    <tr>
+                                        <th style="width:25px !important">#</th>
+                                        <th>Payment Terms</th>
+                                        <th style="width:25px !important">Delete</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary float-left" id="btn_Prev" onclick="setPreviousTab()">Previous</button>
+                <button class="btn btn-warning float-right" id="btn_Next" onclick="setNextTab()">Next</button>
+                <button class="btn btn-success float-right" id="btn_Save" onclick="onSave()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*GLOBAL VARIABLE*@
+<script>
+    console.log(1);
+    var vendorContactList = [];
+    var vendorBanktList = [];
+    var vendorTermList = [];
+    var vendorUploads = [];
+    var counter = 1;
+    var bank_counter = 1;
+    var payment_term = 1;
+    var payment_doc = 1;
+    var vemdorID_ =@ViewBag.TxtVendorID;
+    $(document).ready(function () {
+        $('#tblVendorContact').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            sorting: false,
+            searching: false
+        });
+        if (vemdorID_ != 0) {
+            vendorContactList = @Html.Raw(Json.Encode(ViewBag.ContactList));
+            vendorContactList = JSON.parse(vendorContactList);
+            counter = vendorContactList.length + 1;
+            vendorBanktList = @Html.Raw(Json.Encode(ViewBag.AccountList));
+            vendorBanktList = JSON.parse(vendorBanktList);
+            bank_counter = vendorBanktList.length + 1;
+            vendorTermList = @Html.Raw(Json.Encode(ViewBag.Terms));
+            vendorTermList = JSON.parse(vendorTermList);
+            payment_term = vendorTermList.length + 1;
+            vendorUploads = @Html.Raw(Json.Encode(ViewBag.Docs));
+            vendorUploads = JSON.parse(vendorUploads);
+            payment_doc = vendorUploads.length + 1;
+            OnBlurState();
+            setContactDetailsTable();
+            setVendorBankDetail();
+            setTermTable();
+            setUploadTable();
+            $("#ddlDiscountable").val("@ViewBag.ddlDiscountable");
+            $("#ddlRegisterType").val("@ViewBag.ddlRegisterType");
+            $("#TxtCreditores").val("@ViewBag.TxtCreditores");
+            $("#TxtrelatedPerson").val("@ViewBag.TxtrelatedPerson");
+            $("#ddlGstscheme").val("@ViewBag.ddlGstscheme");
+            $("#ddlstatus").val("@ViewBag.ddlstatus");
+            $("#Txtregistration").val("@ViewBag.Txtregistration");
+            $("#TxtContactNo").val("@ViewBag.TxtContactNo");
+            $("#txtAddress").val("@ViewBag.txtAddress");
+            $("#tXtGStEmail").val("@ViewBag.tXtGStEmail");
+            $("#txtContact").val("@ViewBag.txtContact");
+            $("#txtGSTNo").val("@ViewBag.txtGSTNo");
+            $("#txtPANNo").val("@ViewBag.txtPANNo");
+        }
+    });
+
+    function OnBlurState() {
+        var StateID = $("#txtState").val();
+        var data1 = { 'StateID': StateID };
+        var data = JSON.stringify(data1);
+        $.ajax({
+            type: "POST",
+            url: "/Master/GetSateCode",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("#txtCode").val(data)
+
+
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        });
+    }
+</script>
+@*FOR TAB*@
+<script>
+    var currentIndex = 1;
+    var previousIndex = 1;
+    changeTabSection(currentIndex);
+    function changeTabSection(index) {
+        currentIndex = index;
+        $(".data-tab-panel").hide();
+        $("#quot_panel" + index).show();
+        $(".data-tab-header").removeClass("bg-tab-active");
+        $(".data-tab-header").addClass("bg-tab");
+        $("#quot_tab" + index).addClass("bg-tab-active");
+        $("#quot_tab" + index).removeClass("bg-tab");
+        setFooter();
+        onBackAdjustHeight();
+        $('html, body').animate({
+            scrollTop: $("#TopQ").offset().top
+        }, 10);
+    }
+
+    function setNextTab() {
+        currentIndex = currentIndex + 1;
+        changeTabSection(currentIndex);
+    }
+
+    function setPreviousTab() {
+        previousIndex = currentIndex - 1;
+        changeTabSection(previousIndex);
+    }
+
+    function setFooter() {
+        switch (currentIndex) {
+            case 1:
+                $("#btn_Prev").hide();
+                $("#btn_Save").hide();
+                $("#btn_Next").show();
+                break;
+            case 2:
+                $("#btn_Prev").show();
+                $("#btn_Save").hide();
+                $("#btn_Next").show();
+                break;
+            case 3:
+                $("#btn_Prev").show();
+                $("#btn_Save").hide();
+                $("#btn_Next").show();
+                break;
+            case 4:
+                $("#btn_Prev").show();
+                $("#btn_Save").hide();
+                $("#btn_Next").show();
+                break;
+            case 5:
+                $("#btn_Prev").show();
+                $("#btn_Save").hide();
+                $("#btn_Next").show();
+                break;
+            case 6:
+                $("#btn_Next").hide();
+                $("#btn_Save").show();
+                break;
+
+        }
+    }
+</script>
+@*FOR CONTACT TABLE*@
+<script>
+
+    $('#addRow').on('click', function () {
+        var temp = {};
+        temp.counter = counter;
+        temp.IsCancel = 0;
+        temp.Name = "";
+        temp.Email = "";
+        temp.Mobile = "";
+        temp.Location = "";
+        vendorContactList.push(temp);
+        counter++;
+        setContactDetailsTable();
+    });
+
+    function deleteSelectedRow(ID, CPID) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Selected contact details will be deleted",
+            icon: 'warning',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                for (var i = 0; i < vendorContactList.length; i++) {
+                    if (vendorContactList[i].counter == ID) {
+                        vendorContactList[i].IsCancel = 1;
+                        break;
+                    }
+                }
+                setContactDetailsTable();
+
+            }
+        });
+
+    }
+
+    function updateContactList(id) {
+        for (var i = 0; i < vendorContactList.length; i++) {
+            if (vendorContactList[i].counter == id) {
+                vendorContactList[i].Name = $("#v_name_" + id).val();
+                vendorContactList[i].Email = $("#v_email_" + id).val();
+                vendorContactList[i].Mobile = $("#v_mobile_" + id).val();
+                vendorContactList[i].Location = $("#v_location_" + id).val();
+                break;
+            }
+        }
+       
+    }
+
+    function setContactDetailsTable() {
+        var _vendorContactList = [];
+        for (var i = 0; i < vendorContactList.length; i++) {
+            if (vendorContactList[i].IsCancel == 0) {                
+                var element = {};
+                element.counter = vendorContactList[i].counter;
+                element.Name = vendorContactList[i].Name;
+                element.Email = vendorContactList[i].Email;
+                element.Mobile = vendorContactList[i].Mobile;
+                element.Location = vendorContactList[i].Location;
+                element.IsCancel = 0;
+                _vendorContactList.push(element);
+            }
+        }
+        $('#tblVendorContact').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": _vendorContactList,
+            searching: false,
+            "columns": [
+                {
+                    "data": "counter",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<span class=\"pl-3\">"+data+"</span>"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "Name",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<input class=\"form-control\" id=\"v_name_" + row.counter + "\" onkeyup=\"updateContactList(" + row.counter + ")\" autocomplete=\"off\" value='"+data+"'  />"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "Email",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<input class=\"form-control\" id=\"v_email_" + row.counter + "\" onkeyup=\"updateContactList(" + row.counter + ")\" autocomplete=\"off\" value='" + data + "'  />"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "Mobile",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<input class=\"form-control\" id=\"v_mobile_" + row.counter + "\" onkeyup=\"updateContactList(" + row.counter + ")\" autocomplete=\"off\" value='" + data + "'  />"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "Location",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<input class=\"form-control\" id=\"v_location_" + row.counter + "\" onkeyup=\"updateContactList(" + row.counter + ")\" autocomplete=\"off\" value='" + data + "'  />"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "counter",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<button class=\"btn btn-sm btn-danger\" onclick=\"deleteSelectedRow(" + data + ",0)\" id=\"delete_" + data + "\"><i class=\"fa fa-trash\"><i/></button>"
+                        }
+                        return data;
+                    }
+
+
+                }
+            ]
+        });
+    }
+
+</script>
+@*BANK DETAILS*@
+<script>
+    function addVendorAccountdetails() {
+        var element = {};
+        element.BankName = $("#ddlBankName option:selected").text();
+        element.BankID = $("#ddlBankName option:selected").val();
+        element.AccountNo = $("#txtAccountNumber").val();
+        element.IFSCCode = $("#txtIFSCCode").val();
+        element.AccountName = $("#txtAccountName").val();
+        element.BranchName = $("#txtBranchName").val();
+        if (element.BankName == "") {
+            document.getElementById("ddlBankName").style.borderColor = "red";
+            alert('Please enter Bank Name!')
+            event.preventDefault();
+            return;
+        }
+        if (element.AccountNo == "") {
+            document.getElementById("txtAccountNumber").style.borderColor = "red";
+            alert('Please enter Account No!')
+            event.preventDefault();
+            return;
+        }
+        if (element.IFSCCode == "") {
+            document.getElementById("txtIFSCCode").style.borderColor = "red";
+            alert('Please enter IFSC code!')
+            event.preventDefault();
+            return;
+        }
+        if (element.AccountName == "") {
+            document.getElementById("txtAccountName").style.borderColor = "red";
+            alert('Please enter Account Name!')
+            event.preventDefault();
+            return;
+        }
+        if (element.BranchName == "") {
+            document.getElementById("txtBranchName").style.borderColor = "red";
+            alert('Please enter Bank Name!')
+            event.preventDefault();
+            return;
+        }
+        element.IsActive = 1;   
+        element.Counter = bank_counter;
+        bank_counter++;
+
+        vendorBanktList.push(element);
+        setVendorBankDetail();
+        document.getElementById('txtAccountNumber').value = "";
+        document.getElementById('txtIFSCCode').value = "";
+        document.getElementById('txtAccountName').value = "";
+        document.getElementById('txtBranchName').value = "";
+
+        document.getElementById('ddlBankName').value = "";
+
+
+    }
+
+    function CancelAccountDetails(ID) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Selected bank details will be deleted",
+            icon: 'warning',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                for (var i = 0; i < vendorBanktList.length; i++) {
+                    if (vendorBanktList[i].Counter == ID) {
+                        vendorBanktList[i].IsActive = 0;
+                        break;
+                    }
+                }
+                setVendorBankDetail();
+
+            }
+        })
+    }
+
+    function setVendorBankDetail() {
+        var bank_temp = [];
+        for (var i = 0; i < vendorBanktList.length; i++) {
+            if (vendorBanktList[i].IsActive == 1) {
+                var element = {};
+                element.BankName = vendorBanktList[i].BankName;
+                element.AccountNo = vendorBanktList[i].AccountNo;
+                element.IFSCCode = vendorBanktList[i].IFSCCode;
+                element.AccountName = vendorBanktList[i].AccountName;
+                element.BranchName = vendorBanktList[i].BranchName;
+                element.Counter = vendorBanktList[i].Counter;
+                bank_temp.push(element);
+            }
+        }
+        $('#tblAccountDetails').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": bank_temp,
+            "columns": [
+                { "data": "BankName" },
+                { "data": "AccountNo" },
+                { "data": "IFSCCode" },
+                { "data": "AccountName" },
+                { "data": "BranchName" },
+
+
+                {
+                    "data": "Counter",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+
+                            data = "<button type=\"button\" class=\"btn btn-icon btn-primary btn-danger removebutton \" name=\"removebutton\" style=\"height:35px;\" onclick=\"CancelAccountDetails('" + data + "')\"><i class=\"fe fe-trash\" style=\"font-size: 16px;\"></i></button>"
+                        }
+
+                        return data;
+                    }
+
+
+                }
+            ]
+        });
+    }
+
+</script>
+@*FOR PAYMENT*@
+<script>
+    function addPaymentTerms() {
+        payment_term++;
+        var term_ = $("#term_id_").val();
+        if (term_ != "") {
+            var element = {};
+            element.Counter = payment_term;
+            element.Term = term_;
+            element.IsActive = 1;
+            vendorTermList.push(element);
+        }
+        setTermTable();
+        $("#term_id_").val("");
+    }
+
+    function setTermTable() {
+        var _vendorTerm = [];
+        for (var i = 0; i < vendorTermList.length; i++) {
+            if (vendorTermList[i].IsActive == 1) {
+                var element = {};
+                element.Counter = vendorTermList[i].Counter;
+                element.Term = vendorTermList[i].Term;
+                _vendorTerm.push(element);
+            }
+        }
+        $('#tblVendorTerm').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": _vendorTerm,
+            searching: false,
+            "columns": [
+                {
+                    "data": "Counter",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<span class=\"pl-3\">" + data + "</span>"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "Term",
+                },
+                {
+                    "data": "Counter",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<button class=\"btn btn-sm btn-danger\" onclick=\"deleteSelectedTermRow(" + data + ")\" id=\"delete_" + data + "\"><i class=\"fa fa-trash\"><i/></button>"
+                        }
+                        return data;
+                    }
+
+
+                }
+            ]
+        });
+    }
+
+    function deleteSelectedTermRow(ID) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Selected contact details will be deleted",
+            icon: 'warning',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                for (var i = 0; i < vendorTermList.length; i++) {
+                    if (vendorTermList[i].Counter == ID) {
+                        vendorTermList[i].IsActive = 0;
+                        break;
+                    }
+                }
+                setTermTable();
+            }
+        });
+    }
+</script>
+@*FOR UPLOAD*@
+<script>
+    function SelectedGSTStatus() {
+        var checkSelectedType = $("#ddlRegisterType").val();
+        if (checkSelectedType == "1") {
+            $("#txtGSTNo").prop("disabled", false);
+            $("#txtPANNo").prop("disabled", false);
+        }
+        else {
+            $("#txtGSTNo").val("");
+            $("#txtPANNo").val("");
+            $("#txtGSTNo").prop("disabled", true);
+            $("#txtPANNo").prop("disabled", true);
+        }    
+
+    }
+
+    function addAttchmentINFolder() {
+
+        //var MSNO = data;
+        var DocumenttypeID = $("#ddlDocsType option:selected").val();
+        ///Attach
+        var fileUpload = $("#fileJOAttachment").get(0);
+        var files = fileUpload.files;
+        // Create FormData object
+        var fileData = new FormData();
+        if (files.length == 0) {
+            //alert("Please select File!!")
+            return false;
+        }
+        else {
+            var iSize = document.getElementById('fileJOAttachment').files[0].size / 1024
+            iSize = (Math.round((iSize / 1024) * 100) / 100)
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+            //fileData.append('MSNoFile', MSNO);
+            fileData.append('DocumenttypeID', DocumenttypeID);
+
+        }
+        $.ajax({
+            url: "/Master/SaveAttachmentToDirectory",
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (response) {
+                if (response.FilePath != undefined) {
+                    var element = {};
+                    element.FileName = response.FileName;
+                    element.FilePath = response.FilePath;
+                    element.DocumentType = response.DocumentType;
+                    element.payment_doc = payment_doc;
+                    element.IsActive = 1;
+                    payment_doc++;
+                    vendorUploads.push(element);
+                }
+                $("#cute-loader").fadeOut("slow");
+                setUploadTable();
+                alert("Record saved successfully!");
+                $("#fileJOAttachment").val();
+                $("##ddlDocsType").val();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#cute-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+    function deleteSelectedUploadRow(ID) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Selected contact details will be deleted",
+            icon: 'warning',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                for (var i = 0; i < vendorUploads.length; i++) {
+                    if (vendorUploads[i].payment_doc == ID) {
+                        vendorUploads[i].IsActive = 0;
+                        break;
+                    }
+                }
+                setUploadTable();
+            }
+        });
+    }
+
+    function setUploadTable() {
+        var _vendorUploads = [];
+        for (var i = 0; i < vendorUploads.length; i++) {
+            if (vendorUploads[i].IsActive ==1) {
+                var element = {};
+                element.payment_doc = vendorUploads[i].payment_doc;
+                element.FileName = vendorUploads[i].FileName;
+                _vendorUploads.push(element);
+            }
+        }
+        $('#tblVendorUpload').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": _vendorUploads,
+            searching: false,
+            "columns": [
+                {
+                    "data": "payment_doc",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<span class=\"pl-3\">" + data + "</span>"
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "FileName",
+                },
+                {
+                    "data": "payment_doc",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = "<button class=\"btn btn-sm btn-info\" onclick=\"downloadFile(" + data + ")\" id=\"down" + data + "\"><i class=\"fa fa-download\"></i></button> <button class=\"btn btn-sm btn-danger\" onclick=\"deleteSelectedUploadRow(" + data + ")\" id=\"delete_" + data + "\"><i class=\"fa fa-trash\"></i></button>"
+                        }
+                        return data;
+                    }
+
+
+                }
+            ]
+        });
+    }
+
+</script>
+@*SAVE OR UPDATE*@
+<script>
+    function onSave() {
+        debugger
+        var Vendor = {};
+        Vendor.VendorID = $("#TxtVendorID").val();
+        Vendor.Vendor_Name = $("#TxtVendorName").val();
+        Vendor.Vendor_Code = $("#TxtVendorCode").val();
+        Vendor.TallyName = $("#TxttallyName").val();
+        Vendor.Vendor_Address = $("#TxtAddress").val();
+        Vendor.ContactPerson = $("#TxtContactNo").val();
+        Vendor.GSTNo = $("#txtGSTNo").val();
+        Vendor.EmailAddress = $("#tXtGStEmail").val();
+        Vendor.StateID = $("#txtState").val();
+        Vendor.address2 = $("#Txtaddress2").val();
+        Vendor.Discountable = $("#ddlDiscountable").val();
+        Vendor.Creditores = $("#TxtCreditores").val();
+        Vendor.relatedPerson = $("#TxtrelatedPerson").val();
+        Vendor.Gstscheme = $("#ddlGstscheme").val();
+        Vendor.status = $("#ddlstatus").val();
+        Vendor.registration = $("#Txtregistration").val();
+        Vendor.PANNo = $("#txtPANNo").val();
+        Vendor.StateCode = $("#txtCode").val();
+        Vendor.RegisterTypeID = $("#ddlRegisterType").val();
+        Vendor.GSTRegistrationDate = $("#datePicker1").val();
+        Vendor.GSTLocation = $("#GstLocation").val();
+        Vendor.GSTAddress = $("#txtAddress").val();
+        Vendor.GSTContactNo = $("#txtContact").val();
+        //console.log(Vendor);
+        var isValidate = Boolean;
+        isValidate = true;
+        var errorMsg = "Please enter ";
+        if (Vendor.Vendor_Name == "") {
+            errorMsg = errorMsg + "Vendor Name,";
+            isValidate = false && isValidate;
+        }
+        if (Vendor.TallyName == "") {
+            errorMsg = errorMsg + "Tally Name,";
+            isValidate = false && isValidate;
+        }
+        if (Vendor.RegisterType == "") {
+            errorMsg = errorMsg + "Register Type,";
+            isValidate = false && isValidate;
+        }
+        if (Vendor.RegisterTypeID == 3 || Vendor.RegisterTypeID == 2) {
+            Vendor.GSTNo = "-";
+            Vendor.PANNo = "-";
+        }
+        if (Vendor.GSTNo == "") {
+            errorMsg = errorMsg + "GST No,";
+            isValidate = false && isValidate;
+        }
+        if (Vendor.PANNo == "") {
+            errorMsg = errorMsg + "Pan No,";
+            isValidate = false && isValidate;
+        }
+
+        if (isValidate == false) {
+            Swal.fire({
+                title: 'Warning',
+                text: errorMsg,
+                icon: 'warning'
+            });
+            return false;
+        }
+        var data = { 'Basic': Vendor, 'VendorList': vendorContactList, 'BankList': vendorBanktList, 'TermList': vendorTermList, 'Upload': vendorUploads };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Master/AjaxAddOrEditVendor",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                         document.location = '@Url.Action("VendorSummary", "Master")';
+                        });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+
+                }
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        })
+    }
+</script>

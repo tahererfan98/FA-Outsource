@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "GlobalSearch";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<style>
+    .highlight {
+        background: orange;
+        color: black;
+    }
+</style>
+<div class="row" id="SearchSection">
+    <div class="col-sm-12 col-md-6 ">
+        <div class="form-group mt-2">
+            <div class="row gutters-xs">
+                <span class="col-auto mt-1">
+                    <strong>Search</strong>
+                </span>
+                <div class="col">
+                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchTextContact", name = "searchTextContact", autocomplete = "off" })
+                    <small id="resultCount"></small>
+                </div>
+                <span class="col-auto">
+                    <button class="btn btn-secondary" type="button" onclick="LoadSearchResult()"><i class="fe fe-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+        <div class="form-group mt-2">
+            <select class="form-control" onchange="showSelectedResult(this)" id="ddlOption">
+                <option value="x">ALL</option>
+                <option value="0">Contact</option>
+                <option value="1">Enquiry</option>
+                <option value="2">Quotation</option>
+                <option value="3">Item</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="content vscroll" style="max-height:450px">
+
+
+                    <div id="result"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="viewQuote"></div>
+
+<script>
+
+    $(document).ready(function () {
+        LoadSearchResult();
+    });
+
+    $("#searchTextContact").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            LoadSearchResult();
+        }
+    });
+    function LoadSearchResult() {
+        var st = document.getElementById("searchTextContact").value;
+        st = st.trim();
+        if (st === "" || st == undefined) {
+            return;
+        }
+        $("#ddlOption").val("x");
+        var data = { 'SearchText': st };
+        $("#global-loader").fadeIn();
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/_SearchResult",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#result").empty();
+                $("#result").html(data);
+                $("#global-loader").fadeOut();
+                $("#result").mark(st, {
+                    "element": "span",
+                    "className": "highlight",
+                    //"accuracy": {
+                    //    "value": "exactly",
+                    //    "limiters": [",", "."]
+                    //}
+                });
+            },
+            error: function (error) {
+                $("#gloabl-loader").fadeOut();
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+
+    }
+
+
+    function viewQuotationDetails(ID, CPID) {
+        var data = { 'ID': ID, 'CPID': CPID };
+        $("#global-loader").fadeIn();
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Quotation/_QuotationData",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#SearchSection').hide();
+                $('#viewQuote').html(response);
+                $('#viewQuote').show();
+             
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function getBack() {
+        $('#SearchSection').show();
+        $('#viewQuote').hide();
+}
+
+</script>

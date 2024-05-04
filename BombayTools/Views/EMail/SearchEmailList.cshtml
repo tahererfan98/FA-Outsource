@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+
+<div class="row" id="SearchList">
+    <div class="card">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-inbox table-hover">
+
+                    <tbody>
+                        @foreach (var d in Model)
+                        {
+                            <tr>
+                                <td class="view-message dont-show" style="width:150px;">@Html.DisplayFor(m => d.FromName)</td>
+                                <td class="view-message" onclick="ShowBodyTagView('@d.ID')">@Html.DisplayFor(m => d.Subject)</td>
+                                <td class="view-message text-right" style="width:150px;">@Html.DisplayFor(m => d.Display)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<script>
+
+    function ShowBodyTagView(body) {
+        $("#SearchList").hide();
+        $("#MessageBody").show();
+        var data = { 'ID': body };
+        data = JSON.stringify(data);
+        $("#goBackButton").show();
+
+        $.ajax({
+            url: "/EMail/GetEMailBody",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#SearchList').hide();
+
+                $("#MessageBody").show();
+                var ifrm = $('#MailText')[0].contentWindow.document;
+                $('body', ifrm).html(response.Body);
+                //$('#MailText').html(response);
+                $('#MailText').show();
+                //$('#text').text(response.PlainText);
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+        //var ifrm = $('#MailText')[0].contentWindow.document;
+        //$('body', ifrm).html(body);
+    }
+</script>

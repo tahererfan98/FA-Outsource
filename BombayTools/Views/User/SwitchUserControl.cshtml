@@ -1,0 +1,88 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.User>
+    @{
+        ViewBag.Title = "SwitchUserControl";
+        Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+        int SrNo = 1;
+    }
+
+    <div class="page-header">
+        <div class="page-title">
+            <h4 class="page-title">User List</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-bordered w-100">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User Name</th>
+                        <th>Role</th>
+                        <th>Last Login</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in Model)
+                    {
+                    <tr>
+                        <td>@SrNo</td>
+                        <td>@d.UserName</td>
+                        <td>@d.Role</td>
+                        <td>@d.LastLogin</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="SwitchToUser(@d.ID)">Switch</button></td>
+                        @{ 
+                            SrNo++;
+                        }
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script>
+    var UserList = []
+     $(document).ready(function () {
+       
+         UserList = [];
+            UserList = @Html.Raw(Json.Encode(@ViewBag.List));
+            UserList = JSON.parse(UserList);
+         
+
+    });
+
+    function SwitchToUser(id) {
+        var list = UserList.filter((x) => x.ID == id);
+        var element = {};
+        element.ID = id;
+        element.UserName = list[0].UserName;
+        element.EmailID = list[0].EmailID;
+        element.UserType = list[0].UserType;
+        var data = { 'User': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/User/AjaxSetUserDataForUserControl',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                                     document.location = '@Url.Action("NavigationMode", "User")';
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+    }
+
+</script>
