@@ -1,0 +1,197 @@
+﻿
+@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="custom-switch">
+                    <input type="checkbox" name="custom-switch-checkbox-info" class="custom-switch-input" id="selectorForInfo" onchange="setInfoFlag()">
+                    <span class="custom-switch-indicator"></span>
+                    <span class="custom-switch-description">Open mail for info@bombaytools.com</span>
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col">
+                        @Html.TextBox("SearchEmail", null, new { @class = "form-control ", @id = "SearchEmail", name = "SearchEmail", placeholder = "Search for...", onclick= "searchResultMail()" })
+                    </div>
+                    <span class="col-auto">
+                        <button class="btn btn-secondary" type="button" onclick="searchResultMail()"><i class="fe fe-search"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="content scroll-1" style="max-height:500px">
+                <div class="table-responsive">
+                    <table class="table table-inbox table-hover">
+                        <tbody>
+                            @foreach (var d in Model)
+                            {
+                              
+                                    <tr class="" >
+                                        <td class="inbox-small-cells" style="width:10%">
+                                            <input type="checkbox" class="mail-checkbox" id="@d.ID" value="@d.ID">
+                                            <input hidden value="@d.ThreadID" id="sa_@d.ID" />
+                                            <input hidden value="@d.Snippets" id="sn_@d.ID" />
+                                        </td>
+                                        @*<td class="view-message dont-show" onclick="viewSelectedMail('@d.ID','@d.ThreadID')"></td>*@
+                                        <td class="view-message" onclick="viewSelectedMail('@d.ID','@d.ThreadID')" style="width:90%">
+                                            @d.Subject
+                                            <br />
+                                            <strong>From: @d.FromName.Replace("\"", "")</strong>
+                                            <br />
+                                            @d.Display
+                                        </td>
+                                    </tr>
+                      
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="" id="loader-temp">
+                <div class="spinner3">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                </div>
+            </div>
+            <div id="emailData_">
+                <h3 id="MailSubject"></h3>
+                <h6 id="MailFrom"></h6>
+                <iframe id="miniMailView" style="border:none;width:100%;height:450px"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    $(".scroll-1").mCustomScrollbar();
+    $("#loader-temp").hide();
+    $("#linkMailFoot").hide();
+
+    var setmailflag = "@ViewBag.setFlagForMail";
+    if (setmailflag == 1) {
+        var isInfo_ = document.getElementById("selectorForInfo");
+        isInfo_.checked = true;
+    }
+    var linkingList = [];
+    function searchResultMail() {
+        var text = $("#SearchEmail").val();
+        if (text != "") {
+            openMiniInbox(text)
+        }
+    }
+
+    function setInfoFlag() {
+        var isInfo = document.getElementById("selectorForInfo");
+        isInfo = isInfo.checked;
+        if (isInfo == false) {
+            flagForMail = 0;
+        } else {
+            flagForMail = 1;
+        }
+        var text = $("#SearchEmail").val();
+ 
+            openMiniInbox(text)
+        
+    }
+
+    function viewSelectedMail(messageID, threadID) {
+        $("#loader-temp").show();
+        $("#emailData_").hide();
+        var data = { 'ID': messageID, 'ThreadID': threadID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/EmailManager/GetEMailBody",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                var ifrm = $('#miniMailView')[0].contentWindow.document;
+                $('body', ifrm).html(response.Body);
+                $("#loader-temp").hide();
+                $("#emailData_").show();
+                $('#MailFrom').text(response.FromName);
+                $('#MailSubject').text(response.Subject);
+               
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+    }
+
+    $('.mail-checkbox').change(function () {
+        if (this.checked) {
+            var key_ = this.value;
+            var element = {};
+            element.ID = key_
+            element.ThreadID = $("#sa_" + key_).val();
+            element.Snippets = $("#sn_"+key_).val();
+            linkingList.push(element);
+        } else {
+            var key_ = this.value ;
+            for (var i = 0; i < linkingList.length; i++) {
+                if (linkingList[i].ID == key_) {
+                    linkingList.splice( i,1);
+                    break;
+                }
+            }
+        }
+        if (linkingList.length != 0) {
+            $("#linkMailFoot").show();
+        } else {
+            $("#linkMailFoot").hide();
+        }
+        
+    });
+    ///Need Snippet
+    function linkSelectedEmail() {
+        var data = { 'Box': FollowUpBoxID ,'linkingList': linkingList };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Requirement/AjaxLinkSelectedEmail',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //$("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    $("#miniModalLong").modal("hide");
+                    setTimeout(function () { }, 2000);
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        ViewBoxTimeLine(FollowUpBoxID);
+                        $("#miniModalLong").modal("hide");
+                });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                }
+            },
+            error: function (err) { }
+        });
+    }
+
+</script>

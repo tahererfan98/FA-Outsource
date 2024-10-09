@@ -1,0 +1,523 @@
+﻿<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#0061da">
+    <meta name="theme-color" content="#1643a3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    @* <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />*@
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/images/Bombay_Tools_LOGO_black.png" />*@
+    @if (@Session["Project"].ToString() == "FA")
+    {
+        <link rel="shortcut icon" type="image/x-icon" href="~/images/DD-IconColour-[PNG].png" />
+    }
+    else
+    {
+        <link rel="shortcut icon" type="image/x-icon" href="~/images/fg logo.png" />
+    }
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/images/fg logo.png" />*@
+    <!-- Title -->
+    <title>@ViewBag.Title | @Session["Project"] </title>
+    <link rel="stylesheet" href="~/fonts/fonts/font-awesome.min.css">
+    <!-- Font Family-->
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:300,400,700" rel="stylesheet">
+    <!-- Sidemenu Css -->
+    <link href="~/plugins/fullside-menu/css/style.css" rel="stylesheet" />
+    <link href="~/plugins/fullside-menu/waves.min.css" rel="stylesheet" />
+    <!-- Dashboard Css -->
+    <link href="~/css/dashboard.css" rel="stylesheet" />
+    <!-- Custom scroll bar css-->
+    <link href="~/plugins/scroll-bar/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <!---Font icons-->
+    <link href="~/plugins/iconfonts/plugin.css" rel="stylesheet" />
+    <!-- Data table css -->
+    <link href="~/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <!-- Slect2 css -->
+    <link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+
+    @*added for order controller*@
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/keytable/2.5.1/css/keyTable.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.1.1/css/rowGroup.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/2.0.1/css/scroller.bootstrap4.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap4.min.css">
+
+</head>
+<body>
+    <div id="global-loader"></div>
+    <div class="page">
+        <div class="page-main" id="page-main">
+            <div class="app-header1 header py-1 d-flex">
+                <div class="container-fluid">
+                    <div class="d-flex">
+                        <a class="header-brand" href="#">
+                            <div class="float-left ml-2">
+                                @*<img src="~/images/btc/Logo_Infinity_White.svg" class="header-brand-img" alt="FG" />*@
+                                <img src="~/images/btc/glassPro_500px_PNG.png" class="header-brand-img" alt="FG" />
+                                @*<img src="~/images/btc/FG_02.png" class="header-brand-img" alt="FG" />*@
+                            </div>
+                            <div class="mt-2"><span style="font-size:12px; color:white; font-family:Comic Sans MS">V-1.0.1</span></div>
+                        </a>
+                        <div class="menu-toggle-button">
+                            <a class="nav-link wave-effect" href="#" id="sidebarCollapse">
+                                <span class="fa fa-bars"></span>
+                            </a>
+                        </div>
+                        <div class="mt-2">
+                            <div class="searching mt-3 ml-2">
+                                <a href="javascript:void(0)" class="search-open mt-3">
+                                    <i class="fa fa-search text-white"></i>
+                                </a>
+                                <div class="search-inline">
+                                    <form>
+                                        <input type="text" class="form-control" placeholder="Search here">
+                                        <button type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <a href="javascript:void(0)" class="search-close">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex order-lg-2 ml-auto">
+                            @{
+
+                                if (((string)Session["usertype"]) == "admin")
+                                {
+                                    if (Session["username"] != null)
+                                    {
+                                        <div class="dropdown d-none d-md-flex mt-1">
+                                            <label class="nav-link font-weight-semibold" style="font-size: 20px;color: white;">
+                                                <i class="fa fa-user mr-2"></i> @Session["username"].ToString()
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            }
+                            @*//For get visit mark*@
+                            <p id="demo"></p>
+                            <div class="dropdown d-none d-md-flex mt-1">
+                                <a class="nav-link icon" data-toggle="dropdown">
+                                    <i class="fa fa-map-marker" onclick="getLocation()"></i>
+                                </a>
+                            </div>
+                            @*Visit mark code end*@
+                            <div class="dropdown d-none d-md-flex mt-1">
+                                <a class="nav-link icon full-screen-link">
+                                    <i class="fe fe-maximize floating" id="fullscreen-button"></i>
+                                </a>
+                            </div>
+                            <div class="dropdown d-none d-md-flex mt-1">
+                                <a class="nav-link icon" data-toggle="dropdown">
+                                    <i class="fe fe-grid floating"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow p-0">
+                                    <ul class="drop-icon-wrap p-0 m-0">
+                                        <li><a class="font-weight-semibold" style="font-size: 15px;" href="#" onclick="SetMenuForUserType('admin')">Admin</a></li>
+                                        <li><a class="font-weight-semibold" style="font-size: 15px;" href="#" onclick="SetMenuForUserType('HR')">HR</a></li>
+                                        <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">SalesPerson</a></li>
+                                        <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">SalesCordinator</a></li>
+                                        <li><a class="font-weight-semibold" style="font-size: 15px;" href="#">Other</a></li>
+                                        @*<li>
+                                                <a href="email.html" class="drop-icon-item">
+                                                    <i class="fe fe-mail"></i>
+                                                    <span class="block"> E-mail</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="drop-icon-item">
+                                                    <i class="fe fe-calendar"></i>
+                                                    <span class="block">calendar</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="maps.html" class="drop-icon-item">
+                                                    <i class="fe fe-map-pin"></i>
+                                                    <span class="block">map</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="cart.html" class="drop-icon-item">
+                                                    <i class="fe fe-shopping-cart"></i>
+                                                    <span class="block">Cart</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="drop-icon-item">
+                                                    <i class="fe fe-message-square"></i>
+                                                    <span class="block">chat</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="profile.html" class="drop-icon-item">
+                                                    <i class="fe fe-phone-outgoing"></i>
+                                                    <span class="block">contact</span>
+                                                </a>
+                                            </li>*@
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="dropdown mt-1">
+                                <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                                    @{
+
+                                        if (Session["userid"] != null)
+                                        {
+                                            <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span>
+                                            @*<span class="avatar avatar-md brround" style="background-image: url(@Session["UserFullName"].ToString())"></span>*@
+                                        }
+                                        else
+                                        {
+                                            <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span>
+                                        }
+
+                                    }
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow ">
+                                    <div class="text-center">
+                                        @{
+                                            if (Session["username"] != null)
+                                            {
+                                                <a href="#" class="dropdown-item text-center font-weight-sembold user">@Session["username"].ToString()</a>
+
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="dropdown-item text-center font-weight-sembold user">Guest</a>
+                                            }
+
+                                        }
+                                        @{
+
+                                            if (Session["username"] != null)
+                                            {
+
+                                                @*<span class="text-center user-semi-title text-dark">@Session["Designation"].ToString()</span>*@
+                                            }
+                                            else
+                                            {
+                                                <span class="text-center user-semi-title text-dark">Guest</span>
+                                            }
+
+
+
+
+                                        }
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                    @*<a class="dropdown-item" href="#">
+                                            <i class="dropdown-icon mdi mdi-account-outline "></i> Profile
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="dropdown-icon  mdi mdi-settings"></i> Settings
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <span class="float-right"><span class="badge badge-primary">6</span></span>
+                                            <i class="dropdown-icon mdi  mdi-message-outline"></i> Inbox
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="dropdown-icon mdi mdi-comment-check-outline"></i> Message
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="dropdown-icon mdi mdi-compass-outline"></i> Need help?
+                                        </a>*@
+                                    @*<a class="dropdown-item" href="login.html">*@
+                                    <a class="dropdown-item" href="@Url.Action("Logout", "Home")">
+                                        <i class="dropdown-icon mdi  mdi-logout-variant"></i> Sign out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <!-- Sidebar Holder -->
+                <nav id="sidebar" class="nav-sidebar">
+                    <ul class="list-unstyled components" id="accordion">
+                        <div class="user-profile">
+                            <div class="dropdown user-pro-body">
+                                <div>
+                                    @{
+
+                                        if (Session["userid"] != null)
+                                        {
+                                            <img src="~/images/img_avatar.png" alt="user-img" class="img-circle">
+                                            @*<img src="@Session["UserFullName"].ToString()" alt="user-img" class="img-circle">*@
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/img_avatar.png" alt="user-img" class="img-circle">
+                                        }
+
+                                    }
+                                </div>
+                                <div class="mb-2">
+                                    @*   <a href="#" class="" data-toggle="" aria-haspopup="true" aria-expanded="false">*@
+                                    @{
+                                        if (Session["username"] != null)
+                                        {
+                                            <span class="font-weight-semibold">@Session["username"].ToString()</span>
+                                            if (Session["mode"] != null)
+                                            {
+                                                <span class="text-center user-semi-title text-white">( @Session["mode"].ToString() )</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="font-weight-semibold">Guest</span>
+                                        }
+
+                                    }
+                                    @*</a>*@
+                                    <br>
+                                    @*@{
+
+                                            if (Session["Designation"] != null)
+                                            {
+                                                <span class="font-weight-semibold">@Session["Designation"].ToString()</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="font-weight-semibold">Guest</span>
+                                            }
+
+
+
+
+                                        }*@
+                                </div>
+                                @*<a href="#" title="settings" class="user-button"><i class="fa fa-cogs"></i></a>
+                                    <a href="#" title="mail" class="user-button"><i class="fa fa-envelope"></i></a>*@
+                                @* <a href="#" title="logout" class="user-button"><i class="fa fa-sign-out"></i></a>*@
+                                <a class="user-button" title="logout" href="@Url.Action("Logout", "Home")">
+                                    <i class="fa fa-sign-out"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @{ Html.RenderAction("SideMenu", "Home");}
+                    </ul>
+                </nav>
+                <div class="content-area">  @RenderBody() </div>
+            </div>
+        </div>
+    </div>
+    <!-- Back to top -->
+    <a href="#top" id="back-to-top" style="display: inline;"><i class="fa fa-angle-up"></i></a>
+    <!-- Dashboard Core -->
+    <script src="~/js/vendors/jquery-3.2.1.min.js"></script>
+
+    @*fullcalendar libary end*@
+    @*<script src="~/plugins/timeline/js/jquery.timelify.js"></script>*@
+    <script src="~/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="~/js/vendors/jquery.sparkline.min.js"></script>
+    <script src="~/js/vendors/selectize.min.js"></script>
+    <script src="~/js/vendors/jquery.tablesorter.min.js"></script>
+    <script src="~/js/vendors/circle-progress.min.js"></script>
+    <script src="~/plugins/rating/jquery.rating-stars.js"></script>
+
+    <!-- Fullside-menu Js-->
+    <script src="~/plugins/fullside-menu/jquery.slimscroll.min.js"></script>
+    <script src="~/plugins/fullside-menu/waves.min.js"></script>
+    <!---Tabs JS-->
+    =
+    <!-- Custom scroll bar Js-->
+    <script src="~/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Data tables -->
+    <script src="~/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/scroller/2.0.1/js/dataTables.scroller.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.6/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.datatables.net/keytable/2.5.1/js/dataTables.keyTable.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/1.0.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/1.0.1/js/searchPanes.bootstrap4.min.js"></script>
+    @*Export to exel ,pdf and csv for Datatable *@
+    <link href="~/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/js/jszip.min.js"></script>
+    <script src="~/js/dataTables.buttons.min.js"></script>
+    <script src="~/js/pdfmake.min.js"></script>
+    <script src="~/js/vfs_fonts.js"></script>
+    <script src="~/js/buttons.html5.min.js"></script>
+    <script src="~/js/buttons.print.min.js"></script>
+    @*Export to exel ,pdf and csv for Datatable *@
+
+
+
+    <!-- Select2 js -->
+    <script src="~/plugins/select2/select2.full.min.js"></script>
+    <script src="~/js/select2.js"></script>
+    <!-- Custom Js-->
+    <script src="~/js/custom.js"></script>
+    <!---Accordion Js-->
+    <script src="~/plugins/accordion/accordion.min.js"></script>
+
+    <!-- Data table js -->
+    <script type="text/javascript">
+        function setDefaultHeight() {
+            var elmnt = document.getElementById("page-main");
+            var height = 0;
+            if (elmnt.scrollHeight) {
+                height = elmnt.scrollHeight;
+            }
+            else {
+                height = $("#page-main").height();
+
+            }
+            ////height = $(".page-main").height();
+            height = height - 62;
+            $("#sidebar").height(height + "px");
+        }
+
+        $(window).on("scroll", function (e) {
+            var elmnt = document.getElementById("page-main");
+            var height = 0;
+            height = elmnt.scrollHeight;
+            if ($(this).scrollTop() > height) {
+                setDefaultHeight();
+            } else {
+                setDefaultHeight();
+            }
+        });
+        $(function (e) {
+            $('#example').DataTable();
+        });
+
+        $('#example').DataTable({
+            retrieve: true,
+            paging: false
+
+
+        });</script>
+    <script>$('body').tooltip({ selector: '[data-toggle="tooltip"]' });</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <link href="~/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    @*Code for multiselect checkbox dropdown*@
+    <link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-multiselect.js"></script>
+    @*Code for multiselect checkbox dropdown*@
+    @*<script src="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/js/query-builder.min.js"></script>*@
+    <link href="~/css/DateTimePickerBL.css" rel="stylesheet" />
+    <script src="~/js/DateTimePickerForBL.js"></script>
+    <!-- Bootstrap DatePicker -->
+    <script type="text/javascript">
+        $(function () {
+
+            $('#datePicker')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd M yyyy',
+                    language: "tr",
+                    changeMonth: true,
+                    changeYear: true,
+                })
+                .on('changeDate', function (e) {
+
+                    $('.datepicker').hide();
+                });
+            $('.datePickerD')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd M yyyy',
+                    language: "tr",
+                    changeMonth: true,
+                    changeYear: true,
+
+                });
+        });</script>
+
+    <script>
+        function SetMenuForUserType(ID) {
+            data = { 'ID': ID };
+            data = JSON.stringify(data);
+            $.ajax({
+                url: "/Home/GetSubMenuForSelectedUser",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //  dataType: "json",
+                success: function (response) {
+                    document.location = '@Url.Action("Dashboard", "Dashboard")';
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        var x = document.getElementById("demo");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+
+                //  url: "//maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyC20HuQigVD8mZvOEKTBsCfAPk_Z72eI-E";
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+
+            var canvas = $("#map_canvas");
+            var latitude = "latlng=" + position.coords.latitude + "," + position.coords.longitude;
+            var longitude = position.coords.longitude;
+            var key = "&key=AIzaSyAO2V51k7ky4l2CoyRGAc3g64djTEoMLRM"
+            //// https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+            var GEOCODE_BASE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+            url = GEOCODE_BASE_URL + '?' + latitude + key;
+            url = "_" + url;
+
+            $.ajax({
+                type: 'post',
+                url: url,
+                // data: data,
+                //contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    console.log(response.results[0].formatted_address);
+                    var Location = (response.results[0].formatted_address);
+                    alert(Location);
+                    //document.getElementById('Location').value = Location;
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+
+        }
+
+    </script>
+
+
+    <script src="~/js/ellipsisDatatable.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+</body>
+</html>

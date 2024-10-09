@@ -1,0 +1,55 @@
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.AssemblyReference.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CoreCompileInputs.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.pdb
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.pdb
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.pdb
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CopyComplete
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.pdb
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.AssemblyReference.cache
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CoreCompileInputs.cache
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CopyComplete
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.dll
+C:\Vishal\MVC\FGCRMNew - ExportInvoice\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.pdb
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.dll
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.pdb
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.dll
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.dll
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.pdb
+D:\MVC\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.pdb
+D:\MVC\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.AssemblyReference.cache
+D:\MVC\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CoreCompileInputs.cache
+D:\MVC\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CopyComplete
+D:\MVC\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.dll
+D:\MVC\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.AssemblyReference.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CoreCompileInputs.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CopyComplete
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.pdb
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.dll
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsDataLayer.pdb
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.dll
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.dll
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsDBConnector.pdb
+D:\FAOutsource\BombayToolsDataLayer\bin\Debug\BombayToolsEntities.pdb
+D:\FAOutsource\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.AssemblyReference.cache
+D:\FAOutsource\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.csproj.CoreCompileInputs.cache
+D:\FAOutsource\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.dll
+D:\FAOutsource\BombayToolsDataLayer\obj\Debug\BombayToolsDataLayer.pdb
+D:\FAOutsource\BombayToolsDataLayer\obj\Debug\BombayTo.1C0DE1D4.Up2Date

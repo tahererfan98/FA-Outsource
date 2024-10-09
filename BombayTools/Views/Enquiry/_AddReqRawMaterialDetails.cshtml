@@ -1,0 +1,1776 @@
+﻿
+
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0.8rem;
+        position: relative;
+    }
+
+    #tblTentativeSchedule td {
+        padding: 0rem;
+        vertical-align: top;
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Add Required Raw Material</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Entry No</label>
+                    @Html.TextBox("txtRRMNO", null, new { @class = "form-control", @id = "txtRRMNO", name = "txtRRMNO", autocomplete = "off", disabled = "off", placeholder = " NEW" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Date</label>
+                    @Html.TextBox("txtRRMDate", null, new { @class = "form-control datePickerD", @id = "txtRRMDate", name = "txtRRMDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy"), disabled = "off", })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">ENQ No</label>
+                    @Html.TextBox("txtENQNO", null, new { @class = "form-control", @id = "txtENQNO", name = "txtENQNO", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.TextBox("txtCustomerName", null, new { @class = "form-control", @id = "txtCustomerName", name = "txtCustomerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Outsource Partner</label>
+                    @Html.TextBox("txtPartnerName", null, new { @class = "form-control", @id = "txtPartnerName", name = "txtPartnerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Item Group</label>
+                    @Html.DropDownList("ItemGroupList", (IEnumerable<SelectListItem>)ViewBag.ItemGroupList, "--Select--", new { @class = "form-control", @id = "ItemGroup", name = "ItemGroup", autocomplete = "off", onchange = "getItemgroupDetails()" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Req Vehicle</label>
+                    @Html.TextBox("txtReqVehicle", null, new { @class = "form-control", @id = "txtReqVehicle", name = "txtReqVehicle", autocomplete = "off", Type = "number" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2" id="divIsCutSize">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Is Cut Size</label>
+                    <input style="height:20px;width:20px" type="checkbox" id="IsCutSizeSelected" onclick="OnclickCutSize()" value="" />
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+                <button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="openItemSearchBox()"><i class="fa fa-plus"></i> Add Item</button>
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+        <div tabindex="1" class="card-body">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPOItemData" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="all text-center"></th>
+                                    @*<th class="all text-center"></th>*@
+                                    <th class="all text-center">#</th>
+                                    <th class="all text-center">Item Code</th>
+                                    <th class="all text-center">Item Name</th>
+                                    <th class="all text-center">Qty</th>
+                                    <th class="all text-center">Unit</th>
+                                    <th class="all text-center">Tot Weight/LM</th>
+
+                                    @*<th class="all text-center">RQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Received Qty"></i></th>*@
+                                    @*<th class="all text-center">ARQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received Qty"></i></th>
+                                        <th class="all text-center">BQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance Qty"></i></th>*@
+                                    @*<th class="all text-center">Rate</th>
+                                    <th class="all text-center">Total LC</th>*@
+                                </tr>
+                            </thead>
+                            @*<tfoot>
+                                    <tr>
+                                        <th colspan="10">Total</th>
+                                        <th><label id="po_NTA"></label></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label id="po_FLA"></label></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="divRMDetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPORMItemData" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="all text-center"></th>
+                                    @*<th class="all text-center"></th>*@
+                                    <th class="all text-center">#</th>
+                                    <th class="all text-center">Item Code</th>
+                                    <th class="all text-center">Item Name</th>
+                                    @*<th class="all text-center">HSN Code</th>*@
+                                    <th class="all text-center">HEIGHT</th>
+                                    <th class="all text-center">WIDTH</th>
+                                    <th class="all text-center">Tot Sheet</th>
+                                    @*<th class="all text-center">NC<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="No Of Cases"></i></th>
+                            <th class="all text-center">SC <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sheet Per Case"></i></th>*@
+                                    <th class="all text-center">SQM</th>
+                                    @*<th class="all text-center">RQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Received Qty"></i></th>*@
+                                    @*<th class="all text-center">ARQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received Qty"></i></th>
+                            <th class="all text-center">BQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance Qty"></i></th>*@
+                                    <th class="all text-right">Weight</th>
+                                    @*<th class="all text-center">Rate</th>
+                            <th class="all text-center">Total LC</th>*@
+                                </tr>
+                            </thead>
+                            @*<tfoot>
+                        <tr>
+                            <th></th>
+                            <th colspan="16">Total</th>
+                            <th><label id="po_NTA2"></label></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th><label id="po_FLA2"></label></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("Remarks", null, new { @class = "form-control", @id = "Remarks", name = "Remarks", autocomplete = "off" })
+            </div>
+        </div>
+        <!--<div class="col-lg-3 col-sm-12 mt-2">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;">Upload Attachment</label>
+                <a-->
+        @*href="#"*@
+        <!--onclick="AddAttachment()">
+                    <i class="fa fa-paperclip fa-2x	" style="color:#070884" aria-hidden="true" title="Upload Attachments"></i>
+                    <span class="custom-switch-description" style="font-size:17px;color:#6c4cbb"><b><label id="lblAttachmentForPhoto">0</label></b></span>
+                </a>
+            </div>
+        </div>-->
+    </div>
+
+    <div class="card-footer">
+        <div class="float-right">
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="OnSave()"><i class="fa fa-save"></i> Save</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+
+@* FOR RM AND CO LIST *@
+<div class="modal fade" id="ModalForRMList" tabindex="-1" role="dialog" aria-labelledby="ModalForRMListTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ModalForRMListTitle">Search RM Items </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12 col-md-4">
+                    <div class="row no-gutters">
+                        <div class="col-2">
+                            <label class="form-label mt-1"><strong>Search</strong></label>
+                        </div>
+                        <div class="col-10 form-group">
+
+                            <div class="input-icon">
+                                <span class="input-icon-addon">
+                                    <i class="fe fe-search"></i>
+                                </span>
+                                <input type="text" id="searchText2" class="form-control" placeholder="Search Here...">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-12" id="divSearch">
+
+                            </div>
+
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="">
+                                    <table class="table table-bordered w-100" id="tblRMItemSearch">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:30px !important">SELECT</th>
+                                                <th>ITEM CODE</th>
+                                                <th>NAME</th>
+                                                <th>HEIGHT</th>
+                                                <th>WIDTH</th>
+                                                <th>IN STOCK</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col--sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Selected Item</h4>
+                            </div>
+                            <div class="card-body content scroll-1">
+                                <ul class="list-group" id="po_selected_item"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalForCOList" tabindex="-1" role="dialog" aria-labelledby="ModalForCOListTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ModalForCOListTitle">Search Consumable Items </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12 col-md-4">
+                    <div class="row no-gutters">
+                        <div class="col-2">
+                            <label class="form-label mt-1"><strong>Search</strong></label>
+                        </div>
+                        <div class="col-10 form-group">
+
+                            <div class="input-icon">
+                                <span class="input-icon-addon">
+                                    <i class="fe fe-search"></i>
+                                </span>
+                                <input type="text" id="searchText3" class="form-control" placeholder="Search Here...">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-12" id="divSearch">
+
+                            </div>
+
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="">
+                                    <table class="table table-bordered w-100" id="tblCOItemSearch">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:30px !important">SELECT</th>
+                                                <th>ITEM CODE</th>
+                                                <th>NAME</th>
+                                                <th>PART NO</th>
+                                                <th>UNIT</th>
+                                                <th>WAREHOUSE</th>
+                                                <th>IN STOCK</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col--sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Selected Item</h4>
+                            </div>
+                            <div class="card-body content scroll-1">
+                                <ul class="list-group" id="CO_selected_item"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var CustomerD = [];
+    var poItemM = [];
+    var PIItemList = [];
+    var PIItemListSearch = [];
+
+    var ScheduleList = [];
+    var IsPointEdit = 0;
+    var EditPointSrNo = 0;
+    var SelectedItem = [];
+    var CopyFrom;
+
+    var EANO = "0";
+    var isDraft = 0;
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+        e.preventDefault();
+        return false;
+    });
+
+    $(document).ready(function () {
+        debugger;
+        $("#divIsCutSize").hide();
+        var Action01 = '@ViewBag.Action';
+        var ItemGroupID01 = @ViewBag.ItemGroupID;
+
+        $("#divCODetails").show();
+        $("#divRMDetails").hide();
+        $("#txtENQNO").val('@ViewBag.ENQNO');
+        $("#txtCustomerName").val('@ViewBag.CustomerName');
+        $("#txtPartnerName").val('@ViewBag.PartnerName');
+
+        if (Action01 == 'View') {
+            $('#Savebtn').hide();
+            $('#itemBtn').hide();
+
+            $("#txtRRMNO").val('@ViewBag.RRMNO');
+            $("#txtRRMDate").val('@ViewBag.RRMDate');
+            $("#ItemGroup").val(@ViewBag.ItemGroupID);
+            $("#txtReqVehicle").val('@ViewBag.ReqVehicle');
+            $("#Remarks").val('@ViewBag.Remarks');
+
+            $("#txtRRMDate").prop('disabled', true);
+            $("#ItemGroup").prop('disabled', true);
+            $("#txtReqVehicle").prop('disabled', true);
+            $("#Remarks").prop('disabled', true);
+            if (@ViewBag.ItemGroupID == 5) {
+                $("#divIsCutSize").show();
+                var Checkbox1 = '@ViewBag.IsCutSize';
+                if (Checkbox1 == 1) {
+                    $('#IsCutSizeSelected').prop('checked', true);
+                } else {
+                    $('#IsCutSizeSelected').prop('checked', false);
+                }
+            }
+
+            SelectedItem = [];
+            SelectedItem = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+            SelectedItem = JSON.parse(SelectedItem);
+            if (ItemGroupID01 == 1) {
+                $("#divCODetails").show();
+                $("#divRMDetails").hide();
+                addCOItemToTable();
+            } else {
+                $("#divCODetails").hide();
+                $("#divRMDetails").show();
+                addItemToTable();
+            }
+
+        }
+    });
+
+    function UpdateDetailsInArrayOLD(SrNo) {
+        debugger;
+        var z = poItemM.findIndex(p => p.SrNo == SrNo);
+        var RecQty = $("#RecQty_" + SrNo).val();
+        RecQty = parseInt(RecQty);
+
+        if (parseInt(RecQty) > (parseInt(poItemM[z].OutQty) - parseInt(poItemM[z].ARQty) ) ) {
+            $("#RecQty" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec Qty can not be greater than bal Qty!",
+                icon: 'error'
+            });
+            $("#RecQty_" + SrNo).val(0);
+            return false;
+        }
+        if (RecQty === poItemM[z].OutQty) {
+            $("#RecSQM_" + SrNo).val(poItemM[z].OutSQM);
+        }
+
+        var BQty = (parseInt(poItemM[z].OutQty) - parseInt(poItemM[z].ARQty)) - parseInt(RecQty) ;
+        BQty = parseInt(BQty);
+        $("#BQty_" + SrNo).val(BQty);
+
+        /////////////////////////////////////////// SQM
+        var RecSQM = $("#RecSQM_" + SrNo).val();
+        RecSQM = parseFloat(RecSQM);
+
+        if (RecSQM > (parseFloat(poItemM[z].OutSQM) - parseInt(poItemM[z].ARSQM) ) ) {
+            $("#RecSQM_" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec SQM can not be greater than bal SQM!",
+                icon: 'error'
+            });
+            $("#RecSQM_" + SrNo).val(0);
+            return false;
+        }
+
+        var BSQM = (parseFloat(poItemM[z].OutSQM) - parseFloat(poItemM[z].ARSQM)) - (parseFloat(RecSQM) );
+        BSQM = parseFloat(BSQM);
+        $("#BSQM_" + SrNo).val(BSQM);
+        /////////////
+
+        poItemM[z].RecQty = RecQty;
+        poItemM[z].RecSQM = RecSQM;
+
+        poItemM[z].BQty = BQty;
+        poItemM[z].BSQM = BSQM;
+
+
+        var OutType = $("#OutType_" + SrNo).val();
+        poItemM[z].OutType = OutType;
+
+        //var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        //poItemM[z].ItemDescription = ItemDescription;
+
+        //01getTotalWeightForPackingList();
+    }
+
+    function CancelItem(SrNo, WONO) {
+        debugger;
+        var r = confirm("Are you sure you want to delete this item?");
+        if (r == true) {
+            for (i = 0; i < poItemM.length; i++) {
+                if (poItemM[i].SrNo == SrNo) {
+                    poItemM.splice(i, 1);
+                }
+            }
+            for (j = 0; j < PIItemListSearch.length; j++) {
+                if (PIItemListSearch[j].WONO == WONO) {
+                    PIItemListSearch.splice(j, 1);
+                }
+            }
+            addCOItemToTable();
+            var table = $('#tblPOItemData').DataTable();
+            $('#tblPOItemData tbody').on('click', '.removebutton', function () {
+                table
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+        }
+    }
+
+</script>
+
+@* *** Upload Attachment *@
+
+<script>
+    function AddAttachment() {
+        debugger;
+        //  var data = {'name': name };
+        //data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/_AddAttachmentReceiveDetails",
+            //  data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        })
+    }
+</script>
+
+
+<script>
+
+    function getItemgroupDetails() {
+        SelectedItem = [];
+        $('#tblPOItemData').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+            "aaData": SelectedItem,
+            "ordering": false,
+        });
+        $('#tblPORMItemData').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "keys": true,  // Enable keyboard navigation
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+            "aaData": SelectedItem,
+            "ordering": false,
+        });
+
+        var ItemGroupID = $("#ItemGroup option:selected").val();
+
+        if (ItemGroupID == 1) {
+            $("#divCODetails").show();
+            $("#divRMDetails").hide();
+            $("#divIsCutSize").hide();
+            //    setSelectedCOItem();
+        } else {
+            $("#divCODetails").hide();
+            $("#divRMDetails").show();
+            $("#divIsCutSize").show();
+            //    setSelectedItem();
+        }
+    }
+
+    function openItemSearchBox() {
+        debugger;
+        var ItemGroupID = $("#ItemGroup option:selected").val();
+        if (ItemGroupID == 0 || ItemGroupID == "" || ItemGroupID == undefined) {
+            Swal.fire({
+                title: 'Error!',
+                text: "Please select Item Group.",
+                icon: 'error'
+            }).then((result) => {
+                $("#ItemGroup").focus();
+                return false;
+            });
+            return;
+        }
+        else if (ItemGroupID == 1) {
+            setTimeout(function () { ShowCOItemList(); }, 3000);
+            $("#ModalForCOList").modal("show");
+            $("#divCODetails").show();
+            $("#divRMDetails").hide();
+            setSelectedCOItem();
+        }
+        else if (ItemGroupID == 5) {
+            setTimeout(function () { ShowItemList(); }, 3000);
+            $("#ModalForRMList").modal("show");
+            $("#divCODetails").hide();
+            $("#divRMDetails").show();
+            setSelectedItem();
+        }
+
+    }
+
+    function OnclickCutSize() {
+        debugger;
+        if (SelectedItem.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Item!",
+                icon: 'error'
+            });
+            document.getElementById("IsCutSizeSelected").checked = false;
+            return false;
+        }
+        var checkbox = document.getElementById("IsCutSizeSelected");
+        if (checkbox.checked) {
+            for (var i = 0; i < SelectedItem.length; i++) {
+                $("#Width_" + SelectedItem[i].SrNo).prop('disabled', false);
+                $("#Height_" + SelectedItem[i].SrNo).prop('disabled', false);
+            }
+        } else {
+            for (var i = 0; i < SelectedItem.length; i++) {
+                $("#Width_" + SelectedItem[i].SrNo).prop('disabled', true);
+                $("#Height_" + SelectedItem[i].SrNo).prop('disabled', true);
+            }
+        }
+
+       
+
+
+    }
+</script>
+
+
+<script>
+    //////////////////////// ////////@@@@@@@@@@ FOR CONSUMABLE
+    $("#searchText3").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            ShowCOItemList();
+        }
+    });
+    function ShowCOItemList() {
+        //debugger;
+        $("#global-loader").fadeIn("slow");
+        var Search = $("#searchText3").val();
+        if (Search == undefined || Search == null || Search == "") {
+            Search = "";
+        }
+        $("#global-loader").fadeIn("slow");
+        var data = { 'Search': Search };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/GetCOItemList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                itemSearchM = [];
+                itemSearchM = response;
+                $('#tblCOItemSearch').dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"i>rt<"bottom float-left m-3"p><"saveImportedData bottom float-right m-3"><"clear">',
+                    "columns": [
+                        {
+                            "data": "ItemID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<div class=\"form-group\"><label class=\"custom-switch\"><input type=\"checkbox\" name=\"custom-switch-checkbox_co_" + data + "\" id=\"custom-switch-checkbox_co_" + data + "\" onclick=\"addOrRemoveCOItem(" + data + ")\" class=\"custom-switch-input _po_check_data\"><span class=\"custom-switch-indicator\"></span></label></div>";
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "ItemCode" },
+                        { "data": "ItemDescription" },
+                        { "data": "PartNo" },
+                        { "data": "Unit" },
+                        { "data": "WarehouseName" },
+                        { "data": "InStock" }
+
+
+                    ]
+                });
+
+                for (var j = 0; j < SelectedItem.length; j++) {
+                    if ($("#custom-switch-checkbox_co_" + SelectedItem[j].ItemID).length == 0) {
+                        //it doesn't exist
+                    } else {
+                        document.getElementById("custom-switch-checkbox_co_" + SelectedItem[j].ItemID).checked = true;
+                    }
+                }
+                $("#global-loader").fadeOut("slow");
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+
+    }
+    function addOrRemoveCOItem(data) {
+
+        var chk1 = document.getElementById("custom-switch-checkbox_co_" + data);
+        if (chk1.checked) {
+            var i = itemSearchM.findIndex(p => p.ItemID == data);
+            var element = {};
+            element.ItemID = data;
+            element.ItemCode = itemSearchM[i].ItemCode;
+            element.ItemDescription = itemSearchM[i].ItemDescription;
+            element.PartNo = itemSearchM[i].PartNo;
+            element.Unit = itemSearchM[i].Unit;
+            element.Rate = 0;
+            element.Height = 0;
+            element.Width = 0;
+            element.Weight = 0;
+            element.NoOfCase = 0;
+            element.SheetPerCase = 0;
+            element.Qty = 0;
+            element.SQM = 0;
+            element.BalanceQty = 0;
+            element.AlreadyReceivedQty = 0;
+            element.TotalLC = 0;
+            element.DiscountPer = 0;
+            element.GSTID = 1;
+            element.GSTPercent = "";
+            element.NetTotal = 0;
+            element.CGSTPer = 0;
+            element.SGSTPer = 0;
+            element.IGSTPer = 0;
+            element.CGST = 0;
+            element.SGST = 0;
+            element.IGST = 0;
+            element.FinalTotal = 0;
+            element.LastPurchase = "";
+            element.ProjectID = 0;
+            element.ProjectName = "";
+            element.CategoryID = 0;
+            element.CategoryName = "";
+            element.SubCategoryID = 0;
+            element.SubCategoryName = "";
+            element.OtherDiff = 0;
+            element.AssesValue = 0;
+            element.AssesRate = 0;
+            element.PONO = 0;
+            SelectedItem.push(element);
+
+            var SrNo = 0;
+            for (var i = 0; i < SelectedItem.length; i++) {
+                SrNo = parseInt(SrNo);
+                SrNo = SrNo + 1;
+                SelectedItem[i].SrNo = SrNo;
+                SelectedItem[i].index = SrNo;
+            }
+            $("#custom-switch-checkbox_co_" + data).prop('checked', false);
+        }
+        //else {
+        //    var i = SelectedItem.findIndex(p => p.ItemID == data);
+        //    SelectedItem.splice(i, 1);
+        //}
+        setSelectedCOItem();
+    }
+    function setSelectedCOItem() {
+
+        $('#CO_selected_item').empty();
+        for (var i = 0; i < SelectedItem.length; i++) {
+            $("#CO_selected_item").append("<li class=\"list-group-item\" id=\"item_co_search_" + SelectedItem[i].SrNo + "\"><strong>" + (i + 1) + "</strong>. " + SelectedItem[i].ItemDescription + " <strong>" + SelectedItem[i].ItemCode + "</strong><div class=\"pull-right\"><i class=\"fa fa-times text-danger\" onclick=\"deleteSelectedCORow(" + SelectedItem[i].SrNo + ")\"></i></div></li>");
+        }
+        addCOItemToTable();
+    }
+    function addCOItemToTable() {
+        var IsDisabledfield = "";
+        if (CopyFrom != "1") {
+            IsDisabledfield = "";
+        } else {
+            IsDisabledfield = "disabled";
+        }
+        $('#tblPOItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": SelectedItem,
+            "bPaginate": false,
+            "bInfo": false,
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+
+            "columns": [
+                {
+                    "data": "ItemID",
+                    "render": function (data, type, row, meta) {
+                        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deleteSelectedCORow(' + row.SrNo + ')" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                        return data;
+                    }
+
+                },
+                //{
+                //    "data": "ItemID",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Last Purchase" name="viewbutton" style="height:35px;" onclick="openLastPurchaseBox(' + row.ItemID + ')" ><i class="fe fe-eye" style="font-size: 16px;"></i></button>'
+
+                //        return data;
+                //    }
+
+                //},
+
+                { "data": "SrNo" },
+                //{ "data": "ItemCode" },
+                {
+                    "data": "ItemCode",
+                    "render": function (data, type, row, meta) {
+                        data = "<input type=\"text\" onkeydown=\"event.preventDefault()\" autocomplete=\"off\" class=\"form-control noborder width\"   value='" + data + "' >";
+                        return data;
+                    }
+                },
+                //{ "data": "ItemDescription" },
+                {
+                    "data": "ItemDescription", "className": "ChkWidth",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea type="text" rows="2" class="form-control noborder width" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')"></textarea>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Qty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right noborder width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                //{ "data": "Unit" },
+                {
+                    "data": "Unit",
+                    "render": function (data, type, row, meta) {
+                        data = '<input class="form-control text-right noborder width" id="Unit_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Weight",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right noborder width" id="Weight_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                //{
+                //    "data": "AlreadyReceivedQty",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="AlreadyReceivedQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "BalanceQty",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="BalanceQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "Rate",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" ' + IsDisabledfield + ' class="form-control noborder width" id="Rate_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "TotalLC",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="TotalLC_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //}
+
+
+
+            ]
+        });
+
+        for (i = 0; i < SelectedItem.length; i++) {
+            //var temp2 = "GSTPer_" + SelectedItem[i].SrNo
+            //document.getElementById(temp2).value = SelectedItem[i].GSTID;
+            var temp1 = "ItemDescription_" + SelectedItem[i].SrNo
+            document.getElementById(temp1).value = SelectedItem[i].ItemDescription;
+        }
+    }
+
+    function deleteSelectedCORow(data) {
+        var i = SelectedItem.findIndex(p => p.SrNo == data)
+        //$("#custom-switch-checkbox_co_" + data).prop('checked', false);
+
+        SelectedItem.splice(i, 1);
+        var SrNo = 0;
+        for (var i = 0; i < SelectedItem.length; i++) {
+            SrNo = parseInt(SrNo);
+            SrNo = SrNo + 1;
+            SelectedItem[i].SrNo = SrNo;
+            SelectedItem[i].index = SrNo;
+        }
+        setSelectedCOItem();
+        getTotalOfPOItem();
+    }
+
+</script>
+
+<script>
+    //////////////////////// ////////@@@@@@@@@@ For RAW MATERIAL
+    //FOR RM
+    $("#searchText2").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            ShowItemList();
+        }
+    });
+
+    function ShowItemList() {
+        $("#global-loader").fadeIn("slow");
+        var Search = $("#searchText2").val();
+        if (Search == undefined || Search == null || Search == "") {
+            Search = "";
+        }
+        $("#global-loader").fadeIn("slow");
+        var ENQNO = '@ViewBag.ENQNO';
+        var data = { 'Search': Search, 'ENQNO': ENQNO };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/GetRMItemList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                itemSearchM = [];
+                itemSearchM = response;
+                $('#tblRMItemSearch').dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"i>rt<"bottom float-left m-3"p><"saveImportedData bottom float-right m-3"><"clear">',
+                    "columns": [
+                        {
+                            "data": "ItemID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<div class=\"form-group\"><label class=\"custom-switch\"><input type=\"checkbox\" name=\"custom-switch-checkbox_" + data + "\" id=\"custom-switch-checkbox_" + data + "\" onclick=\"addOrRemoveItem(" + data + ")\" class=\"custom-switch-input _po_check_data\"><span class=\"custom-switch-indicator\"></span></label></div>";
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "ItemCode" },
+                        { "data": "ItemDescription" },
+                        { "data": "Height" },
+                        { "data": "Width" },
+                        { "data": "InStock" }
+                    ]
+                });
+                debugger;
+                for (var j = 0; j < SelectedItem.length; j++) {
+                    if ($("#custom-switch-checkbox_" + SelectedItem[j].ItemID).length == 0) {
+                        //it doesn't exist
+                    } else {
+                        document.getElementById("custom-switch-checkbox_" + SelectedItem[j].ItemID).checked = true;
+                    }
+                }
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+    function addOrRemoveItem(data) {
+        debugger;
+        var chk1 = document.getElementById("custom-switch-checkbox_" + data);
+        if (chk1.checked) {
+            var i = itemSearchM.findIndex(p => p.ItemID == data);
+            var element = {};
+            element.ItemID = data;
+            element.HSNCode = itemSearchM[i].HSNCode;
+            element.ItemCode = itemSearchM[i].ItemCode;
+            element.ItemDescription = itemSearchM[i].ItemDescription;
+            element.PartNo = itemSearchM[i].PartNo;
+            element.Thickness = itemSearchM[i].Thickness;
+            element.Rate = 0;
+            element.Height = itemSearchM[i].Height;
+            element.Width = itemSearchM[i].Width;
+            element.Weight = 0;
+            element.NoOfCase = 0;
+            element.SheetPerCase = 0;
+            element.TotalSheet = 0;
+            element.Qty = 0;
+            element.SQM = 0;
+            element.BalanceQty = 0;
+            element.AlreadyReceivedQty = 0;
+            element.TotalLC = 0;
+            element.Unit = itemSearchM[i].Unit;
+            element.DiscountPer = 0;
+            element.GSTID = 1;
+            element.GSTPercent = "";
+            element.NetTotal = 0;
+            element.CGSTPer = 0;
+            element.SGSTPer = 0;
+            element.IGSTPer = 0;
+            element.CGST = 0;
+            element.SGST = 0;
+            element.IGST = 0;
+            element.FinalTotal = 0;
+            element.LastPurchase = "";
+            element.ProjectID = 0;
+            element.ProjectName = "";
+            element.Tags = "";
+            element.CategoryID = 0;
+            element.CategoryName = "";
+            element.SubCategoryID = 0;
+            element.SubCategoryName = "";
+            element.OtherDiff = 0;
+            element.AssesValue = 0;
+            element.AssesRate = 0;
+            element.PONO = 0;
+            SelectedItem.push(element);
+
+            var SrNo = 0;
+            for (var i = 0; i < SelectedItem.length; i++) {
+                SrNo = parseInt(SrNo);
+                SrNo = SrNo + 1;
+                SelectedItem[i].SrNo = SrNo;
+                SelectedItem[i].index = SrNo;
+            }
+            $("#custom-switch-checkbox_" + data).prop('checked', false);
+        }
+        //else {
+        //    var i = SelectedItem.findIndex(p => p.ItemID == data);
+        //    SelectedItem.splice(i, 1);
+        //}
+        setSelectedItem();
+    }
+    function setSelectedItem() {
+        debugger;
+        $('#po_selected_item').empty();
+        for (var i = 0; i < SelectedItem.length; i++) {
+            $("#po_selected_item").append("<li class=\"list-group-item\" id=\"item_po_search_" + SelectedItem[i].ItemID + "\"><strong>" + (i + 1) + "</strong>. " + SelectedItem[i].ItemDescription + " <strong>" + SelectedItem[i].PartNo + "</strong><div class=\"pull-right\"><i class=\"fa fa-times text-danger\" onclick=\"deleteSelectedRow(" + SelectedItem[i].SrNo + ")\"></i></div></li>");
+        }
+        addItemToTable();
+    }
+    function addItemToTable() {
+        debugger;
+        var IsDisabledfield = "";
+        if (CopyFrom != "1") {
+            IsDisabledfield = "";
+        } else {
+            //IsDisabledfield = "disabled";
+            IsDisabledfield = "";
+        }
+        $('#tblPORMItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": SelectedItem,
+            "bPaginate": false,
+            "bInfo": false,
+            "keys": true,  // Enable keyboard navigation
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "columns": [
+
+                {
+                    "data": "ItemID",
+                    "render": function (data, type, row, meta) {
+                        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deleteSelectedRow(' + row.SrNo + ')" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                        return data;
+                    }
+
+                },
+                //{
+                //    "data": "ItemID",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Last Purchase" name="viewbutton" style="height:35px;" onclick="openLastPurchaseBox(' + row.ItemID + ')" ><i class="fe fe-eye" style="font-size: 16px;"></i></button>'
+
+                //        return data;
+                //    }
+
+                //},
+                { "data": "SrNo" },
+                { "data": "ItemCode" },
+                //{
+                //    "className": "CodeWidth", "data": "ItemCode",
+                //    "render": function (data, type, row, meta) {
+                //        data = "<input type=\"text\" onkeydown=\"event.preventDefault()\" autocomplete=\"off\" class=\"form-control noborder width\"   value='" + data + "' >";
+                //        return data;
+                //    }
+                //},
+                // { "data": "ItemDescription" },
+                {
+                    "className": "ChkWidth", "data": "ItemDescription",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea type="text" rows="2" class="form-control noborder width" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')"></textarea>';
+                        return data;
+                    }
+                },
+                //{ "data": "HSNCode" },
+                //{ "data": "Height" },
+                //{ "data": "Width" },
+                {
+                    "data": "Width",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" disabled class="form-control text-right noborder width" id="Width_' + row.SrNo + '" step=".01" value="' + data + '" oninput="validOnlyNumber(this)" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Height",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" disabled class="form-control text-right noborder width" id="Height_' + row.SrNo + '" step=".01" value="' + data + '" oninput="validOnlyNumber(this)" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+
+                //{
+                //    "data": "NoOfCase",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text" class="form-control noborder width" id="NoOfCase_' + row.SrNo + '"   value="' + data + '" oninput="validOnlyNumber(this)"  onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "SheetPerCase",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text" class="form-control noborder width" id="SheetPerCase_' + row.SrNo + '"  value="' + data + '" oninput="validOnlyNumber(this)" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                //        return data;
+                //    }
+                //},
+                {
+                    "data": "Qty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right noborder width" id="Qty_' + row.SrNo + '" step=".01" value="' + data + '" oninput="validOnlyNumber(this)" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                //{
+                //    "data": "Qty",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "AlreadyReceivedQty",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="AlreadyReceivedQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "BalanceQty",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="BalanceQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //},
+                {
+                    "data": "SQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" disabled  class="form-control text-right noborder width" id="SQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Weight",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" disabled  class="form-control text-right noborder width" id="Weight_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                        return data;
+                    }
+                },
+                //{
+                //    "data": "Rate",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" ' + IsDisabledfield + ' class="form-control noborder width" id="Rate_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "TotalLC",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" disabled class="form-control noborder width" id="TotalLC_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')">';
+                //        return data;
+                //    }
+                //}
+            ]
+        });
+        for (i = 0; i < SelectedItem.length; i++) {
+
+            //var temp2 = "GSTPer_" + SelectedItem[i].SrNo
+            //document.getElementById(temp2).value = SelectedItem[i].GSTID;
+            var temp1 = "ItemDescription_" + SelectedItem[i].SrNo
+            document.getElementById(temp1).value = SelectedItem[i].ItemDescription;
+        }
+    }
+
+    function UpdateDetailsInArray(SrNo) {
+        debugger;
+        var z = SelectedItem.findIndex(p => p.SrNo == SrNo);
+        var ItemGroupID = $("#ItemGroup option:selected").val();
+        if (ItemGroupID == 1) {
+            var Qty = $("#Qty_" + SrNo).val();
+            var Weight = $("#Weight_" + SrNo).val();
+            if (Qty == "" || Qty == undefined) {
+                Qty = 0;
+            }
+            if (Weight == "" || Weight == undefined) {
+                Weight = 0;
+            }
+            Weight = parseFloat(Weight);
+            Qty = parseInt(Qty);
+            Weight = parseFloat(Weight).toFixed(2);
+            SelectedItem[z].Qty = Qty;
+            SelectedItem[z].Weight = Weight;
+
+            var Unit = $("#Unit_" + SrNo).val();
+            SelectedItem[z].Unit = Unit;
+
+
+        }
+        ////// Raw material
+        else if (ItemGroupID == 5) {
+            var Width = $("#Width_" + SrNo).val();
+            if (Width == "" || Width == undefined) {
+                Width = 0;
+            }
+            Width = parseFloat(Width);
+            SelectedItem[z].Width = Width;
+
+            var Height = $("#Height_" + SrNo).val();
+            if (Height == "" || Height == undefined) {
+                Height = 0;
+            }
+            Height = parseFloat(Height);
+            SelectedItem[z].Height = Height;
+
+            var Qty = $("#Qty_" + SrNo).val();
+            Qty = parseInt(Qty);
+            if (Qty == "" || Qty == undefined) {
+                Qty = 0;
+            }
+            SelectedItem[z].Qty = Qty;
+            var SQMValue = parseFloat(SelectedItem[z].Height) * parseFloat(SelectedItem[z].Width);
+            if (SQMValue == "" || SQMValue == undefined) {
+                SQMValue = 0;
+            }
+            SQMValue = parseFloat(SQMValue) / parseFloat(1000000);
+            SQMValue = parseFloat(SQMValue) * parseFloat(Qty);
+            SQMValue = parseFloat(SQMValue).toFixed(4)
+            var sqm = "SQM_" + SrNo;
+            if (sqm == "" || sqm == undefined) { 
+                sqm = 0;
+            }
+            document.getElementById(sqm).value = SQMValue;
+            SelectedItem[z].SQM = SQMValue;
+
+            var WeightValue = parseFloat(SQMValue) * 2.5;
+            WeightValue = parseFloat(WeightValue) * parseFloat(SelectedItem[z].Thickness);;
+            WeightValue = parseFloat(WeightValue).toFixed(2);
+
+            var weight = "Weight_" + SrNo;
+            document.getElementById(weight).value = WeightValue;
+            SelectedItem[z].Weight = WeightValue;
+
+        }
+
+        var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        SelectedItem[z].ItemDescription = ItemDescription;
+
+        //    getTotalOfPOItem();
+    }
+
+
+    function UpdateDetailsInArrayOLD(SrNo) {
+        debugger;
+        var z = SelectedItem.findIndex(p => p.SrNo == SrNo);
+        var ItemGroupID = $("#ItemGroup option:selected").val();
+        if (ItemGroupID == 1) {
+
+
+        }
+        else if (ItemGroupID == 5) {
+            var NoOfCase = "#NoOfCase_" + SrNo;
+            NoOfCase = $("#NoOfCase_" + SrNo).val();
+            if (NoOfCase == "" || NoOfCase == undefined) {
+                NoOfCase = 0;
+            }
+            SelectedItem[z].NoOfCase = NoOfCase;
+
+            var SheetPerCase = "#SheetPerCase_" + SrNo;
+            SheetPerCase = $("#SheetPerCase_" + SrNo).val();
+            if (SheetPerCase == "" || SheetPerCase == undefined) {
+                SheetPerCase = 0;
+            }
+            SelectedItem[z].SheetPerCase = SheetPerCase;
+
+            var QtyValue = parseFloat(NoOfCase) * parseFloat(SheetPerCase);
+            QtyValue = parseFloat(QtyValue).toFixed(2)
+            var Qty = "Qty_" + SrNo;
+            document.getElementById(Qty).value = QtyValue;
+            SelectedItem[z].Qty = QtyValue;
+
+            var SQMValue = parseFloat(SelectedItem[z].Height) * parseFloat(SelectedItem[z].Width);
+            SQMValue = parseFloat(SQMValue) / parseFloat(1000000);
+            SQMValue = parseFloat(SQMValue) * parseFloat(QtyValue);
+            SQMValue = parseFloat(SQMValue).toFixed(4)
+            var sqm = "SQM_" + SrNo;
+            document.getElementById(sqm).value = SQMValue;
+            SelectedItem[z].SQM = SQMValue;
+        }
+
+        var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        SelectedItem[z].ItemDescription = ItemDescription;
+
+        var _receivedQty = $("#Qty_" + SrNo).val();
+        var alreadyReceived = SelectedItem[z].AlreadyReceivedQty;
+        var txtbalanceQty = SelectedItem[z].FixedBalanceQty;
+        _receivedQty = parseFloat(_receivedQty);
+
+        if (CopyFrom == "1") {
+            SelectedItem[z].BalanceQty = _receivedQty;
+            SelectedItem[z].AlreadyReceivedQty = 0;
+
+        }
+        else {
+            SelectedItem[z].BalanceQty = _receivedQty;
+            SelectedItem[z].AlreadyReceivedQty = 0;
+        }
+        //////////////////////////////////////////////////////////////////
+        var _Rate = $("#Rate_" + SrNo).val();
+        var _QTY = $("#Qty_" + SrNo).val();
+
+        var _TotalLC;
+        var _NetTotal;
+        var _FinalTotal;
+        if (ItemGroupID == 1) {
+            _TotalLC = (_Rate * _QTY);
+            _TotalLC = parseFloat(_TotalLC).toFixed(2);
+
+        }
+        else if (ItemGroupID == 5) {
+            _TotalLC = (_Rate * SelectedItem[z].SQM);
+            _TotalLC = parseFloat(_TotalLC).toFixed(2);
+        }
+
+        //$("#NetTotal_" + SrNo).val(_NetTotal);
+        //$("#FinalTotal_" + SrNo).val(_FinalTotal);
+        $("#TotalLC_" + SrNo).val(_TotalLC);
+        $("#Rate_" + SrNo).val(_Rate);
+        //$("#DiscountPer_" + SrNo).val(_Discount);
+
+
+        SelectedItem[z].Qty = _QTY;
+        SelectedItem[z].TotalLC = _TotalLC;
+        SelectedItem[z].Rate = _Rate;
+
+        //    getTotalOfPOItem();
+    }
+
+
+    function deleteSelectedRow(data) {
+        var i = SelectedItem.findIndex(p => p.SrNo == data)
+        //$("#custom-switch-checkbox_" + data).prop('checked', false);
+
+        SelectedItem.splice(i, 1);
+        var SrNo = 0;
+        for (var i = 0; i < SelectedItem.length; i++) {
+            SrNo = parseInt(SrNo);
+            SrNo = SrNo + 1;
+            SelectedItem[i].SrNo = SrNo;
+            SelectedItem[i].index = SrNo;
+        }
+        setSelectedItem();
+    }
+
+</script>
+
+<script>
+
+    function OnSave() {
+        debugger;
+        var ItemGroupID = $("#ItemGroup option:selected").val();
+        if (ItemGroupID == 0 || ItemGroupID == "" || ItemGroupID == undefined) {
+            Swal.fire({
+                title: 'Error!',
+                text: "Please select Item Group.",
+                icon: 'error'
+            }).then((result) => {
+                $("#ItemGroup").focus();
+                return false;
+            });
+            return;
+        }
+
+        var basicElement = {};
+        basicElement.RRMNO = '0';
+        basicElement.RRMID = 0;
+        @*basicElement.EANO = '@ViewBag.EANO';*@
+        basicElement.ESNO = '@ViewBag.ESNO';
+        basicElement.ENQNO = '@ViewBag.ENQNO';
+        basicElement.RRMDate = $("#txtRRMDate").val();
+        basicElement.CustomerID = '@ViewBag.CustomerID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.PartnerID = '@ViewBag.PartnerID';
+        basicElement.ItemGroupID = ItemGroupID;
+        basicElement.ReqVehicle = $("#txtReqVehicle").val();
+        basicElement.Remarks = $("#Remarks").val();
+        var IsCutSizeSelected = document.getElementById('IsCutSizeSelected');
+        if (IsCutSizeSelected.checked) {
+            IsCutSizeSelected = 1;
+        } else if (IsCutSizeSelected.checked == undefined) {
+            IsCutSizeSelected = 0;
+        } else {
+            IsCutSizeSelected = 0;
+        }
+        basicElement.IsCutSize = IsCutSizeSelected
+
+        if (basicElement.ReqVehicle == "" || basicElement.ReqVehicle == null || basicElement.ReqVehicle == undefined || basicElement.ReqVehicle == 0) {
+            basicElement.ReqVehicle = 0;
+        }
+
+        //if (basicElement.NoOfVehicle == "" || basicElement.NoOfVehicle == null || basicElement.NoOfVehicle == undefined|| basicElement.NoOfVehicle == 0) {
+        //    Swal.fire({
+        //        title: 'Error',
+        //        text: "Please enter no of vehicle",
+        //        icon: 'error'
+        //    });
+
+        //    $("#NoOfVehicle").focus();
+        //    return false;
+        //}
+        //if (basicElement.Destination == "" || basicElement.Destination == null || basicElement.Destination == undefined || basicElement.Destination == 0) {
+        //    Swal.fire({
+        //        title: 'Error',
+        //        text: "Please enter  Destination",
+        //        icon: 'error'
+        //    });
+
+        //    $("#txtDestination").focus();
+        //    return false;
+        //}
+
+
+        if (SelectedItem.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Item!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        var Total = 0;
+
+        for (var j = 0; j < SelectedItem.length; j++) {
+            Total = Total + parseFloat(SelectedItem[j].TotalLC);
+        }
+        Total = parseFloat(Total).toFixed(2);
+        basicElement.Total = Total;
+
+        for (var i = 0; i < SelectedItem.length; i++) {
+
+            if (basicElement.ItemGroupID == 1) {
+                if (SelectedItem[i].Qty == "" || SelectedItem[i].Qty == 0 || SelectedItem[i].Qty == undefined || SelectedItem[i].Qty == NaN) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "Please enter Qty for " + SelectedItem[i].ItemDescription,
+                        icon: 'error'
+                    });
+                    return false;
+                }
+                if (SelectedItem[i].Weight == "" || SelectedItem[i].Weight == 0 || SelectedItem[i].Weight == undefined || SelectedItem[i].Weight == NaN) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "Please enter Weight for " + SelectedItem[i].ItemDescription,
+                        icon: 'error'
+                    });
+                    return false;
+                }
+            }
+            if (basicElement.ItemGroupID == 5) {
+                if (SelectedItem[i].Qty == "" || SelectedItem[i].Qty == 0 || SelectedItem[i].Qty == undefined || SelectedItem[i].Qty == NaN) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "Please enter Qty for " + SelectedItem[i].ItemDescription,
+                        icon: 'error'
+                    });
+                    return false;
+                }
+
+            }
+
+        }
+
+        // Attachment
+        //TotalAttchment = [];
+        //TotalAttchment = BillAttachment;
+        //for (i = 0; i < TotalAttchment.length; i++) {
+        //    var element2 = {};
+        //    element2.DocName = TotalAttchment[i].DocFileName;
+        //    element2.FilePath = TotalAttchment[i].FilePath;
+        //    element2.ContentType = TotalAttchment[i].ContentType;
+        //    MasterAttachment.push(element2);
+        //}
+
+        $("#global-loader").fadeIn("slow");
+        var data = { 'BasicDetails': basicElement, 'ItemListD': SelectedItem };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/SaveReqRawMaterialDetails',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#Savebtn").prop("disabled", true);
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("ReqRawMaterialSummary", "Enquiry")';
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+</script>
+
+<script>
+
+    function validOnlyNumber(elem) {
+        var RegExp = /^[0-9()]*$/;
+        if (RegExp.test(elem.value)) {
+            val = elem.value;
+        } else {
+            elem.value = 0;
+        }
+    }
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    jQuery('.txtInput').click(function () { selectAllText(jQuery(this)) });
+
+</script>
+
+
+

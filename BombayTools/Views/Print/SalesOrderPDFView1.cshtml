@@ -1,0 +1,652 @@
+﻿@{ ViewBag.Title = "SalesOrderPDFView"; }
+
+@*@model IEnumerable<BombayToolsEntities.BusinessEntities.SalesOrderData>*@
+
+<style>
+    * {
+        color: black;
+    }
+
+    #MainSummaryTable {
+        /*border: solid 2px #000000;*/
+        /*border-collapse: collapse;*/
+        border-top-style: none;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    body {
+        background-color: white;
+        line-height: normal;
+        color: black;
+    }
+
+    .table {
+        /*border: 2px solid #2E2E2E;*/
+        /* border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;*/
+    }
+
+    table {
+        page-break-inside: auto;
+        /*border-collapse: collapse;*/
+        /*border-left: solid 1px #000000;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;*/
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    td {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group;
+        border-top: 1px solid black;
+    }
+
+    tfoot {
+        display: table-footer-group
+    }
+
+    hr {
+        border-top: 1px solid black;
+    }
+
+    pre {
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    .table td {
+        padding: 0.5rem !important;
+        vertical-align: top;
+        width: 500px;
+        height: 40px;
+        /*border-collapse: collapse;*/
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+    }
+
+    .normal-p {
+        font-family: 'Quicksand', sans-serif !important;
+        font-size: 16px;
+        font-weight: 900;
+        color: inherit !important;
+        padding: inherit !important;
+        overflow: auto;
+        font-size: 100%;
+        line-height: normal;
+        /*   line-height: 1.45;*/
+        border-left: 0px;
+        background-color: inherit !important;
+        border-radius: 3px;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        text-shadow: 0 1px white;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+    }
+
+    .table th {
+        /*border-collapse: collapse;*/
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+    }
+
+    /*    #headerFor {
+        position: fixed;
+        top: 0;
+        height: 100px;
+        width: 800px;
+    }
+
+    #footerFor {
+        position: fixed;
+        bottom: 70px;
+        height: 100px;
+        width: 800px;
+    }*/
+
+</style>
+
+<div class="row m-5" id="wrapper">
+
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        @*FOR START HEADER*@
+        <div class="bg-white" id="headerFor">
+            <div class="row">
+                <div class="col-9">
+                    <div class="text-left">
+
+                        <label style="font-size:15px; ">
+                            <strong style="font-weight: 900;font-size:20px !important;">@ViewBag.Master.BillFor</strong> <br />
+                            <strong style="font-weight:900;">Address : <span style="font-weight: 500;">Plot 22G, 224 Nesbit Compound, Opposite Jupiter Tower/ SBI Bank, Nesbit Road Mazagaon, Mumbai 400010 |</span></strong>
+                            <strong style="font-weight: 900;">E-Mail : <span style="font-weight: 500;">info@bombaytools.in  |</span></strong>
+                            <strong style="font-weight: 900;">Ph.No : <span style="font-weight: 500;">022-66668781/82/83</span></strong>
+                            <br />
+                            @if (@ViewBag.Master.BillFor == "Bombay Tools Centre Bombay Pvt Ltd")
+                            {
+                <strong style="font-weight: 900;">GSTIN/UIN : <span style="font-weight: 500;">27AAFCB2492P1Z5 |</span></strong> <strong style="font-weight: 900;">State Name : <span style="font-weight: 500;">Maharashtra, Code : 27</span></strong><br /> }
+
+            else
+            {
+<strong style="font-weight: 900;">GSTIN/UIN : <span style="font-weight: 500;">27AAAFB3364J1ZJ |</span></strong> <strong style="font-weight: 900;">State Name : <span style="font-weight: 500;">Maharashtra, Code : 27</span></strong> <br />}
+
+
+                            @*<strong style="font-weight: 900;">E-Mail : <span style="font-weight: 500;">info@bombaytools.in</span></strong> <br />*@
+                            @*<strong style="font-weight: 900;">Ph.No : <span style="font-weight: 500;">022-66668781/82/83</span></strong> <br />*@
+                            <strong style="font-weight: 900;">CIN : <span style="font-weight: 500;">U52500MH2012PTC234920 </span></strong> <br />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <img height="100" style="margin-right: 5px; width:100%" src="~/images/BTC-Logo.svg" />
+                </div>
+            </div>
+        </div>
+        @*FOR END HEADER*@
+        <div class="col-sm-12 col-md-12 col-lg-12 mt-2 text-center">
+            <h3><strong>Proforma Invoice</strong></h3>
+        </div>
+        <div class="row" style="border:1px solid black;  border-bottom: 1px solid black;">
+
+            <div class="col-6" style=" height: auto;border-bottom: 1px solid black;">
+                <div class="row">
+                    <div class="col-6" style="border-right:1px solid black;height:auto;">
+                        <p class="mt-1" style="font-size:15px;font-weight: 900;">Voucher No : <strong style="font-size:15px;font-weight: 500;">@ViewBag.Master.SONo</strong></p>
+                    </div>
+                    <div class="col-6" style="height: auto;">
+                        <p class="mt-1" style="font-size:15px;font-weight: 900;">Dated : <strong style="font-size:15px;font-weight: 500;">@ViewBag.Master.DisplaySalesOrderDate</strong></p>
+                        @*<h6 class="mb-1"><strong style="font-weight: 900;">@ViewBag.Master.DisplaySalesOrderDate</strong></h6>*@
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-6" style="border-left: 1px solid black;border-bottom: 1px solid black; height: auto;">
+                <div class="row">
+                    @*<div class="col-6" style="border-bottom: 1px solid black;border-right:1px solid black;height:50px;">
+                            <h4>Voucher No.</h4>
+                            <h6><strong style="font-weight: 900;">@ViewBag.Master.SONo</strong></h6>
+                        </div>
+                        <div class="col-6" style="border-bottom: 1px solid black; height: 50px;">
+                            <h4>Dated</h4>
+                            <h6><strong style="font-weight: 900;">@ViewBag.Master.DisplaySalesOrderDate</strong></h6>
+                        </div>*@
+                    <div class="col-6" style="border-right: 1px solid black;height:auto;">
+                        <p class="mt-1" style="font-size:15px;font-weight: 900;">PO No : <strong style="font-size:15px;font-weight: 500;">@ViewBag.Master.PONO</strong></p>
+                        @*<h6 class="mb-1"><strong style="font-weight: 900;">@ViewBag.Master.PONO</strong></h6>*@
+                    </div>
+                    <div class="col-6" style="height: auto;">
+                        <p class="mt-1" style="font-size:15px;font-weight: 900;">PO Date : <strong style="font-size:15px;font-weight: 500;">@ViewBag.Master.DisplayPODate</strong></p>
+                        @*<h6 class="mb-1"><strong style="font-weight: 900;">@ViewBag.Master.DisplayPODate</strong></h6>*@
+                    </div>
+                    @*<div class="col-6" style="border-right: 1px solid black; height: 50px;">
+
+                        </div>
+                        <div class="col-6" style=" height: 50px;">
+                            <h4>Vendor Code :</h4>
+                            <h6><strong style="font-weight: 900;"> <label id="VendorCode">@ViewBag.Master.VendorCode</label></strong></h6>
+                        </div>*@
+                </div>
+            </div>
+            <div class="col-6" style="border-right:1px solid black; border-bottom:1px solid black; height:auto;">
+                <h4 class="mt-1">Consignee (Ship to)</h4>
+                <label id="DelioveryLocationL" style="font-size:15px;">
+                    <strong style="font-weight: 900; font-size:18px;">
+                        @if (ViewBag.Master.DelCompanyName == "" || ViewBag.Master.DelCompanyName == " " || ViewBag.Master.DelCompanyName == "-" || ViewBag.Master.DelCompanyName == null || ViewBag.Master.DelCompanyName == @ViewBag.Master.Company)
+                        {
+            @ViewBag.Master.Company <br /> }
+        else
+        {
+@ViewBag.Master.DelCompanyName <br />}
+                    </strong>
+                    @ViewBag.Master.ConsigneeAddress,
+                    @ViewBag.Master.ShippingLocation,
+                    @ViewBag.Master.DeliveryStateName @*- @ViewBag.Master.PinCodeDelivery*@ <br />
+                    <strong style="font-weight: 900;">Contact Details 1  :</strong> @ViewBag.Master.ContactDelivery1<br />
+                    <strong style="font-weight: 900;">Contact Details 2  :</strong> @ViewBag.Master.ContactDelivery2<br />
+                    <strong style="font-weight: 900;">Email-ID  :</strong> @ViewBag.Master.DLEmailID<br />
+                    @*<strong style="font-weight: 900;">Delivery Company Name  :</strong> @ViewBag.Master.DelCompanyName<br />*@
+
+                </label>
+
+            </div>
+            <div class="col-6" style="border-bottom: 1px solid black; height: auto;">
+                <h4 class="mt-1">Buyer (Bill to)</h4>
+                <label id="BillingLocation" style="font-size:15px;">
+                    <strong style="font-weight: 900; font-size:18px;">@ViewBag.Master.Company</strong><br />
+                    @ViewBag.Master.BillingAddress,
+                    @ViewBag.Master.BillingLocation,
+                    @ViewBag.Master.BillingStateName @*- @ViewBag.Master.PinCodeBill*@ <br />
+                    <strong style="font-weight: 900;">GST No :</strong> @ViewBag.Master.GSTNO<br />
+                    <strong style="font-weight: 900;">Contact Details 1  :</strong> @ViewBag.Master.ContactNo<br />
+                    <strong style="font-weight: 900;">Contact Details 2  :</strong> @ViewBag.Master.ContactNo2<br />
+                    <strong style="font-weight: 900;">Email-ID  :</strong> @ViewBag.Master.EmailID<br />
+                </label>
+
+            </div>
+            <div class="col-6" style="border-right: 1px solid black; height: auto; ">
+
+
+                <label id="paymentdaycount" style="font-size:15px;">
+                    <strong style="font-weight: 900; font-size:18px;">Payment Type:</strong> @ViewBag.Master.PaymentType<br />
+                    @if (ViewBag.Master.PaymentType == "Advance")
+                    {
+        <strong style="font-weight: 900;">Advance Details :</strong> @ViewBag.Master.AdvanceDetails }
+    else
+    {
+<strong style="font-weight: 900;">No. of credit days:</strong> @ViewBag.Master.CreditDays}<br />
+                    <strong style="font-weight: 900;">Vendor Code :</strong> @ViewBag.Master.VendorCode
+                </label>
+                <br />
+
+            </div>
+            <div class="col-6" style="height: auto;">
+
+                <h4 class="mt-1">Bank Details</h4>
+                @if (@ViewBag.Master.BillFor == "Bombay Tools Centre Bombay Pvt Ltd")
+                {
+    <table class="p-0 m-0" style="height: auto; border-style: none; width: 100%">
+        <tbody>
+            <tr>
+                <td style="padding: 0 !important;" class="pull-left"><h6><strong>Bank Name</strong></h6></td>
+                <td style="padding: 0 !important;">
+                    <h6><strong> : ICICI Bank</strong> </h6>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0 !important;" class="pull-left"><h6><strong>Account No</strong></h6></td>
+                <td style="padding: 0 !important;">
+                    <h6><strong> : 026105007700</strong> </h6>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0 !important;" class="pull-left"><h6><strong>Branch & IFSC Code</strong></h6></td>
+                <td style="padding: 0 !important;">
+                    <h6><strong> : Zaveri Bazar & ICIC0000261</strong> </h6>
+                </td>
+            </tr>
+        </tbody>
+    </table> }
+else
+{
+<table class="p-0 m-0" style="height: auto; border-style: none; width: 100%">
+    <tbody>
+        <tr>
+            <td style="padding: 0 !important;" class="pull-left"><h6><strong style="font-weight: 900;">Bank Name</strong></h6></td>
+            <td style="padding: 0 !important;">
+                <h6><strong> : Bank of Baroda</strong> </h6>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0 !important;" class="pull-left"><h6><strong style="font-weight: 900;">Account No</strong></h6></td>
+            <td style="padding: 0 !important;">
+                <h6><strong> : 99320200000306</strong></h6>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0 !important;" class="pull-left"><h6><strong style="font-weight: 900;">IFSC Code</strong></h6></td>
+            <td style="padding: 0 !important;">
+                <h6><strong> : BARB0DBNDEV</strong> </h6>
+            </td>
+        </tr>
+    </tbody>
+</table>}
+
+
+
+            </div>
+
+        </div>
+
+
+        @*Item-start*@
+        @*<br />*@
+        <div class="row">
+
+            <table class="table" border='1' id="MainSummaryTable">
+
+                <thead>
+                    <tr id="MainSummaryTable">
+                        <th id="MainSummaryTable" colspan="10" class="text-center" style="font-weight:900;"> Item Details</th>
+                    </tr>
+                    <tr id="MainSummaryTable">
+                        <th id="MainSummaryTable" style="width:1% !important" class="text-center p-0">Sr No</th>
+                        <th id="MainSummaryTable" class="text-center" style="width:19%">Description of Goods</th>
+                        @*<th id="MainSummaryTable" class="text-center" style="width:19%">Item Description</th>*@
+                        <th id="MainSummaryTable" class="text-center" style="width:1%">HSN</th>
+                        <th id="MainSummaryTable" style="width:1% !important" class="text-center">QTY</th>
+                        <th id="MainSummaryTable" class="text-center" style="width:1% !important">Rate</th>
+                        <th id="MainSummaryTable" style="width:0.5% !important">Unit</th>
+                        <th id="MainSummaryTable" class="text-center" style="width:1% !important">Net Total</th>
+                        <th id="MainSummaryTable" class="text-center" style="width:1% !important">GST</th>
+                        @*<th class="text-center" style="width:1% !important">IGST</th>
+                            <th class="text-center" style="width:1% !important">CGST</th>
+                            <th class="text-center" style="width:1% !important">SGST</th>*@
+                        <th id="MainSummaryTable" class="text-center" style="width:3% !important">Final Total</th>
+                    </tr>
+                </thead>
+
+                <tbody style="height:10%;">
+
+                    @foreach (var d in ViewBag.Item)
+                    {
+        <tr id="MainSummaryTable">
+            <td id="MainSummaryTable" class="text-left">@d.SrNo</td>
+            <td id="MainSummaryTable" style="width:20% ;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <p class="m-0 pl-1" style="font-weight: 900;">
+                            @d.ItemDescription
+                        </p>
+                    </div>
+                    @if (d.DataType != "Tax" && d.DataType != "Item Total" && d.DataType != "Total")
+                    {
+                        if (d.SOItemNote != "" && d.SOItemNote != null && d.SOItemNote != " " && d.SOItemNote != "-")
+                        {
+    <div class="col-12">
+        <p class="m-0 pl-1" style=" "><span style="font-weight: 900;">Description: </span>@Html.Raw(d.SOItemNote)</p>
+    </div> }
+<div class="col-6">
+    <p class="m-0 pl-1" style=" "><span style="font-weight: 900;">Part No: </span>@d.PartNo</p>
+</div>
+                    <div class="col-6">
+                        <p class="m-0 pl-1" style=" "><span style="font-weight: 900;">Make: </span>@d.Manufacture</p>
+                    </div>}
+                </div>
+
+            </td>
+            @*<td id="MainSummaryTable" class="text-center">@Html.Raw(d.SOItemNote)</td>*@
+            <td id="MainSummaryTable" class="text-center">@d.HSNCode</td>
+            @if (d.QTY != 0)
+            {
+<td id="MainSummaryTable" class="text-center">@d.QTY</td>
+ }
+else
+{
+<td id="MainSummaryTable" class="text-center"></td>
+}
+            @if (d.Rate != 0)
+            {
+<td id="MainSummaryTable" class="text-right">@d.Rate</td>
+ }
+else
+{
+<td class="text-right"></td>
+}
+            @*<td class="text-center">@d.QTY</td>
+                <td class="text-right">@d.Rate</td>*@
+            <td class=""> @d.Unit </td>
+            @if (d.DataType != "Item Total" && d.DataType != "Total")
+            {
+<td id="MainSummaryTable" class="text-right">@d.NetTotal</td>
+ }
+else
+{
+<td id="MainSummaryTable" class="text-right" style="font-weight: 900;">@d.NetTotal</td>
+}
+            @*<td class="text-right">@d.NetTotal</td>*@
+            <td class="text-right">@d.GST</td>
+            @*<td class="text-right">@d.IGST_D</td>
+                <td class="text-right">@d.CGST_D</td>
+                <td class="text-right">@d.SGST_D</td>*@
+            @if (d.DataType != "Item Total" && d.DataType != "Total")
+            {
+<td id="MainSummaryTable" class="text-right">@d.FinalTotal</td>
+ }
+else
+{
+<td id="MainSummaryTable" class="text-right" style="font-weight: 900;">@d.FinalTotal</td>
+}
+            @*<td class="text-right" style="font-weight: 900;">@d.FinalTotal</td>*@
+        </tr>
+}
+                    <!--<tr style="border-top:1px solid black;border-bottom:1px solid black">
+                        <td id="topmargin"></td>
+                        <td id="topmargin"><div class="float-right" style="font-weight: 900; font-size:17px;">Total</div></td>
+                        <td id="topmargin"></td>
+                        <td id="topmargin" class="text-center" style="font-weight: 900; font-size:17px;">@ViewBag.TotalQTY</td>
+                        <td id="topmargin"></td>
+                        <td id="topmargin"></td>
+                        <td id="topmargin" class="text-right" style="font-weight: 900; font-size:17px;">@ViewBag.FinalItemNetTotal</td>
+                        <td id="topmargin"></td>-->
+                    @*<td id="topmargin"></td>
+                        <td id="topmargin"></td>
+                        <td id="topmargin"></td>*@
+                    <!--<td id="topmargin" class="text-right" style="font-weight: 900; font-size:17px;"><i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.FinalTotalAmount</td>
+                    </tr>-->
+                    @*item ends*@
+                </tbody>
+            </table><br />
+
+
+            @*Item-ends*@
+
+            @*Taxtion*@
+            @if (ViewBag.Tax.Count > 0)
+            {@*<table class="table table-bordered" style="height:auto;border-bottom:2px solid black;border-top:1px solid black">*@
+                            <div class="row col-12">
+                                <div class="col-9">
+
+                                    <table style="height: auto; border-style: none; width: 100%">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 0 !important;" class="pull-left">
+                                                    <h5>
+                                                        <strong>
+                                                            INCO TERMS :
+                                                        </strong>@ViewBag.Master.INCOTerm
+                                                    </h5>
+                                                </td>
+                                                @*<td></td>
+                                                    <td style="padding: 0 !important;" class="pull-left">
+                                                        <h5><strong>@ViewBag.Master.INCOTerm </strong> </h5>
+                                                    </td>*@
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0 !important;" class="pull-left">
+                                                    <h5>
+                                                        <strong>
+                                                            Delivery Period :
+                                                        </strong>@ViewBag.Master.DeliveryPeriod
+                                                    </h5>
+                                                </td>
+                                                @*<td></td>
+                                                    <td style="padding: 0 !important;" class="pull-left">
+                                                        <h5><strong>@ViewBag.Master.DeliveryPeriod</strong> </h5>
+                                                    </td>*@
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0 !important;" class="pull-left">
+                                                    <h5>
+                                                        <strong>
+                                                            Delivery Instructions :
+                                                        </strong>@ViewBag.Master.DeliveryInstruction
+                                                    </h5>
+                                                </td>
+                                                @*<td></td>
+                                                    <td style="padding: 0 !important;" class="pull-left">
+                                                        <h5><strong>@ViewBag.Master.DeliveryInstruction</strong> </h5>
+                                                    </td>*@
+                                            </tr>
+                                            @*<tr>
+                                                    <td style="padding: 0 !important;" class="pull-left"><h5><strong>Remarks</strong></h5></td>
+                                                    <td></td>
+                                                    <td style="padding: 0 !important;">
+                                                        <h5><strong> : @ViewBag.Master.Remarks</strong> </h5>
+                                                    </td>
+                                                </tr>*@
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-3 float-right">
+                                    <table style="height: auto; border-style: none; width: 100%">
+
+                                        <tbody>
+                                            @foreach (var d in ViewBag.Tax)
+                                            {
+                            <tr>
+                                <td style="padding: 0 !important;" class="pull-left"><h5><strong>@d.GstPercent : </strong></h5></td>
+                                <td></td>
+                                <td style="padding: 0 !important;" class="pull-right">
+                                    <h5><strong> @d.GSTAmount </strong> </h5>
+                                </td>
+
+                                @*<td style="font-weight: 900;border-style:none;padding: 0 !important;line-height: 80%; width:50% !important" class="text-right">
+                                        <h5><strong>@d.GstPercent</strong></h5>
+                                    </td>
+                                    <td style="font-weight: 900;border-style:none;padding: 0 !important;line-height: 80%; width:50% !important" class="text-right mr-1"><h5><strong>@d.GSTAmount </strong></h5></td>*@
+                            </tr>
+}
+                                        </tbody>
+
+                                    </table><br />
+                                </div>
+                            </div> } @*@if (ViewBag.Tax.Count > 0)
+                            {
+                                <table class="table table-bordered" style="height:auto;border-bottom:2px solid black;border-top:1px solid black">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="9" class="text-center" style="font-weight:900; border-bottom :1px solid black"> Other Charges Details</th>
+                                        </tr>
+                                        <tr style="border-top: 1px solid black">
+                                            <th style="" class="text-center"><strong>Sr No</strong></th>
+                                            <th style="width: 30% !important" class="text-center"><strong>Charge Name</strong></th>
+                                            <th style="" class="text-center"><strong>Amount </strong></th>
+                                            <th style="" class="text-center"><strong>GST</strong></th>
+                                            <th style="" class="text-center"><strong>IGST</strong></th>
+                                            <th style="" class="text-center"><strong>SGST</strong></th>
+                                            <th style="" class="text-center"><strong>CGST</strong></th>
+                                            <th style="" class="text-center"><strong>Final Total</strong></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var d in ViewBag.Tax)
+                                        {
+                                            <tr>
+                                                <td style="" class="text-center"><strong>@d.SrNo</strong></td>
+                                                <td style="font-weight: 900; width:30% !important" class="text-center">@d.TaxName</td>
+                                                <td style="font-weight: 900;" class="text-right mr-1">@d.Amount </td>
+                                                <td style="" class="text-center">@d.GST</td>
+                                                <td style="" class="text-center"> @d.IGST </td>
+                                                <td style="" class="text-center"> @d.SGST </td>
+                                                <td style="" class="text-center"> @d.CGST </td>
+                                                <td style="font-weight: 900;" class="text-right mr-1"> @d.FinalTotal </td>
+                                            </tr>
+                                        }
+                                        <tr style="border-top:2px solid black;border-bottom:1px solid black">
+                                            <td id="topmargin"></td>
+                                            <td id="topmargin"><div class="float-right" style="font-weight: 900; font-size:17px;">Total</div></td>
+                                            <td id="topmargin" class="text-right" style="font-weight: 900; font-size:17px;">@ViewBag.BasicTotalAmount</td>
+                                            <td id="topmargin"></td>
+                                            <td id="topmargin"></td>
+                                            <td id="topmargin"></td>
+                                            <td id="topmargin"></td>
+                                            <td id="topmargin" class="text-right" style="font-weight: 900; font-size:17px;"><i class="fa fa-inr" aria-hidden="true"></i>  @ViewBag.FinalTotalTax</td>
+                                        </tr>
+                                    </tbody>
+
+
+
+                                </table><br />
+                            }*@ @*Taxtion ends*@ @*Terms and Conditions*@
+            <!--<div class="row">
+                <div class="col-12">
+                    <table style="height: auto; border-style: none; width: 100%">
+                        <tbody>
+                            <tr>
+                                <td style="padding: 0 !important;" class="pull-left"><h5><strong>INCO TERMS</strong></h5></td>
+                                <td></td>
+                                <td style="padding: 0 !important;" class="pull-left">
+                                    <h5><strong> : @ViewBag.Master.INCOTerm</strong> </h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 !important;" class="pull-left"><h5><strong>Delivery Period</strong></h5></td>
+                                <td></td>
+                                <td style="padding: 0 !important;" class="pull-left">
+                                    <h5><strong> : @ViewBag.Master.DeliveryPeriod</strong> </h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 !important;" class="pull-left"><h5><strong>Delivery Instructions</strong></h5></td>
+                                <td></td>
+                                <td style="padding: 0 !important;" class="pull-left">
+                                    <h5><strong> : @ViewBag.Master.DeliveryInstruction</strong> </h5>
+                                </td>
+                            </tr>-->
+            @*<tr>
+                    <td style="padding: 0 !important;" class="pull-left"><h5><strong>Remarks</strong></h5></td>
+                    <td></td>
+                    <td style="padding: 0 !important;">
+                        <h5><strong> : @ViewBag.Master.Remarks</strong> </h5>
+                    </td>
+                </tr>*@
+            <!--</tbody>
+                    </table>
+                </div>
+            </div>-->
+            @*Terms and Conditions Ends*@
+
+
+        </div>
+
+        @*FOR FOOTER START*@
+
+        @*<div class="bg-white" id="footerFor">
+                <hr />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <h5>Bombay Tools Centre (Bombay) Pvt Ltd</h5>
+                            <p>CIN-U52500MH2012PTC234920</p>
+                            <p>Plot 22G, 224 Nesbit Compound, Opposite Jupiter Tower/ SBI Bank, Nesbit Road Mazagaon, Mumbai 400010</p>
+                            <p>Ph.No.022-66668781/82/83</p>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+        @*FOR FOOTER END*@
+    </div>
+
+</div>
+
+
+@*<script>
+            setTimeout(function () {
+                window.onload = window.print();
+
+
+            }, 1000);
+            window.onload = function () {
+
+        };
+
+    </script>
+
+    <script>
+            setTimeout(function () {
+                window.onload = window.close();
+            }, 1000);
+            window.onload = function () {
+
+            };
+    </script>*@

@@ -1,0 +1,253 @@
+﻿
+@*@{
+    ViewBag.Title = "Principal";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}*@
+
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title" id="New">Principal Master</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" id="ShowSummary" class="btn btn-josph btn-success" style="color:white;align-content:center;" title="Summary"><i class="fa fa-file-text" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Summary"></i>  </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Principal Name</label>
+                                @Html.TextBox("Principal", null, new { @class = "form-control", @id = "Principal", name = "Principal", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary  float-right" id="Save" onclick="SavePrincipal()" title="Save"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-warning float-right" id="Update" onclick="UpdatePrincipal()"><i class="fa fa-save"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var SetID = 0;
+
+
+    $(document).ready(function () {
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        SetID = '@ViewBag.PrincipalID';
+        if (SetID != 0) {
+            $("#Save").hide();
+            $("#Update").show();
+        } else {
+            $("#Update").hide();
+            $("#Save").show();
+        }
+    });
+
+    function SavePrincipal() {
+        $("#cute-loader").fadeIn("slow");
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+         }
+         var Name = document.getElementById("Principal").value;
+         Name=Name.trim()
+         Name = Name.toLowerCase();
+         for (i = 0; i < PrincipalList.length; i++) {
+             var temp = PrincipalList[i].PrincipalName;
+             temp = temp.toLowerCase();
+             if (Name.trim() == temp) {
+                 alert("Principal Name already exist");
+                 return false;
+             }
+         }
+        var element = {};
+        element.PrincipalID = 0;
+         element.PrincipalName = Name;
+        element.AddedOn = new Date();
+        element.ModifiedOn = new Date();
+        element.isActive = 1;
+        element.IsNew = 1;
+        data = JSON.stringify(element);
+
+        $.ajax({
+            type: 'post',
+            url: '/Master/NewPrincipal',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#cute-loader").fadeOut("slow");
+                alert(response);
+                getBack();
+            },
+            error: function (errormessage) {
+                $("#cute-loader").fadeOut("slow");
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdatePrincipal() {
+        //CheckPrincipal();
+        $("#cute-loader").fadeIn("slow");
+        var Name = document.getElementById("Principal").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < PrincipalList.length; i++) {
+            if (SetID != PrincipalList[i].PrincipalID) {
+                var temp = PrincipalList[i].PrincipalName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    alert("Principal Name already exist");
+                    return false;
+                }
+            }
+        }
+
+
+        var element = {};
+
+        element.PrincipalID = '@ViewBag.PrincipalID';
+        element.PrincipalName = document.getElementById("Principal").value;
+        element.ModifiedOn = new Date();
+
+        element.AddedOn = new Date();
+        element.ModifiedOn = new Date();
+        element.isActive = 1;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+
+        $.ajax({
+            type: 'post',
+            url: '/Master/UpdateNewPrincipal',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#cute-loader").fadeOut("slow");
+                alert(response);
+                getBack();
+            },
+            error: function (errormessage) {
+                $("#cute-loader").fadeOut("slow");
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+     function DeletePrincipal() {
+
+        var element = {};
+
+        element.PrincipalID = '@ViewBag.PrincipalID';
+        element.PrincipalName = document.getElementById("Principal").value;
+        element.ModifiedOn = new Date();
+
+        element.AddedOn = new Date();
+        element.ModifiedOn = new Date();
+        element.isActive = 0;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+
+        $.ajax({
+            type: 'post',
+            url: '/Master/DeleteNewPrincipal',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("PrincipalSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    
+    function validateAllDetail() {
+        var isValid = Boolean;
+        isValid = true;
+        var Principal = document.getElementById("Principal").value;
+
+
+        if (Principal == "" || Principal == undefined) {
+            document.getElementById('Principal').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Principal').style.borderColor = "Gainsboro";
+        }
+
+
+
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+        }
+
+
+        function CheckPrincipal(Principal) {
+            var isValid1 = Boolean;
+            isValid1 = true;
+           var element = {};
+
+
+        element.PrincipalName = document.getElementById("Principal").value;
+
+        data = JSON.stringify(element);
+           // alert(data);
+                $.ajax({
+                    url: "/Master/AjaxGetAllPrincipal",
+                   data: data,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == 0) {
+                            isValid1 = true;
+                        }
+                        else {
+                            alert("Principal is already present.")
+                            isValid1 = false;
+
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage);
+                    }
+                });
+            return isValid1;
+
+        }
+</script>
+
+
+

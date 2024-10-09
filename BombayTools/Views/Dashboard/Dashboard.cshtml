@@ -1,0 +1,885 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+
+}
+
+
+
+<style>
+    .pointer_cursor {
+        cursor: pointer;
+    }
+
+    .bg-grad_head {
+        background: linear-gradient(269deg, #32cafe,#867efc);
+    }
+</style>
+<div id="cute-loader"></div>
+<div class=" content-area" id="Dashboard">
+    <div class="page-header">
+        <h4 class="page-title">Dashboard</h4>
+        <div class="breadcrumb">
+            <button id="getBackToDashboard" onclick="getBackToDashboard()" class="btn btn-success"><i class="fa fa-arrow-left"></i></button>
+            <button id="getBackToPrincipal" onclick="getBackToPrincipal()" class="btn btn-success"><i class="fa fa-arrow-left"></i></button>
+        </div>
+    </div>
+
+    <div id="DashBoard">
+        @if (ViewBag.PendingApproval != 0)
+        {
+            <div class="row">
+                <div class="col-sm-12 col-lg-3">
+                    <div class="card bg-primary pointer_cursor" onclick="GetPendingApproval()">
+                        <div class="card-body">
+                            <div class="d-flex no-block align-items-center">
+                                <div>
+                                    <h5 class="text-white">Pending Approval</h5>
+                                    <h2 class="text-white m-0 " id="PrincipalCount">@ViewBag.PendingApproval</h2>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="text-white display-6"><i class="fa fa-clock-o fa-2x"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-sm-12 col-lg-3">
+                <div class="card bg-info pointer_cursor" onclick="GetPrincipalTable()">
+                    <div class="card-body">
+                        <div class="d-flex no-block align-items-center">
+                            <div>
+                                <h5 class="text-white">Principal Count</h5>
+                                <h2 class="text-white m-0 " id="PrincipalCount">@ViewBag.PrincipalCount</h2>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="text-white display-6"><i class="fa fa-group fa-2x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+                <div class="card bg-success pointer_cursor" onclick="GetSectorTable()">
+                    <div class="card-body">
+                        <div class="d-flex no-block align-items-center">
+                            <div>
+                                <h5 class="text-white">Sector Count</h5>
+                                <h2 class="text-white m-0 " id="PrincipalCount">@ViewBag.SectorCount</h2>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="text-white display-6"><i class="fa fa-map fa-2x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+                <div class="card bg-warning pointer_cursor" onclick="GetIndustryTable()">
+                    <div class="card-body">
+                        <div class="d-flex no-block align-items-center">
+                            <div>
+                                <h5 class="text-white">Industry Count</h5>
+                                <h2 class="text-white m-0 " id="PrincipalCount">@ViewBag.IndustryCount</h2>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="text-white display-6"><i class="fa fa-industry fa-2x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+                <div class="card bg-danger pointer_cursor" onclick="GetCompanyTable()">
+                    <div class="card-body">
+                        <div class="d-flex no-block align-items-center">
+                            <div>
+                                <h5 class="text-white">Company Count</h5>
+                                <h2 class="text-white m-0 " id="PrincipalCount">@ViewBag.CompanyCount</h2>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="text-white display-6"><i class="fa fa-building-o fa-2x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*@if (((string)Session["usertype"]) == "admin" || ((string)Session["usertype"]) == "SalesCordinator")
+            {
+                var UserType = ((string)Session["usertype"]);*@
+        <div class="row ">
+
+            <div class="col-sm-12 col-lg-6">
+                <div id="LiveReport"></div>
+                <div class="card card-collapsed">
+                    <div class="card-header bg-grad_head br-tr-7 br-tl-7">
+                        <h3 class="card-title text-white">Streak Data</h3>
+                        <div class="card-options ">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up text-white"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach (var sd in ViewBag.StreakReport)
+                            {
+                                //if (UserType == "admin")
+                                //{
+                                <li class="list-group-item justify-content-between pointer_cursor" onclick="GetStreakUserData(@sd.Type)">
+                                    @sd.Name
+                                    <span class="badgetext badge badge-primary badge-pill">@sd.ID</span>
+                                </li>
+                                //}
+
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-grad_head br-tr-7 br-tl-7">
+                        <h4 class="card-title text-white">Activity Log</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">From Date</label>
+                                    @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(-1).ToString("dd MMM yyyy"), onchange = "fetchActivityLog()" })
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">To Date</label>
+                                    @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.ToString("dd MMM yyyy"), onchange = "fetchActivityLog()" })
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">User</label>
+                                    @Html.DropDownList("UserDropdown", (IEnumerable<SelectListItem>)ViewBag.UserDetail, "--Select--", new { @class = "form-control custom-select", @id = "userDropdown", name = "UserDropdown", autocomplete = "off", onchange = "fetchActivityLog()" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="content scroll-1 mCustomScrollbar _mCS_3" style="max-height:450px"> <div id="activityLogTimeline"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*}*@
+    </div>
+    <div id="PrincipalView">
+        <div class="row" id="PrincipalTable">
+            <div class="col-sm-12 col-lg-5 card">
+                <h5 class="mt-3 mb-0"><label id="TypeData"></label></h5>
+                <div class="table-responsive">
+                    <table id="tblDataCount" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:16px"></th>
+                                <th>Name</th>
+                                <th style="width:100px">Companies</th>
+                                <th style="visibility:hidden"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div id="principalT"></div>
+            </div>
+        </div>
+        <div class="row " id="PrincipalWiseCompany">
+            <div class="col-sm-12 col-lg-8 card">
+                <h5 class="mt-3 mb-0"><label id="TypeName"></label></h5>
+                <div class="table-responsive">
+                    <table id="tblCompanyList" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:16px"></th>
+                                <th>Company</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="CompanySummary">
+        <div class="row ">
+            <div class="col-sm-12 col-lg-12 card">
+                <div class="table-responsive mt-3">
+                    <table id="tblCompanyDataList" class="table table-striped table-bordered compact " style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:16px"></th>
+                                <th>Company</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="ApprovalSummary"></div>
+<div id="UserDetail"></div>
+<div id="StreakData"></div>
+<div id="EditStreakData"></div>
+<div id="QuotSummary"></div>
+
+
+
+
+<script>
+    var temp = 0;
+    $(document).ready(function () {
+        $("#cute-loader").fadeOut("slow");
+
+        $('#PrincipalView').hide();
+        $('#CompanySummary').hide();
+        $('#PrincipalWiseCompany').hide();
+
+        //Back button
+        $('#getBackToDashboard').hide();
+        $('#getBackToPrincipal').hide();
+
+        $('#tblDataCount').DataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "aasorting": false,
+            "paging": false,
+            "dom": 'Bfrtip',
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false
+            }]
+        });
+        GetLiveDataForUser();
+        fetchActivityLog();
+    });
+
+    function GetLiveDataForUser() {
+        var today = new Date();
+
+        var data = { 'From': today };
+
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/DashboardReport",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+
+                $('#LiveReport').html(response);
+                $('#LiveReport').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GetCompanyTable() {
+        var data = { 'Type': 4, 'id': 1 };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Dashboard/GetCompanyListForSelectedPrincipal',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#CompanySummary').show();
+                $('#DashBoard').hide();
+                $('#tblCompanyDataList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    order: [[1, 'asc']],
+                    "rowGroup": {
+                        dataSrc: "Company"
+                    },
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "LocationID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ShowLocationSummary('" + row.CompanyID + "','" + row.LocationID + "','" + row.Location + "','" + row.Company + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Company" },
+                        { "data": "Location" },
+
+                    ],
+                    //dom: 'Bfrtip',
+                    //buttons: ['colvis'
+                    //]
+                });
+            },
+            error: function (error) { alert(error.responseText); }
+        });
+    }
+
+    function GetPrincipalTable() {
+        $.ajax({
+            url: '/Dashboard/GetPrincipalDetail',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                document.getElementById('TypeData').innerHTML = "Principal's"
+                //ShowPrincipalGraph(data);
+                $('#getBackToDashboard').show();
+                $('#PrincipalView').show();
+                $('#DashBoard').hide();
+                $('#tblDataCount').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "PrincipalID",
+                            "aasorting": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ViewCompanyInPrincipal('" + row.PrincipalID + "','" + row.PrincipalName + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "PrincipalName" },
+                        { "data": "PrincipalCount" },
+                        { "data": "PrincipalID", "visible": false }
+
+                    ],
+
+
+                });
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function GetSectorTable() {
+        $.ajax({
+            url: '/Dashboard/GetSectorDetail',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                document.getElementById('TypeData').innerHTML = "Sector's"
+                //ShowPrincipalGraph(data);
+                $('#getBackToDashboard').show();
+                $('#PrincipalView').show();
+                $('#DashBoard').hide();
+                $('#tblDataCount').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "SectorID",
+                            "aasorting": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ViewCompanyInSector('" + row.SectorID + "','" + row.SectorName + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "SectorName" },
+                        { "data": "SectorCount" },
+                        { "data": "SectorID", "visible": false }
+
+                    ]
+                });
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function GetIndustryTable() {
+        $.ajax({
+            url: '/Dashboard/GetIndustryDetail',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                document.getElementById('TypeData').innerHTML = "Industry's"
+                //ShowPrincipalGraph(data);
+                $('#getBackToDashboard').show();
+                $('#PrincipalView').show();
+                $('#DashBoard').hide();
+                $('#tblDataCount').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "IndustryId",
+                            "aasorting": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ViewCompanyInIndustry('" + row.IndustryId + "','" + row.IndustryName + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "IndustryName" },
+                        { "data": "IndustryCount" },
+                        { "data": "IndustryId", "visible": false }
+
+                    ]
+                });
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function ViewCompanyInPrincipal(id, Name) {
+        document.getElementById('TypeName').innerHTML = "Principal: " + Name;
+        $('#getBackToDashboard').hide();
+        $('#getBackToPrincipal').show();
+        var data = { 'Type': 1, 'Id': id };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Dashboard/GetCompanyListForSelectedPrincipal',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#PrincipalWiseCompany').show();
+                $('#PrincipalTable').hide();
+                $('#tblCompanyList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "LocationID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ShowLocationSummary('" + row.CompanyID + "','" + row.LocationID + "','" + row.Location + "','" + row.Company + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Company" },
+                        { "data": "Location" },
+
+                    ],
+                    "rowGroup": {
+                        dataSrc: "Company"
+                    },
+                });
+            },
+            error: function (error) { alert(error); }
+        });
+    }
+    function ViewCompanyInSector(id, Name) {
+        document.getElementById('TypeName').innerHTML = "Sector: " + Name;
+        $('#getBackToDashboard').hide();
+        $('#getBackToPrincipal').show();
+        var data = { 'Type': 2, 'Id': id };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Dashboard/GetCompanyListForSelectedPrincipal',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#PrincipalWiseCompany').show();
+                $('#PrincipalTable').hide();
+                $('#tblCompanyList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "LocationID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ShowLocationSummary('" + row.CompanyID + "','" + row.LocationID + "','" + row.Location + "','" + row.Company + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Company" },
+                        { "data": "Location" },
+
+                    ],
+                    "rowGroup": {
+                        dataSrc: "Company"
+                    },
+                });
+            },
+            error: function (error) { alert(error); }
+        });
+    }
+    function ViewCompanyInIndustry(id, Name) {
+        document.getElementById('TypeName').innerHTML = "Industry: " + Name;
+        $('#getBackToDashboard').hide();
+        $('#getBackToPrincipal').show();
+        var data = { 'Type': 3, 'Id': id };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Dashboard/GetCompanyListForSelectedPrincipal',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#PrincipalWiseCompany').show();
+                $('#PrincipalTable').hide();
+                $('#tblCompanyList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+                        {
+                            "data": "LocationID",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary \"  style=\"height:35px;\" onclick=\"ShowLocationSummary('" + row.CompanyID + "','" + row.LocationID + "','" + row.Location + "','" + row.Company + "')\"><i class=\"fa fa-eye\" style=\"font-size: 16px;\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Company" },
+                        { "data": "Location" },
+
+                    ],
+                    "rowGroup": {
+                        dataSrc: "Company"
+                    },
+                });
+            },
+            error: function (error) { alert(error); }
+        });
+    }
+
+    function ShowPrincipalGraph(data) {
+        var PrincipalSort = [];
+        var Total = 0;
+        for (i = 0; i < data.length; i++) {
+            Total = Total + data[i].PrincipalCount;
+        }
+        for (j = 0; j < data.length; j++) {
+            var count = data[j].PrincipalCount;
+            var percent = count / Total;
+            percent = percent * 100;
+            var element = {};
+            element.PrincipalName = data[j].PrincipalName;
+            element.percent = percent;
+            element.id = data[j].PrincipalID;
+            PrincipalSort.push(element);
+        }
+        var demoP = [];
+        for (var j = 0; j < PrincipalSort.length; j++) {
+            demoP.push({
+                name: PrincipalSort[j].PrincipalName,
+                y: PrincipalSort[j].percent,
+                Pid: PrincipalSort[j].id
+            });
+        }
+
+        Highcharts.chart('principalT', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45,
+                    beta: 0
+                }
+            },
+            exporting: { enabled: false },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: demoP,
+                point: {
+                    events: {
+                        click: function (event) {
+                            ViewCompanyInPrincipal(this.Pid, this.name);
+                        }
+                    }
+                },
+                colors: ['#9f78ff', '#32cafe', '#FFFF33', '#FF0033', '#33FF66', '#FF9655', '#FFF263', '#6AF9C4']
+            }]
+        });
+    }
+
+    function getBackToDashboard() {
+        $('#PrincipalView').hide();
+        $('#PrincipalWiseCompany').hide();
+
+        //Back button
+        $('#getBackToDashboard').hide();
+        $('#getBackToPrincipal').hide();
+        $('#QuotSummary').hide();
+
+        //show
+        $('#DashBoard').show();
+    }
+
+    function getBackToPrincipal() {
+        $('#PrincipalWiseCompany').hide();
+        $('#PrincipalTable').show();
+
+        $('#getBackToDashboard').show();
+        $('#getBackToPrincipal').hide();
+    }
+
+</script>
+<script>
+
+    function ShowLocationSummary(CompanyID, LocationID, Location, Company) {
+        var data = { 'CompanyID': CompanyID, 'LocationID': LocationID,'Company':Company,'Location':Location }
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/AtAGlance/SetDataForSummary',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            dataType: 'json',
+            success: function (response) {
+                document.location = '@Url.Action("LocationSummary", "AtAGlance")';
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+</script>
+<script>
+    var tempIDC;
+    function GetPendingApproval() {
+        $.ajax({
+            url: "/User/PendingApprovalSummary",
+            //data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#Dashboard').hide();
+
+
+                $('#ApprovalSummary').html(response);
+                $('#ApprovalSummary').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GetStreakUserData(ID) {
+        tempIDC = ID;
+        var data = { 'ID': ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/StreakDataView",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                //$("#cute-loader").fadeIn("slow");
+                $('#Dashboard').hide();
+                $('#StreakData').html(response);
+                $('#StreakData').show();
+                //$("#cute-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>
+<script>
+    function getBackToDashboard1() {
+        $('#tblStreakData').DataTable({
+            "destroy": true,
+            //"bLengthChange": false,
+            //"bInfo": false,
+            //"bPaginate": false,
+            ////"bFilter": false,
+            //"paging": false,
+            ////"dom": 'Bfrtip',
+            //"order": [],
+            //"aoColumnDefs": [
+            //    {
+            //        'bSortable': false,
+            //        'aTargets': [0],
+            //    }
+            //]
+        });
+        $('#StreakData').hide();
+        $('#Dashboard').show();
+
+    }
+
+    function GetQuotationListData(ID) {
+        var today = new Date();
+        var data = { 'ID': ID, 'Date':today };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Quotation/QuotationForSelectedUser",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#Dashboard').hide();
+                $('#QuotSummary').html(response);
+                $('#QuotSummary').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function ToAdminDashboard() {
+        document.location = '@Url.Action("Dashboard", "Dashboard")';
+
+    }
+    function fetchActivityLog() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var userID = $("#userDropdown").val();
+        if (userID == "") {
+            userID = 0;
+        }
+        var data = { 'FromDate': fromDate, 'ToDate': toDate, 'UserID': userID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/ActivityLog",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#activityLogTimeline').html(response);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+</script>

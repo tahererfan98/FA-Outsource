@@ -1,0 +1,620 @@
+﻿<html>
+<head>
+    <style>
+        /*#DigramFloat{
+           
+        }*/
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: lightgray;
+        }
+
+        .vl {
+            border-left: 3px solid black;
+            height: 100px;
+        }
+
+        .print td {
+            padding: 0.15rem !important;
+        }
+
+        .m-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .p-0 {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .cell {
+            padding: 0.15rem !important;
+        }
+
+        th, tr, td {
+            padding: 0px;
+        }
+
+        #text-big {
+            font-size: 19px;
+            font-weight: 900;
+            font-family: Poppins;
+            color: black;
+        }
+
+        #text-small {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: Mulish;
+        }
+
+        #text-med {
+            font-size: 14px;
+            font-weight: bolder !important;
+            font-family: Poppins;
+            color: black;
+        }
+
+        #text-num {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: Mulish;
+        }
+
+        #Systemdiv {
+            page-break-before: always;
+        }
+
+        #displayTable {
+            font-weight: 500;
+        }
+
+        #PrintStyle {
+            font-size: 12px;
+            font-weight: 500;
+            color: black;
+            line-height: 14px;
+            font-family: Mulish;
+            /*word-spacing: unset;*/
+            text-align-last: justify;
+        }
+
+        div.c {
+            text-align: justify; /* For Edge */
+            -moz-text-align-last: justify; /* For Firefox prior 58.0 */
+            text-align-last: justify;
+        }
+    </style>
+    <style type="text/css">
+        /*.table {
+            page-break-inside: auto
+        }
+
+        .tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }*/
+
+        #tablebreak {
+            page-break-inside: auto;
+            page-break-before: avoid;
+        }
+
+        #tablebreakrow {
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            page-break-before: auto;
+        }
+    </style>
+    <style>
+        #btnJCBack {
+            background-color: black;
+            border-color: black;
+        }
+
+        #center {
+            text-align: center;
+            border-bottom: none;
+        }
+
+        #right {
+            text-align: right;
+            border-bottom: none;
+        }
+
+        #left {
+            text-align: left;
+            border-bottom: none;
+        }
+        /*.table thead th, .text-wrap table thead th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }
+        .table tbody th, .text-wrap table tbody th {
+            vertical-align: bottom;
+            border-bottom: 0px solid white;
+        }*/
+    </style>
+</head>
+<body>
+    <div id="margine" style="background-color:white;">
+        <page size="A4">
+            <div style="background-color:white;">
+                <div id="Systemdiv">
+                    <h4 class="text-black" id="text-big" style="color:black;border: none;font-family:Poppins;visibility:hidden">&nbsp; ANNEXURE I: SIZES AND QUANTITIES</h4>
+                    <h3 class="text-black" id="text-big" style="color:black;border: none;font-family:Poppins;margin-top:-24px">&nbsp; ANNEXURE I: SIZES AND QUANTITIES</h3>
+                    @*<hr class="mt-5 " style=" background-color: black !important; height:3px" />*@
+                    <div class="row" style="margin-top:-4px">
+                        <div class="col-12">
+                            <div class="mt-1 mb-0">
+                                <div class="mt-1 mb-0">
+                                        <div class="row mt-1 mb-0">
+                                            <div class="col-12 mb-0">
+                                                <table class="table text-wrap border table-striped pb-0 mb-0" style="width:100%; border-color:black">
+                                                    <thead style="color:black">
+                                                        <tr class="text-black  p-0" style="border-top: 1px solid #000000;border-bottom:none">
+                                                            <th class="text-black  p-0" id="left" style="width: 5%;font-family:Poppins"><strong id="text-big">SNO</strong></th>
+                                                            <th class="text-black  p-0" colspan="2" id="center" style="width: 18%;font-family:Poppins"><strong style="padding-left:40px" id="text-big">ACTUAL SIZE</strong></th>
+                                                            <th class="text-black  p-0" colspan="2" id="center" style="width: 18%;font-family:Poppins"><strong style="padding-left:20px" id="text-big">CHARGEABLE SIZE</strong></th>
+                                                            <th class="text-black " id="left" style="font-family:Poppins;width:35%;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;padding-left: 100px;"><strong id="text-big">REMARKS</strong></th>
+                                                            <th class="text-black  p-0" id="right" style="width:5%;font-family:Poppins"><strong id="text-big">QTY</strong></th>
+                                                            <th class="text-black  p-0" id="right" style="width:10%;font-family:Poppins"><strong id="text-big">AREA</strong></th>
+                                                        </tr>
+                                                        <tr class="text-black  p-0" style="border-top:none; border-bottom: 1px solid #000000;line-height:1">
+                                                            <th class="text-black  p-0" id="center" style=""></th>
+                                                            <th class="text-black  p-0" id="right" style="font-family:Poppins"><strong id="text-big">H(mm)</strong></th>
+                                                            <th class="text-black  p-0" id="right" style="font-family:Poppins"><strong id="text-big">W(mm)</strong></th>
+                                                            <th class="text-black  p-0" id="right" style="font-family:Poppins"><strong id="text-big">H(mm)</strong></th>
+                                                            <th class="text-black  p-0" id="right" style="font-family:Poppins"><strong id="text-big">W(mm)</strong></th>
+                                                            <th class="text-black  p-0" id="center" style=""></th>
+                                                            <th class="text-black  p-0" id="center" style="width:5%;"></th>
+                                                            <th class="text-black  p-0" id="right" style="width:10%;font-family:Poppins"><strong id="text-big">(SQM)</strong></th>
+                                                        </tr>
+                                                    </thead>
+                                                    @foreach (var d in ViewBag.PISpecData)
+                                                    {
+                                                        <tbody style="color:black">
+                                                            @{int k = 0;}
+                                                            <tr id="tablebreakrow">
+                                                                <td colspan="8" style="color:black;border: none;">
+                                                                @*<strong id="text-big" style="font-family:Poppins">GLASS SPECIFICATION:</strong><br />*@
+                                                                <strong id="text-big" style="font-family:Poppins">@d.Product </strong><br /><strong style="font-family:Mulish;font-size:16px;line-height:1">@d.GlassDesc</strong><br /><strong id="text-small" style="font-family:Mulish;line-height:1;font-size:15px;color:darkgray;font-weight:700">@d.GlassDetails</strong> </td>
+                                                            </tr>
+                                                            @*<tr>
+                    <td colspan="8" style="color:black;border: none;">&nbsp;<strong id="text-small">@d.GlassDesc</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="color:gray;border: none;">&nbsp;<strong id="text-small">@d.GlassDetails</strong></td>
+                </tr>*@
+                                                            @foreach (var d1 in ViewBag.PISizesData)
+                                                            {
+                                                                if (@d1.SpecID == @d.SpecID)
+                                                                {
+                                                                    k++;
+
+                                                                    <tr id="tablebreakrow" style="line-height: 0.9;">
+                                                                        <td class="text-black  p-1" style="width:5%;" id="left"><b id="text-num">@k</b></td>
+                                                                        <td class="text-black  p-1" style="width:15px;" id="right"><b id="text-num">@d1.AHeight</b></td>
+                                                                        <td class="text-black  p-1" style="width:15px;" id="right"><b id="text-num">@d1.AWidth</b></td>
+                                                                        <td class="text-black  p-1" style="width:15px;" id="right"><b id="text-num">@d1.CHeight</b></td>
+                                                                        <td class="text-black  p-1" style="width:15px;" id="right"><b id="text-num">@d1.CWidth</b></td>
+                                                                        <td class="text-black" style="width:32%;padding-right: 0px;padding-top: 3px;padding-bottom: 0px;padding-left: 100px;" id="left"><b id="text-num">@d1.Remarks</b></td>
+                                                                        <td class="text-black  p-1" style="width:5%;" id="right"><b id="text-num">@d1.Qty</b></td>
+                                                                        <td class="text-black  p-1" style="width:10%;" id="right"><b id="text-num">@d1.SQM</b></td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                            <tr style="border-top: 1px solid #000000; border-bottom: 1px solid #000000" id="tablebreakrow">
+                                                                <td class="text-black  pt-2 pb-2 pl-1 pr-2" style="width:15px;" id="left"><b id="text-num" style="font-weight:900">TOTAL</b></td>
+                                                                <td class="text-black  p-2" style="width:15px;" id="center"></td>
+                                                                <td class="text-black  p-2" style="width:15px;" id="center"></td>
+                                                                <td class="text-black  p-2" style="width:15px;" id="center"></td>
+                                                                <td class="text-black  p-2" style="width:15px;" id="center"></td>
+                                                                <td class="text-black  p-2" style="width:15px;" id="center"></td>
+                                                                <td class="text-black  pt-2 pb-2 pl-2 pr-1" style="width:5%;" id="right"><b id="text-num" style="font-weight:900">@d.Qty</b></td>
+                                                                <td class="text-black  pt-2 pb-2 pl-2 pr-1" style="width:10%;" id="right"><b id="text-num" style="font-weight:900">@d.SQM</b></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+                                </div>
+                                @*<hr class="m-0" style=" background-color: black !important; height:3px" />*@
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <div id="Systemdiv">
+
+                    <div class="row" style="margin-top:0px">
+
+                        <div class="col-6 c">
+                            <h4 class="text-black" style="color:black;border: none;font-family:Poppins;font-size:20px;font-weight:800;margin-top:15px">ANNEXURE II: STANDARD TERMS AND CONDITIONS</h4>
+                            <table class="table card-table table-vcenter text-wrap print p-0" style="margin-top:-5px">
+                                <tr>
+                                    <td>
+                                        <strong id="text-med">2.1 QUALITY STANDARDS</strong><br />
+                                        <p class="p-0" id="PrintStyle" style="color:black">
+
+                                            All glasses shall be made as per the following European Standards <br />
+                                            1. EN12150 for Toughened Glasses<br />
+                                            2. EN1863 for Heat-Strengthened Glasses<br />
+                                            3. EN1279 for Insulated Glasses<br />
+                                            4. EN12543 for Laminated Glasses<br />
+                                            5. EN1096 for Coated Glasses<br />
+                                            6. EN14179 for Heat-Soaked Glasses<br />
+                                            Any glass that falls within the tolerances / specifications mentioned in the above<br />
+                                            standards shall be deemed acceptable and not liable for replacements<br />
+                                        </p>
+                                        <strong id="text-med" style="color:black">   2.2 SPECIAL CHARACTERISTIC: NiS INDUCED SPONTANEOUS BREAKAGES</strong><br />
+                                        <p class="p-0" id="PrintStyle" style="color:black;">
+                                            All tempered glasses are susceptible to spontaneous breakage due to Nickel Sulphide
+                                            inclusions. Breakage/s due to Nickel Sulphide inclusions are not attributable to us. This
+                                            is a property of tempered glasses and not considered a defect, and hence are not liable
+                                            for replacements. To reduce the probability of breakage/s due to NiS inclusions, FG Glass
+                                            strongly recommends heat soaking of all fully tempered glasses. Please ask our sales
+                                            very executives for heat-soaking cost implications.<br />
+
+                                        </p>
+                                        <strong id="text-med" style="color:black">2.3 SPECIAL CHARACTERISTIC: IRIDESCENCE (ANISOTROPY)</strong><br />
+                                        <p class="p-0" id="PrintStyle" style="color:black">
+                                            All heat-treated glasses exhibit a strain pattern, which is not normally visible, and may become
+                                            visible under certain lighting conditions. It is a characteristic of these kinds of glass and should
+                                            not be mistaken as discoloration or non-uniform tint or color. These strain patterns or quench
+                                            patterns should not be viewed as a defect in the glass as they cannot be eliminated in the heat
+                                            treatment process.<br />
+                                        </p>
+                                        <strong id="text-med" style="color:black">2.4 GLASS OPTIMIZATION WASTAGE</strong><br />
+                                        <p class="p-0" id="PrintStyle" style="color:black">
+                                            Unless otherwise specified, glass optimization wastage shall be charged extra. The wastage
+                                            shall be intimated at the time of making the Proforma Invoice on receipt of your final sizes<br />
+                                        </p>
+                                        <strong id="text-med">2.5 NON-STANDARD CONSIDERATIONS</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Unless otherwise specified, glass optimization wastage shall be charged extra. The wastage
+                                            shall be intimated at the time of making the Proforma Invoice on receipt of your final sizes<br />
+                                        </p>
+                                        <strong id="text-med">2.6 INSULATED GLASS SPECIFICATIONS</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Unless otherwise specified, glasses shall be sealed with structural glazing sealant. The standard
+                                            byte size shall be 6mm. Byte sizes more than 6mm shall be charged extra at Rs.30per
+                                            millimeter per square meter. Spacers shall be made of aluminum and mill-finished. Anodized
+                                            and painted spacers shall incur a higher price. In case of glasses with U-inserts, the customer
+                                            shall provide the U-inserts. Stepped glasses shall incur an additional Rs.100/ sqm cost. In the
+                                            event low-E coatings need to be step-glazed, edge-deletion charges at Rs.100 per 10 millimeter
+                                            step per square meter shall be charged extra.<br />
+                                        </p>
+                                        <strong id="text-med">2.7 CLAIMS DUE TO BREAKAGES AND REJECTIONS</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Any rejection claims arising due to quality deviations need to be intimated within 5 days from
+                                            receipt of the glass. Breakage/s during transit need to be indicated on our Delivery Challan and
+                                            should be verified by the driver, failing which the claim will not be entertained. Breakage/s
+                                            during unloading shall not be attributable to us. This applies even when we provide unloading
+                                            service at your site/factory. Breakages of value less than Rs.25,000 are not covered under
+                                            transit insurance.<br />
+
+                                        </p>
+                                        <strong id="text-med">2.8 TAXES AND DUTIES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            The taxation structure is indicated in the commercial terms. However the taxation prevalent at
+                                            the time of invoice shall be applicable and the prices shall change accordingly<br />
+                                        </p>
+                                        <strong id="text-med">2.9 PACKING, FORWARDING AND FREIGHTCHARGES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            In case of destinations within Mumbai and nearby cities such as Pune and Nashik, packing shall
+                                            be appropriate for local transportation. For distances beyond a 300-kilometer radius, wooden
+                                            crate packing shall be done if deemed appropriate. Charges for wooden packing shall be
+                                            intimated at the time of making the Proforma Invoice. In case of courier and cargo service,
+                                            forwarding charges shall be applicable.<br />
+                                        </p>
+                                        <strong id="text-med">2.10 DETENTION CHARGES FOR FREIGHT</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            In the event that our vehicles are not unloaded at site on the same day or within 12
+                                            hours (whichever is earlier), detention charges shall apply. These charges will be
+                                            50% of the delivery amount. We shall inform you of the expected time of delivery at
+                                            site in advance to facilitate labor mobilization at your end for timely unloading.<br />
+                                        </p>
+                                        <strong id="text-med">2.11 SELF-PICKUP DELIVERIES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Deliveries which are to be picked up by the client shall not be covered under insurance and no
+                                            claims for breakages or quality defects due to transport shall be accepted.<br />
+                                        </p>
+                                        <strong id="text-med">2.12 JURISDICTION</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            This contract shall be construed and enforced in accordance with the laws of the Union of India
+                                            and under the jurisdiction of Mumbai courts only.<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-6 c">
+                            <h4 style="visibility:hidden;margin-top:15px"> aww</h4>
+                            <table class="card-table table-vcenter text-wrap print"  style="margin-top:-5px">
+                                <tr>
+                                    <td>
+                                        <strong id="text-med">2.13 DRAWING CONFIRMATION FOR SPECIAL PROCESSES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            In case of special processes such as step-glazed glasses and fabricated glasses with
+                                            holes, notches, cutouts, etc., we shall furnish detailed section drawings for your
+                                            approval. Failure to send timely confirmation of these drawings might result in
+                                            delivery delays.<br />
+                                            In the event templates are submitted for manufacturing, they shall be digitized and
+                                            disposed off. FG Glass does not take any liability for return of templates.<br />
+                                        </p>
+                                        <strong id="text-med">2.14 MODIFICATIONS IN ORDER AFTER CONFIRMATION</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Since the products are completely made-to-order, no changes in the order shall be
+                                            entertained once confirmation is given.<br />
+                                            In the event the order is modified or cancelled once issued to production, all material
+                                            expenses, processing costs and cancellation penalties up to the date of modification
+                                            or cancellation shall be invoiced. The amount to be invoiced is solely at the discretion of
+                                            the Seller and shall be final and non-negotiable.<br />
+                                            The rates mentioned in this offer are based on the entire order quantity and value
+                                            and any reduction in quantities and value will render this offer null and void and we
+                                            shall issue you a new Proforma Invoice with the revisions incorporated<br />
+                                        </p>
+                                        <strong id="text-med">2.15 FINANCIAL CHARGES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            The above prices do not include any bank charges, customs duties at the point of
+                                            entry,customs clearance related charges at destination, shipping document attestation /
+                                            legalization charges and any detention charges applied for land Transport or ocean
+                                            container due to delay in clearing the goods at the point of entry by the customer.<br />
+                                        </p>
+                                        <strong id="text-med">2.16 TERMS OF PAYMENT</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            1. &nbsp;&nbsp;The payments shall be made in accordance with the payment schedule
+                                                   specified in the <b style="visibility:hidden">em</b>Proforma Invoice.<br />
+                                            2. &nbsp;&nbsp;Whenever any part of the payment is to be made by means of a Letter of Credit,
+                                            <b style="visibility:hidden">em</b>Clause 4.16 shall apply.<br />
+                                            3. &nbsp;&nbsp;In the event of Buyer failing to make payment or establishing Letter of Credit at
+                                            <b style="visibility:hidden">em</b>agreed time or it becomes evident that the Buyer will not fulfill his contractual
+                                            <b style="visibility:hidden">em</b>obligations, the Seller reserves the right to postpone the fulfillment of its
+                                            obligations at <b style="visibility:hidden">em</b>least till the Buyer makes   such payment or establishes the Letter of
+                                            Credit.<br />
+                                            4. &nbsp;&nbsp;Seller shall be entitled to charge interest from Buyer if payment to Seller is past
+                                            due as <b style="visibility:hidden">em</b>per Clause 4.17.<br />
+                                        </p>
+                                        <strong id="text-med">2.17 DELAYED PAYMENT CHARGES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            Payment delays beyond the mentioned payment terms shall be charged interest at the
+                                            rate of 24% per annum. The interest shall be counted from the due date until the actual
+                                            date of the payment. Buyer shall pay such interest within thirty (30) days from the date
+                                            of the demand notice.<br />
+                                        </p>
+                                        <strong id="text-med">2.18 LETTER OF CREDIT</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            1.&nbsp;&nbsp; The Letter of Credit shall be irrevocable and transferable, without recourse, and
+                                            shall <b style="visibility:hidden">em</b>allow partial shipments, charter party Bill of Lading and transshipments.<br />
+                                            2.&nbsp;&nbsp; The Letter of Credit shall be established in a form  acceptable to Seller  not later
+                                            than <b style="visibility:hidden">em</b>thirty (30) days from the date on which the  Contract is  executed by Seller
+                                            and it shall <b style="visibility:hidden">em</b>remain valid for a period of at least 30 days after the date of last
+                                            delivery.<br />
+                                            3.&nbsp;&nbsp; The Letter of Credit shall be issued and confirmed by a nationalized or
+                                            international &nbsp; <b style="visibility:hidden">em</b>bank acceptable to Seller and it shall be payable at sight at the
+                                            counters of a bank &nbsp; <b style="visibility:hidden">em</b>nominated by Seller against presentation of appropriate
+                                            transport documents and a &nbsp; <b style="visibility:hidden">em</b>commercial invoice or other documents specified in
+                                            the Contract.<br />
+                                        </p>
+                                        <strong id="text-med">2.19 CANCELLATION OF CONTACT</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            If contract is cancelled at any stage, for any reason, customer agrees to pay us a
+                                            cancellation charge of 10% of contract price or actual costs incurred up to time of
+                                            cancellation, whichever is higher.<br />
+                                        </p>
+                                        <strong id="text-med">2.20 FORCE MAJEURE CHARGES</strong><br />
+                                        <p class="p-0" id="PrintStyle">
+                                            The delivery times mentioned in the Commercial Terms shall not be applicable in the
+                                            event of Force Majeure, including but not limited to:<br />
+                                            1.&nbsp;&nbsp; act of God (such as, but not limited to, fires, explosions, earthquakes,drought,
+                                            tidal &nbsp;<b style="visibility:hidden">em</b>waves and floods);<br />
+                                            2.&nbsp;&nbsp; war, hostilities (whether war be declared or not), invasion, act of foreign
+                                            enemies, &nbsp;<b style="visibility:hidden">em</b>mobilization, requisition, or embargo;<br />
+                                            3.&nbsp;&nbsp; rebellion, revolution, insurrection, or military or usurped power, or civil war;<br />
+                                            4.&nbsp;&nbsp; contamination by radio-activity from any nuclear fuel, or from any
+                                            nuclear waste from <b style="visibility:hidden">em</b>the combustion of nuclear fuel, radio-active toxic explosive,
+                                            or other hazardous prop <b style="visibility:hidden">em</b>erties  of any explosive nuclear assembly or nuclear
+                                            component of such assembly;<br />
+                                            5.&nbsp;&nbsp; riot, commotion, strikes, go slows, lock outs or disorder, unless solely restricted to &nbsp;
+                                            <b style="visibility:hidden">em</b>employees of the Supplier or of his Subcontractors; or<br />
+                                            6.&nbsp;&nbsp; acts or threats of terrorism<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="Systemdiv">
+                    <div class="row">
+                        <div class="col-6 c">
+                            <h4 class="text-black" style="color:black;border: none;font-family:Poppins;font-size:20px;font-weight:800;margin-top:15px">ANNEXURE III: WARRANTY TERMS</h4>
+                            <table class="table card-table table-vcenter text-wrap print" style="margin-top:-5px">
+                                <tr>
+                                    <td>
+                                        <strong id="text-med">3.1 LIMITED PRODUCT WARRANTY</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            Unless Otherwise specified , the warranty period for the glass unit shall be<br />
+                                            1. 12 months from the date of supply, or<br />
+                                            2. 12 months from the date of first invoice ,whichever is sooner. Warranty for our units
+                                            shall be supported back-to-back by our raw material suppliers for glass, PVB and
+                                            other interlayer films, structural sealants, primary sealants, desiccants, spacers and
+                                            other accessories , All terms and conditions mentioned in the respective Suppliers'
+                                            warranty clauses shall be applicable for our products as well and we shall onle be
+                                            liable for replacements in case our products fails any of these clauses and/or falls
+                                            out of quality standards.
+                                            In case of glass replacement , our liability is limited to replacement of the glass unit
+                                            only and no incidental replacement costs shall be attributable to us. In consideration
+                                            for the purchase of processed Glass (as per the product specification given above)
+                                            (hereinafter "Glass" ) FG Glass Industries Pvt Ltd., (hereinafter "FG Glass" ) hereby
+                                            warrants that the Glass is manufactured under standard norms based on the following<br />
+                                            European standards:<br />
+                                            1. EN 12150 for Toughened Glasses<br />
+                                            2. EN 1863 for Heat-Strengthened Glasses<br />
+                                            3. EN 1279 for Insulated Glasses<br />
+                                            4. EN 12543 for Laminated Glasses<br />
+                                            and are free from any defects in materials and workmanship under normal
+                                            application, installation, use and service conditions. The purchaser
+                                            acknowledges that the Glass at the time of delivery was undamaged and free
+                                            from anydefects and agrees that the warranty for the Glass shall be subject to the
+                                            exclusions, limitations and terms of warranty as stated below. This warranty is a limited
+                                            warranty and constitutes the only express warranty extended by FG Glass.This
+                                            warranty only comes into effect when all payment dues to the final amount indicated
+                                            in the Proforma Invoice have been remitted by the buyer.
+                                        </p><br />
+                                        <strong id="text-med">3.2 WARRANTY PERIOD</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+
+                                            The warranty period shall commence from the date of shipment to the original purchaser till
+                                            the expiry of the period specified against the category of Glass as indicated before.
+                                        </p><br />
+                                        <strong id="text-med">3.3 VERIFICATION</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            In the event of any defect in the Glass notified within the warranty period, FG Glass shall
+                                            depute a competent quality executive to site to carry out the defect analysis.
+                                            On the basis of the report of the quality executive, FG Glass will repair or replace, at its option,
+                                            defective parts at no charge, provided the product is returned, "freight prepaid" to
+                                            manufacturing unit of FG
+                                        </p><br />
+                                        <strong id="text-med">3.4 LIABILITY FOR REPLACEMENTS</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            The liability of FG Glass under this warranty shall be limited to the replacement of the
+                                            processed Glass to the end user only at ex-factory cost and FG Glass shall not be liable for all
+                                            costs and incidental costs for removal and re-installation, labour costs, value addition,
+                                            transportation or installation of the Glass or any other related damages or costs.<br />
+                                            FG Glass does not accept any liability for personal injury, loss , claims ,property damage or
+                                            labour, material or other cost (whether special or consequential or otherwise) , howsoever FG
+                                            Glass has given the warranty on the Glass to the original purchaser of Glass from FG
+                                            Glass.However, warranties do not apply to subsequent purchasers of processed Glass,
+                                            modified Glass, as-is/distressed pieces or display items. It shall be the responsibility of the
+                                            original purchaser to communicate the limitations on the warranty to the end user. FG Glass
+                                            shall in no circumstances be liable to the end-user in the event of such warranty terms not
+                                            communicated to the end user by the original purchaser of Glass.<br />
+                                            Warranty shall be rendered null and void in the event of cutting, edge-working and/or
+                                            processing (like acid etching, application of stickers, sand blasting, painting, designer film
+                                            application, etc.) once Glass is supplied. Any costs incurred by the end user for further
+                                            processing (like acid etching, application of stickers, sand blasting, painting, designer film
+                                            application, glazing and installation of Glass, etc.) are not covered under the warranty under
+                                            any circumstance.<br />
+                                            This warranty does not apply to defects that result from further processing by subsequent
+                                            user (like acid etching, application of stickers, sand blasting, painting, designer film
+                                            application, modification of the Glass, negligence, misuse, abnormal use, accident or
+                                            commercial use, etc.).
+                                        </p><br />
+                                        <strong id="text-med">3.5 EXCLUSIONS AND LIMITATIONS</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            1.&nbsp;&nbsp; This warranty does not cover improper installation, misuse, abuse or neglect on the
+                                            part <b style="visibility:hidden">em</b>of the end user.<br />
+                                            2.&nbsp;&nbsp; This warranty does not cover Glass failures due to improper product specifications
+                                            <b style="visibility:hidden">em</b>given by the buyer and/or incoherent design considerations<br />
+                                            3. &nbsp;&nbsp;This warranty does not cover any artificial or unnatural deterioration of Glass and
+                                            would <b style="visibility:hidden">em</b>not be valid in following circumstances where the Glass is damaged on account<br />
+                                            I.&nbsp;&nbsp;&nbsp; Failure to adhere to required maintenance of the unit, including written proof of routine
+                                            <b style="visibility:hidden">em</b>maintenance
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-6 c">
+                            <h4 class="text-black" style="color:black;border: none;visibility:hidden;margin-top:15px;font-family:'Segoe UI'">ANNEXURE III: WARRANTY TERMS</h4>
+                            <table class="table card-table table-vcenter text-wrap print"  style="margin-top:-5px">
+                                <tr>
+                                    <td>
+                                        <p class="m-0" id="PrintStyle">
+                                            II.&nbsp;&nbsp; Failure to ensure that the product is cleaned regularly with water, mild detergent
+                                            <b style="visibility:hidden">em</b>solution or soft solvents or in accordance with the instructions provided by FG
+                                            Glass.<br />
+                                            III.&nbsp;&nbsp; Use of solvents where the pH level is not in the range from 5 to 8.<br />
+                                            IV.&nbsp; Use of abrasive material which damages the coating.<br />
+                                            V.&nbsp;&nbsp;&nbsp;  Use of films or stickers on the Glass.<br />
+                                            VI.&nbsp;&nbsp; Inappropriate use of the Glass.<br />
+                                            VII.&nbsp;&nbsp;Improper handling, stacking or storing.<br />
+                                            VIII.&nbsp;Defective glazing and fabrication.<br />
+                                            IX.&nbsp;&nbsp;&nbsp;Improper removal or installation.<br />
+                                            X.&nbsp;&nbsp;&nbsp;&nbsp;Failure to use mechanical method of handling Glass wherever necessary
+                                            or so advised<br />
+                                            XI.&nbsp;&nbsp; Contact with tree branches, wet cement, window coverings, blinds, curtains or
+                                            other <b style="visibility:hidden">em</b>&nbsp; items/objects which are abrasive.<br />
+                                            XII.&nbsp;&nbsp; Improper movement or placement of Glass.<br />
+                                            XII.&nbsp;&nbsp; Improper movement or placement of Glass.<br />
+                                            XIII.&nbsp; If the unit is subject to abnormal stresses from the load application of heat,excessive
+                                            <b style="visibility:hidden">em</b>&nbsp; vibration, building or foundation movement.<br />
+                                            XIV.&nbsp;&nbsp;Incompatibility with glazing or installation materials, including coatings, sealants,&nbsp;&nbsp;
+                                            <b style="visibility:hidden">emp</b>&nbsp;gaskets, setting blocks, lubricants, insulation, or any other materials.<br />
+                                            XV.&nbsp;&nbsp; Lack of adequate expansion or contraction provisions in the framing members.<br />
+                                            XVI.&nbsp;&nbsp;If glazed with materials which do not remain resilient for the warranty period.<br />
+                                            XVII. If the methods and materials used in glazing the unit do not completely repel
+                                            water <b style="visibility:hidden">em</b>&nbsp; during the warranty period.<br />
+                                            4.&nbsp;&nbsp; After delivery, Glass breakage is not warranted under any circumstances under
+                                            <b style="visibility:hidden">em</b>(including Nickel Sulphide induced spontaneous breakage).<br />
+                                            5.&nbsp;&nbsp; No warranty for laminated Glasses shall be applicable for installations with open
+                                            <b style="visibility:hidden">em</b>edges, near seafronts with high salt content in the air and with silicon in contact
+                                            having <b style="visibility:hidden">em</b>air-entrapments.<br />
+                                            6.&nbsp;&nbsp; The warranty is further subject to Glass being used in the following conditions:<br />
+                                            I.&nbsp;&nbsp; The Glass is protected from temperatures above 140 degree centigrade.<br />
+                                            II.&nbsp;&nbsp;The Glass has been installed with the coated surface glazed to the inside of the
+                                            building <b style="visibility:hidden">em</b>and not to the exterior of the building.<br />
+                                            III.&nbsp;The Glass is not exposed to chemical fumes or gases other than those present in
+                                            normal <b style="visibility:hidden">em</b>clear atmospheric air nor is subject to prolonged exposure to water or
+                                            moisture, nor is <b style="visibility:hidden">em</b>exposed to radiation of any type other than normal sunlight.<br />
+                                            IV.&nbsp;&nbsp;Any sealant or adhesive used in glazing is compatible with the coating.<br />
+                                            7.&nbsp;&nbsp; Glass units that are improperly installed, or installed in swimming pools,
+                                            aquariums, &nbsp;<b style="visibility:hidden">em</b>skylights, solar collectors, used in sloped glazing applications or
+                                            structural glazed, is <b style="visibility:hidden">em</b>sold without warranty. All implied warranties of
+                                            merchantability or fitness for a <b style="visibility:hidden">em</b>particular purpose are hereby expressly excluded.
+                                        </p><br />
+                                        <strong id="text-med">3.6 WARRANTY OF REPLACEMENT GLASSES</strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            Any replacement Glass supplied pursuant to this Warranty shall be warranted only for
+                                            the unexpired warranty period for the original Glass.
+                                        
+                                        </p><br />
+                                        <strong id="text-med">3.7 FORCE MAJUERE </strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            Glass shall not in any way be responsible or liable to the end user of Glass or
+                                            any third-party arising out of any non-performance or delay in
+                                            performance of any terms and conditions of sale, including this limited
+                                            warranty, due to:<br />
+                                          1.&nbsp;&nbsp; act of God (such as, but not limited to, fires, explosions, earthquakes,drought,
+                                            tidal &nbsp;<b style="visibility:hidden">em</b>waves and floods);<br />
+                                            2.&nbsp;&nbsp; war, hostilities (whether war be declared or not), invasion, act of foreign
+                                            enemies, &nbsp;<b style="visibility:hidden">em</b>mobilization, requisition, or embargo;<br />
+                                            3.&nbsp;&nbsp; rebellion, revolution, insurrection, or military or usurped power, or civil war;<br />
+                                            4.&nbsp;&nbsp; contamination by radio-activity from any nuclear fuel, or from any
+                                            nuclear waste from <b style="visibility:hidden">em</b>the combustion of nuclear fuel, radio-active toxic explosive,
+                                            or other hazardous prop <b style="visibility:hidden">em</b>erties  of any explosive nuclear assembly or nuclear
+                                            component of such assembly;<br />
+                                            5.&nbsp;&nbsp; riot, commotion, strikes, go slows, lock outs or disorder, unless solely restricted to &nbsp;
+                                            <b style="visibility:hidden">em</b>employees of the Supplier or of his Subcontractors; or<br />
+                                             6.&nbsp;&nbsp; acts or threats of terrorism. or caused by any artificial or unnatural
+                                            deterioration and &nbsp;&nbsp;<b style="visibility:hidden">em</b> any unforeseen event beyond its reasonable control,
+                                            including without limitation, any &nbsp;&nbsp;<b style="visibility:hidden">em</b> technological or physical event or
+                                            condition which is not reasonably known or understood <b style="visibility:hidden">em</b> at the time of
+                                            the sale of the Glass or the claim.
+                                            </p><br />
+                                        <strong id="text-med">3.8 DISPUTE RESOLUTION </strong><br />
+                                        <p class="m-0" id="PrintStyle">
+                                            In the event the parties (end user and FG Glass) do not agree upon the existence of a
+                                            defect, the matter shall be referred to a sole arbitrator mutually agreed by both the
+                                            parties. Such arbitration shall be governed by the Indian Arbitration and Conciliation
+                                            Act, 1996 and the place of arbitration will be Mumbai, India.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </page>
+    </div>
+</body>
+</html>

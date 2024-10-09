@@ -1,0 +1,445 @@
+﻿
+@{
+    ViewBag.Title = "Summary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<style>
+    .is-empty {
+        margin-bottom: 0 !important;
+    }
+
+    .btn_excel {
+        color: #7bd235 !important;
+        background-color: #ffF !important;
+        border-color: #7bd235 !important;
+    }
+
+    span.btn_excel {
+        font-weight:600;
+    }
+</style>
+<div class="page-header">
+    <h4 class="page-title">
+        Enquiry Summary
+    </h4>
+</div>
+<div class="row ">
+    <div class="col-sm-12 col-md-2">
+        <div class="row no-gutters">
+            <div class="col-4">
+                <label class="form-label mt-1">From <i class="fa fa-calendar"></i></label>
+            </div>
+            <div class="col-8">
+                @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(-7).ToString("dd MMM yyyy") })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="row no-gutters">
+            <div class="col-4">
+                <label class="form-label mt-1">To <i class="fa fa-calendar"></i></label>
+            </div>
+            <div class="col-8">
+                @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.ToString("dd MMM yyyy") })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-1">
+        <button class="btn btn-warning" onclick="GetEnquirySummary()"><i class="fa fa-search" style="font-size:14px"></i></button>
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <div class="form-group">
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                </span>
+                @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", autocomplete = "off" })
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <label class="custom-switch pt-2">
+            <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="GetEnquirySummary()" id="statusID">
+            <span class="custom-switch-description px-2">Open</span>
+            <span class="custom-switch-indicator"></span>
+            <span class="custom-switch-description px-2">Closed</span>
+        </label>
+    </div>  
+    <div class="col-sm-12 col-md-1">
+        <div id="buttons">
+
+        </div>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover w-100 card-table m-0 text-nowrap" id="tblEnquirySummary">
+                <thead>
+                    <tr>
+                        <th style="width:15px">#</th>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Contact Person</th>
+                        <th>Assigned</th>
+                        <th>Created By</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@*/********SEARCH CONTACT MODAL**********/*@
+<div class="modal fade" id="searchContactModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="sectionSearch"></div>
+        </div>
+    </div>
+</div>
+
+@*/************DELETE REMARK***************/*@
+<div class="modal fade" id="DeleteRemark" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="color: white;background-image: linear-gradient(269deg, #32CAFE, #867EFC)">
+                <h5 class="modal-title" id="example-Modal3">Close Enquiry</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12">
+                        <label class="form-label">  Remark</label>
+                        @Html.TextBox("Remark", null, new { @class = "form-control", @id = "Remark", name = "Remark", autocomplete = "off", placeholder = "", @maxlength = 100 })
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteEnquiry(EnquiryNo)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*/************SHARE ENQUIRY*************/*@
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @*share View*@
+        <div class="modal-content">
+            <div class="modal-header" style="color: white;background-image: linear-gradient(269deg, #32CAFE, #867EFC)">
+                <h5 class="modal-title" id="example-Modal3">Share Enquiry</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ShareEnqView"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveShareList()">Share</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*/************SELECTED TEMPLATE****************/*@
+<div class="modal fade" id="exampleModal23" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div id="SelectTemplate"></div>
+    </div>
+</div>
+<script>
+    var EnquiryNo = 0;
+    var CPID = 0;
+    var table;
+    $(document).ready(function () {
+        GetEnquirySummary();
+    });
+       
+    function GetEnquirySummary() {
+        var FromDate = document.getElementById("fromDate").value;
+        var ToDate = document.getElementById("toDate").value;
+        var SearchText = document.getElementById("searchText").value;
+        var StatusID = document.getElementById("statusID").checked;
+        if (StatusID == 0) {
+            StatusID = 1;
+        } else {
+            StatusID = 2;
+        }
+        if (FromDate == "" || ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+        if (SearchText == "") {
+            SearchText = "-";
+        }
+        $("#global-loader").fadeIn("slow");
+        var data = { 'FromDate': FromDate, 'ToDate': ToDate, 'SearchText': SearchText, 'StatusID': StatusID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/AjaxEnquirySummary",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('#tblEnquirySummary').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"i>rt<"bottom float-left m-3"p><"newEnquiry bottom float-right m-3"><"clear">',
+                    "columns": [
+                        { "data": "SrNo" },
+                        { "data": "Date" },
+                        { "data": "Reference" },
+                        { "data": "CompanyName" },
+                        { "data": "LocationName" },
+                        { "data": "PersonName" },
+                        { "data": "Assigned" },
+                        { "data": "AddedBy" },
+                        {
+                            "data": "SrNo",
+                            "orderable": false,
+                            "className": "pl-0 pr-0",
+                            "render": function (data, type, row, meta) {
+                                var url = '/Enquiry/AddorEditEnquiry?ContactPersonID=' + row.ContactPersonID + '&EnquiryNo=' + row.EnquiryNo + '&Status=';                              
+                                if (type === 'display') {
+                                    if (StatusID == 1) {
+                                        data = "<div class=\"btn-list text-center\"><a class=\"btn btn-primary btn-sm\" href='" + url + "0' data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\"><i class=\"fe fe-eye\"></i></a><button class=\"btn btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Share\" onclick=\"ShareEnqView('" + row.EnquiryNo + "')\"><i class=\"fa fa-share\"></i></button><a class=\"btn btn-info btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" href='" + url + "1'><i class=\"fe fe-edit\"></i></a><button class=\"btn btn-lime btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Generate Quote\" onclick=\"generateQuotation('" + row.ContactPersonID + "','" + row.EnquiryNo + "')\"><i class=\"fa fa-file\"></i></button><button class=\"btn btn-orange btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Use Template\" onclick=\"SelectTemplate('" + row.ContactPersonID + "','" + row.EnquiryNo + "')\"><i class=\"fa fa-cubes\"></i></button><button class=\"btn btn-danger btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"SaveDeleteRemark('" + row.EnquiryNo + "')\"><i class=\"fe fe-trash\"></i></button></div>"
+                                    } else {
+                                        data = "<div class=\"btn-list text-center\"><a class=\"btn btn-primary btn-sm\" href='" + url + "2' data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\"><i class=\"fe fe-eye\"></i></a></div>"
+                                    }
+
+
+                                    }
+
+                                    return data;
+                                }
+                            }
+                        
+                    ],
+                    "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] },
+                    ],
+                });
+
+                $("div.newEnquiry").html('<div class="float-right"><button class="btn btn-success"  onclick="NewEnquiry()"><i class="fa fa-plus"></i> Add Enquiry</button></div>');
+
+                table = $('#tblEnquirySummary').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+                var table = $('#tblEnquirySummary').DataTable();
+
+                // #myInput is a <input type="text"> element
+                $('#searchText').on('keyup', function () {
+                    table.search(this.value).draw();
+                });
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error',
+                    text: str,
+                    icon: 'error'
+                })
+            }
+        });
+    }
+
+    function generateQuotation(ContactPersonID,EnquiryNo) {
+        var url = '/Quotation/AddOrEditQuotation?FromEnquiry=1&QuotationID=0&TemplateID=0&EnquiryID=' + EnquiryNo + '&CPID=' + ContactPersonID + '&IsCopy=0';
+        window.location = url;
+    }
+
+    function NewEnquiry() {
+        $.ajax({
+            url: "/Enquiry/SearchContact",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#searchContactModal').modal("show");
+                $('#sectionSearch').html(response);
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function SelectTemplate(ContactPersonID, EnqNo) {
+        EnquiryNo = EnqNo;
+        CPID = ContactPersonID;
+        $.ajax({
+            url: "/Quotation/SelectTemplateForView",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#SelectTemplate').html(response);
+                $("#exampleModal23").modal("show");
+                $("SelectTemplate").show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GenerateQuotFromTemplate() {
+        var e = document.getElementById("ddlTemplate");
+        TemplateID = e.options[e.selectedIndex].value;
+        var url = '/Quotation/AddOrEditQuotation?FromEnquiry=1&QuotationID=0&TemplateID=' + TemplateID + '&EnquiryID=' + EnquiryNo + '&CPID=' + CPID + '&IsCopy=0';
+        window.location = url;
+    }
+
+    function SaveDeleteRemark(EnqNO) {
+        EnquiryNo = EnqNO;
+        $("#DeleteRemark").modal();
+        $("#DeleteRemark").show();
+    }
+
+    function deleteEnquiry() {
+        var element = {};
+        element.Remark = document.getElementById("Remark").value;
+        if (element.Remark == "") {
+            $("#Remark").addClass("is-invalid state-invalid");
+            return false;
+        } else {
+            $("#Remark").removeClass("is-invalid state-invalid");
+        }
+        element.AddedON = new Date();
+        element.EnquiryNO = EnquiryNo;
+        $.ajax({
+            url: "/Enquiry/AjaxDeleteEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                if (response.Status == 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.Message,
+                        icon: 'error'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.Message,
+                        icon: 'success'
+                    });
+                    GetEnquirySummary();
+                }
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+    }
+
+
+    var tempForShare;
+    function ShareEnqView(ID) {
+        tempForShare = ID;
+        var data = { 'ID': ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/ShareEnquiryDetail",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $("#exampleModal3").modal("show")
+                $('#ShareEnqView').html(response);
+                $('#ShareEnqView').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function SaveShareList() {
+        var myColumnDefs = [];
+        $('.uniqCheck').each(function () {
+            if (this.checked) {
+                myColumnDefs.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefs.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+        if (myColumnDefs == "") {
+            alert("There is no Menu list")
+            return false;
+        }
+        var SharedWith = "";
+        for (i = 0; i < myColumnDefs.length; i++) {
+            if (myColumnDefs[i].Status) {
+                SharedWith = SharedWith + myColumnDefs[i].ID + ",";
+            }
+        }
+        var data = { 'SharedWith': SharedWith, 'ID': tempForShare };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/SaveSharedList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var i = response;
+                if (response == 1) {
+                    $("#exampleModal3").hide();
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function CreateNew(ContactPersonID) {
+        var url = '/Enquiry/AddorEditEnquiry?ContactPersonID=' + ContactPersonID + '&EnquiryNo=0&Status=0';
+        window.location = url;
+
+    }
+
+</script>

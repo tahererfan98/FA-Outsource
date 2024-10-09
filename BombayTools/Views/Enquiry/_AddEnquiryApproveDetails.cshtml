@@ -1,0 +1,1086 @@
+﻿
+
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0.8rem;
+        position: relative;
+    }
+    #tblTentativeSchedule td {
+        padding: 0rem;
+        vertical-align: top;
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+</script>
+
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Enquiry Approve Details</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Entry No</label>
+                    @Html.TextBox("txtEANO", null, new { @class = "form-control", @id = "txtEANO", name = "txtEANO", autocomplete = "off", disabled = "off", placeholder = " NEW" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Date</label>
+                    @Html.TextBox("txtEADate", null, new { @class = "form-control datePickerD", @id = "txtEADate", name = "txtEADate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy"), disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">ENQ No</label>
+                    @Html.TextBox("txtENQNO", null, new { @class = "form-control", @id = "txtENQNO", name = "txtENQNO", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-5">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Outsource Partner</label>
+                    @Html.DropDownList("ddlPartnerESNO", (IEnumerable<SelectListItem>)ViewBag.ddlOSPartnerDropdown, "--Select--", new { @class = "form-control", @id = "ddlPartnerESNO", name = "ddlPartnerESNO", autocomplete = "off", @onchange = "setFromLocation()" })
+                    @*@Html.TextBox("txtPartnerName", null, new { @class = "form-control", @id = "txtPartnerName", name = "txtPartnerName", autocomplete = "off", disabled = "off" })*@
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.TextBox("txtCustomerName", null, new { @class = "form-control", @id = "txtCustomerName", name = "txtCustomerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Project Name</label>
+                    @Html.TextBox("txtProjectName", null, new { @class = "form-control", @id = "txtProjectName", name = "txtProjectName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Req Vehicle</label>
+                    @Html.TextBox("txtNoOfVehicle", null, new { @class = "form-control", @id = "txtNoOfVehicle", name = "txtNoOfVehicle", autocomplete = "off", Type = "number" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">From Location </label>
+                    @Html.TextBox("txtPartnerLoc", null, new { @class = "form-control", @id = "txtPartnerLoc", name = "txtPartnerLoc", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Destination </label>
+                    @Html.TextBox("txtDestination", null, new { @class = "form-control", @id = "txtDestination", name = "txtDestination", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">OS PI NO</label>
+                    @Html.TextBox("txtPINO", null, new { @class = "form-control", @id = "txtPINO", name = "txtPINO", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">PI Amount (AED)</label>
+                    @Html.TextBox("txtPIAmount", null, new { @class = "form-control", @id = "txtPIAmount", name = "txtPIAmount", autocomplete = "off", Type = "number" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+                @*<button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>*@
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPOItemData" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    @*<th class="all text-center"></th>*@
+                                    <th class="all text-center">#</th>
+                                    <th class="all text-center">GL No</th>
+                                    <th class="all text-center">PINO</th>
+                                    <th class="all text-center">WONO</th>
+                                    <th class="all text-center">Item Name</th>
+                                    <th class="all text-center">Unit</th>
+                                    <th class="all text-center">Qty</th>
+                                    <th class="all text-center">SQM</th>
+                                    <th class="all text-center">OTS Qty</th>
+                                    <th class="all text-center">OTS SQM</th>
+                                    <th class="all text-center">App Rate<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Approved Rate"></i></th>
+                                    <th class="all text-center">Amount</th>
+                                    <th class="all text-center">Type</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Tentative Schedule Details</h4>
+            <div class="card-options">
+                @*<button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>*@
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+
+        <div class="card-body mt-0">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">Tot SQM</label>
+                        @Html.TextBox("txtTotSQM", null, new { @class = "form-control", @id = "txtTotSQM", name = "txtTotSQM", autocomplete = "off", Type = "number", @disabled="disabled" })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">To Receive SQM</label>
+                        @Html.TextBox("txtReceivedSQM", null, new { @class = "form-control", @id = "txtReceivedSQM", name = "txtReceivedSQM", autocomplete = "off", Type = "number" })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600;">Tentative Schedule Date</label>
+                        @Html.TextBox("txtScheduleDate", null, new { @class = "form-control datePickerD", @id = "txtScheduleDate", name = "txtScheduleDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                    </div>
+                </div>
+                <div class="col-lg-1 col-sm-12">
+                    <div class="form-group">
+                        <label class="form-label" style="visibility:hidden"> add</label>
+                        <div class="row gutters-xs">
+                            <div class="col">
+                                <button class="btn btn-sm btn-success" id="Savebtn" onclick="AddTentativeScheduleList()" data-toggle="tooltip" title="Add"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-1" id="">
+                <div class="col-sm-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblTentativeSchedule" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th width="7%" class="all text-center text-white">#</th>
+                                    <th width="7%" class="all text-center text-white"><b>SrNo</b></th>
+                                    <th width="10%" class="all text-right text-white"><b>Rec. Qty</b></th>
+                                    <th width="76%" class="all text-left text-white"><b>Tentative Date</b></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+
+    </div>
+
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("Remarks", null, new { @class = "form-control", @id = "Remarks", name = "Remarks", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 mt-2">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;">Upload Attachment</label>
+                <a @*href="#"*@ onclick="AddAttachment()">
+                    <i class="fa fa-paperclip fa-2x	" style="color:#070884" aria-hidden="true" title="Upload Attachments"></i>
+                    <span class="custom-switch-description" style="font-size:17px;color:#6c4cbb"><b><label id="lblAttachmentForPhoto">0</label></b></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card-footer">
+        <div class="float-right">
+            @*<button class="btn btn-sm btn-warning" id="Genbtn" onclick="GenerateTemplate()"><i class="fa fa-table"></i> Gen Template</button>*@
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="OnSave()"><i class="fa fa-check-square-o"></i> Approved</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var CustomerD = [];
+    var poItemM = [];
+    var PIItemList = [];
+    var PIItemListSearch = [];
+
+    var ScheduleList = [];
+    var IsPointEdit = 0;
+    var EditPointSrNo = 0;
+
+    var EANO = "0";
+    var isDraft = 0;
+    var TotSQM = 0;
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+        e.preventDefault();
+        return false;
+    });
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    $(document).ready(function () {
+        debugger;
+       document.getElementById("txtDestination").value = "FA Glass, LLC";
+
+       $("#txtENQNO").val('@ViewBag.ENQNO');
+       $("#txtCustomerName").val('@ViewBag.CustomerName');
+       @*$("#txtPartnerName").val('@ViewBag.PartnerName');*@
+        $("#txtProjectName").val('@ViewBag.ProjectName');
+        $("#txtTotSQM").val(@ViewBag.OutSQM);
+
+        poItemM = [];
+        poItemM = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+        poItemM = JSON.parse(poItemM);
+        addCOItemToTable();
+
+        TotSQM = '@ViewBag.OutSQM';
+        TotSQM = parseFloat(TotSQM);
+
+    });
+
+   
+    function addCOItemToTable() {
+        debugger;
+
+        $('#tblPOItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": poItemM,
+            "bPaginate": false,
+            "bInfo": false,
+            "pa": false,
+            "bFilter": false, // Disable search box
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": false,
+            }],
+            "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                $('td', row).css('font-weight', 'bold');
+            },
+            "columns": [
+                //{
+                //    "data": "SrNo",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deleteSelectedCORow(' + row.SrNo + ', `' + row.DCNO + '`)" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                //        return data;
+                //    }
+                //},
+                { "data": "SrNo" },
+                { "data": "SpecID" },
+                //{
+                //    "data": "GLNO",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text"  class="form-control noborder width" style="text-transform:uppercase;" id="GLNO_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                //        return data;
+                //    }
+                //},
+                { "data": "PINO" },
+                { "data": "WONO" },
+                {
+                    "className": "ChkWidth", "data": "ItemDescription",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea disabled type="text" rows="2" class="form-control noborder width" style="text-transform:uppercase;" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" ></textarea> ';
+                        return data;
+                    }
+                },
+
+                { "data": "Unit" },
+
+                {
+                    "data": "Qty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "SQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" style="width:90px;" id="SQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "OutQty",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="OutQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "OutSQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" id="OutSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "ApprovedRate",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" id="ApprovedRate_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" style="width:100px;" id="Amount_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "className": "ChkWidthType", "data": "OutType",
+                    "render": function (data, type, row, meta) {
+                        data = '<input   class="form-control text-LEFT width" style="width=200px" id="OutType_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" disabled>';
+                        return data;
+                    }
+                },
+            ]
+        });
+
+        for (i = 0; i < poItemM.length; i++) {
+            var temp1 = "ItemDescription_" + poItemM[i].SrNo
+            document.getElementById(temp1).value = poItemM[i].ItemDescription;
+        }
+    }
+
+    function setFromLocation() {
+        debugger;
+        var PartnerESNO = $("#ddlPartnerESNO").val();
+        if (PartnerESNO == 0 || PartnerESNO == "") {
+            alert("Please select OS Partner.");
+            document.getElementById('ddlPartnerESNO').style.borderColor = "red";
+            $("#txtPartnerLoc").val('');
+            return false;
+        } else {
+            document.getElementById('ddlPartnerESNO').style.borderColor = "gainsboro";
+        }
+
+        var data = { 'ESNO': PartnerESNO };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Enquiry/getPartnerLocation",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                $("#txtPartnerLoc").val(response.PartnerLoc);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                //$("#tracker-loader").fadeOut("slow");
+            }
+        });
+
+    }
+
+
+    function UpdateDetailsInArray(SrNo) {
+        debugger;
+
+        var Amount = 0;
+        var z = poItemM.findIndex(p => p.SrNo == SrNo);
+        var ApprovedRate = $("#ApprovedRate_" + SrNo).val();
+        ApprovedRate = parseFloat(ApprovedRate);
+
+        poItemM[z].ApprovedRate = ApprovedRate;
+
+        Amount = parseFloat(poItemM[z].OutSQM) * parseFloat(poItemM[z].ApprovedRate);
+        Amount = parseFloat(Amount).toFixed(2);
+
+        $("#Amount_" + SrNo).val(Amount);
+        poItemM[z].Amount = Amount;
+
+    }
+
+
+</script>
+
+<script>
+    ///////////////////////////////////  Tetative Schedule Details
+
+    function EditItem(id) {
+        var i = ScheduleList.findIndex(p => p.SrNo == id);
+        var ReceivedSQM = ScheduleList[i].ReceivedSQM;
+        var ScheduleDate = ScheduleList[i].ScheduleDate;
+        $('#txtReceivedSQM').val(ReceivedSQM);
+        $('#txtScheduleDate').val(ScheduleDate);
+        IsPointEdit = 1;
+        EditPointSrNo = id;
+    }
+    var TotalSQM = 0;
+
+    var TotalSQM = 0;
+
+    function AddTentativeScheduleList() {
+        debugger;
+        var ReceivedSQM = $('#txtReceivedSQM').val();
+        var ScheduleDate = $('#txtScheduleDate').val();
+        ReceivedSQM = parseFloat(ReceivedSQM);
+
+        if (isNaN(ReceivedSQM) || ReceivedSQM <= 0) {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please enter a valid Received Qty",
+                icon: 'error'
+            });
+            $("#txtReceivedSQM").focus();
+            $("#txtReceivedSQM").val('');
+            return false;
+        }
+        if (ScheduleDate == "") {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please select a date",
+                icon: 'error'
+            });
+            $("#txtScheduleDate").focus();
+            return false;
+        }
+
+        if (IsPointEdit == 1) {
+            var i = ScheduleList.findIndex(p => p.SrNo == EditPointSrNo);
+            if (i !== -1) {
+                TotalSQM -= parseFloat(ScheduleList[i].ReceivedSQM); // Subtract the old value from TotalSQM
+                ScheduleList[i].ReceivedSQM = ReceivedSQM;
+                ScheduleList[i].ScheduleDate = ScheduleDate;
+                TotalSQM += ReceivedSQM; // Add the new value to TotalSQM
+
+                if (TotalSQM > TotSQM) {
+                    Swal.fire({
+                        title: 'Alert',
+                        text: "Received SQM cannot be greater than Total SQM " + TotSQM,
+                        icon: 'error'
+                    });
+                    return false;
+                }
+
+                $("#txtReceivedSQM").val('');
+                IsPointEdit = 0;
+                EditPointSrNo = 0;
+                BindTable();
+            }
+        } else {
+            var element = {
+                ReceivedSQM: ReceivedSQM,
+                ScheduleDate: ScheduleDate
+            };
+
+            var y = ScheduleList.findIndex(p => p.ReceivedSQM == ReceivedSQM && p.ScheduleDate == ScheduleDate);
+            if (y == -1) {
+                TotalSQM = ScheduleList.reduce((sum, item) => sum + parseFloat(item.ReceivedSQM), 0);
+                TotalSQM += ReceivedSQM;
+
+                if (TotalSQM > TotSQM) {
+                    Swal.fire({
+                        title: 'Alert',
+                        text: "Received SQM cannot be greater than Total SQM " + TotSQM,
+                        icon: 'error'
+                    });
+                    $("#txtReceivedSQM").val('');
+                    return false;
+                }
+
+                ScheduleList.push(element);
+                SetSrNo();
+                $("#txtReceivedSQM").val('');
+            } else {
+                $("#txtReceivedSQM").val('');
+                alert('Entry already exists.');
+                return false;
+            }
+            BindTable();
+        }
+    }
+
+
+    //function AddTentativeScheduleList() {
+    //    //// Need to check total qty
+    //    debugger;
+    //    var ReceivedSQM = $('#txtReceivedSQM').val();
+    //    var ScheduleDate = $('#txtScheduleDate').val();
+    //    ReceivedSQM = parseFloat(ReceivedSQM);
+
+    //    if (ReceivedSQM == "" || ReceivedSQM == 0) {
+    //        Swal.fire({
+    //            title: 'Alert',
+    //            text: "Please enter Received Qty",
+    //            icon: 'error'
+    //        });
+
+    //        $("#txtReceivedSQM").focus();
+    //        $("#txtReceivedSQM").val('');
+    //        return false;
+    //    }
+    //    if (ScheduleDate == "") {
+    //        Swal.fire({
+    //            title: 'Alert',
+    //            text: "Please select date",
+    //            icon: 'error'
+    //        });
+
+    //        $("#txtScheduleDate").focus();
+    //        return false;
+    //    }
+
+    //    if (IsPointEdit == 1) {
+    //        var i = ScheduleList.findIndex(p => p.SrNo == EditPointSrNo);
+    //        ScheduleList[i].ReceivedSQM = ReceivedSQM;
+    //        ScheduleList[i].ScheduleDate = ScheduleDate;
+    //        $("#txtReceivedSQM").val('');
+    //        $("#txtReceivedSQM").val('');
+    //        IsPointEdit = 0;
+    //        EditPointSrNo = 0;
+    //        BindTable();
+    //    }
+    //    else {
+
+    //        var element = {};
+    //        element.ReceivedSQM = ReceivedSQM;
+    //        element.ScheduleDate = ScheduleDate;
+
+    //        var y = 0;
+    //        var y = ScheduleList.findIndex(p => p.ReceivedSQM == ReceivedSQM && p.ScheduleDate == ScheduleDate);
+
+    //        if (y == -1) {
+    //            //if (ScheduleList.length > 0) {
+    //            //    for (var i = 0; i < ScheduleList.length; i++) {
+    //            //        TotalSQM = TotalSQM + parseFloat(ScheduleList[i].ReceivedSQM);
+    //            //    }
+    //            //} else {
+    //            //    if (ReceivedSQM > TotSQM) {
+    //            //        Swal.fire({
+    //            //            title: 'Alert',
+    //            //            text: "Received SQM can not be greater than Total SQM " + TotSQM,
+    //            //            icon: 'error'
+    //            //        });
+    //            //        return false;
+    //            //    }
+    //            //}
+    //            TotalSQM = parseFloat(TotalSQM) + parseFloat(ReceivedSQM);
+    //            if (TotalSQM > TotSQM) {
+    //                Swal.fire({
+    //                    title: 'Alert',
+    //                    text: "Received SQM can not be greater than Total SQM " + TotSQM,
+    //                    icon: 'error'
+    //                });
+    //                $("#txtReceivedSQM").val('');
+    //                return false;
+    //            }
+
+    //            ScheduleList.push(element);
+    //            SetSrNo();
+    //            $("#txtReceivedSQM").val('');
+    //            //TotalSQM = 0;
+    //            //for (var i = 0; i < ScheduleList.length; i++) {
+    //            //        TotalSQM = TotalSQM + parseFloat(ScheduleList[i].ReceivedSQM);
+    //            //    }
+    //        } else {
+    //            $("#txtReceivedSQM").val('');
+    //            alert('already exist ..');
+    //            return false;
+    //        }
+    //        BindTable();
+    //    }
+
+    //}
+
+    function SetSrNo() {
+        var rowNum = 1;
+        for (var i = 0; i < ScheduleList.length; i++) {
+            ScheduleList[i].SrNo = rowNum++;
+        }
+    }
+
+    function CancelItem(id) {
+
+        var r = confirm("Are you sure you want to delete this item?");
+        if (r == true) {
+
+            for (i = 0; i < ScheduleList.length; i++) {
+                if (ScheduleList[i].SrNo == id) {
+                    ScheduleList.splice(i, 1);
+                }
+            }
+
+            BindTable();
+            var table = $('#tblTentativeSchedule').DataTable();
+            $('#tblTentativeSchedule tbody').on('click', '.removebutton', function () {
+                table
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+        }
+    }
+
+    function BindTable() {
+        SetSrNo();
+        $('#tblTentativeSchedule').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": ScheduleList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "aaSorting": [],
+            "searching": false,
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<div class=\"btn-list text-center\"><button type=\"button\" class=\"btn btn-sm btn-danger\" name=\"removebutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"CancelItem(' + row.SrNo + ')\" ><i class=\"fa fa-trash\" style=\"font-size: 16px;\"></i></button> <button type=\"button\" class=\"btn btn-primary btn-sm\" name=\"editbutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"EditItem(' + row.SrNo + ')\" ><i class=\"fa fa-edit\" style=\"font-size: 16px;\"></i></button></div>';
+                        return data;
+                    }
+                },
+                { "data": "SrNo", "class": "text-center" },
+                { "data": "ReceivedSQM" },
+                { "data": "ScheduleDate" }
+            ]
+        });
+    }
+
+</script>
+
+<script>
+    function OnSave() {
+        debugger;
+        var ESNO = $("#ddlPartnerESNO option:selected").val();
+        if (ESNO == "")
+            if (ESNO == "" || ESNO == null || ESNO == undefined ) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select outsource partner",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        var basicElement = {};
+        basicElement.EANO = '0';
+        basicElement.EAID = 0;
+        basicElement.ESNO = ESNO;
+        basicElement.ENQNO = '@ViewBag.ENQNO';
+        basicElement.EADate = $("#txtEADate").val();
+        basicElement.CustomerID = '@ViewBag.CustomerID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.PartnerID = '@ViewBag.PartnerID';
+        basicElement.PartnerLoc = $("#txtPartnerLoc").val();
+        basicElement.NoOfVehicle = $("#txtNoOfVehicle").val();
+        basicElement.Destination = $("#txtDestination").val();
+        basicElement.PINO = $("#txtPINO").val();
+        basicElement.PIAmount = $("#txtPIAmount").val();
+        basicElement.Remarks = $("#Remarks").val();
+
+        if (basicElement.NoOfVehicle == "" || basicElement.NoOfVehicle == null || basicElement.NoOfVehicle == undefined || basicElement.NoOfVehicle == 0) {
+            basicElement.NoOfVehicle = 0;
+        }
+        if (basicElement.PIAmount == "" || basicElement.PIAmount == null || basicElement.PIAmount == undefined || basicElement.PIAmount == 0) {
+            basicElement.PIAmount = 0;
+        }
+        //if (basicElement.PONO == "" || basicElement.PONO == null || basicElement.PONO == undefined || basicElement.PONO == 0) {
+        //    Swal.fire({
+        //        title: 'Error',
+        //        text: "Please enter PONO",
+        //        icon: 'error'
+        //    });
+
+        //    $("#txtPONO").focus();
+        //    return false;
+        //}
+
+        //////////////////////////////  Item List
+            if (poItemM.length == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please add Item details to proceed!",
+                    icon: 'error'
+                })
+                return false;
+            }
+
+            for (var i = 0; i < poItemM.length; i++) {
+
+                if (poItemM[i].ApprovedRate == "" || poItemM[i].ApprovedRate == 0) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Please enter Approved Rate for SrNo -: " + poItemM[i].SrNo,
+                        icon: 'error'
+                    });
+
+                    $("#ApprovedRate_" + poItemM[i].SrNo).focus();
+                    return false;
+                    poItemM[i].ApprovedRate == 0;
+                }
+
+            }
+
+            if (ScheduleList.length == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please add tentative schedule to proceed!",
+                    icon: 'error'
+                })
+                return false;
+            }
+
+        ///////////////////////////////// Attachment
+            TotalAttchment = [];
+            TotalAttchment = BillAttachment;
+            for (i = 0; i < TotalAttchment.length; i++) {
+                var element2 = {};
+                element2.DocName = TotalAttchment[i].DocFileName;
+                element2.FilePath = TotalAttchment[i].FilePath;
+                element2.ContentType = TotalAttchment[i].ContentType;
+                MasterAttachment.push(element2);
+            }
+
+        $("#global-loader").fadeIn("slow");
+            var data = { 'BasicDetails': basicElement, 'ItemListD': poItemM, 'ScheduleList': ScheduleList,  'AttachmentList': MasterAttachment };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/SaveEnquiryApproveDetails',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#Savebtn").prop("disabled", true);
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        TotalSQM = 0;
+                        document.location = '@Url.Action("EnquirySentSummary", "Enquiry")';
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+</script>
+
+@* *** Upload Attachment *@
+
+<script>
+    function AddAttachment() {
+        debugger;
+        //  var data = {'name': name };
+        //data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/_AddAttachmentApproveDetails",
+            //  data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        })
+    }
+</script>
+
+@* *** Generate Template  *@
+
+<script>
+
+    function GenerateTemplate() {
+        debugger;
+    var ENQNO = '@ViewBag.ENQNO'
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        //var flatPINOArrayString = Array.prototype.map.call(poItemM, function (item) { return "'" + item.PINO + "'"; }).join(', ');
+        //var flatPINOArrayString = JSON.stringify(poItemM);
+        //var itemListJson = JSON.stringify(poItemM);
+        //window.location = "/Enquiry/ExportToExcelWODetailsTemplate?ENQNO=" + ENQNO + "&ItemListD=" + itemListJson;
+
+        var data = { 'ENQNO': ENQNO, 'ItemListD': poItemM  };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/StorePINoInTemp',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                document.location = '@Url.Action("ExportToExcelWODetailsTemplate", "Enquiry")';
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+
+            }
+        });
+
+    }
+
+</script>
+
+<script>
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    jQuery('.txtInput').click(function () { selectAllText(jQuery(this)) });
+
+</script>
+

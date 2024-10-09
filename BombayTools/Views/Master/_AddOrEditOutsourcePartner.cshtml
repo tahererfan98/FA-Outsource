@@ -1,0 +1,621 @@
+﻿
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0.8rem;
+        position: relative;
+    }
+
+    #tblContactList td, th {
+        padding: 0.1rem;
+        vertical-align: top;
+    }
+</style>
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+<script type="text/javascript">
+    $('.select2').select2({
+        selectOnClose: true
+    });
+</script>
+
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Add New Outsource Partner</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-6 col-lg-6">
+                <div class="form-group">
+                    <label class="form-label">Partner Name</label>
+                    @Html.TextBox("PartnerName", null, new { @class = "form-control", @id = "PartnerName", name = "PartnerName", autocomplete = "off", @oninput = "this.value = this.value.toUpperCase()", maxlength = 40 })
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label">Pick Up Location</label>
+                    @Html.TextBox("PartnerLoc", null, new { @class = "form-control", @id = "PartnerLoc", name = "PartnerLoc", autocomplete = "off", @oninput = "this.value = this.value.toUpperCase()", maxlength = 30 })
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="form-label" style="visibility:hidden">Name</label>
+                    <label class="form-label" style="padding-bottom:15px">Is Active&nbsp;&nbsp;&nbsp;<input type="checkbox" id="IsActive" style="width:20px;height:20px" checked></label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6 ">
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    @Html.TextArea("Address", null, new { @class = "form-control", @id = "Address", name = "Address", autocomplete = "off", maxlength = 100 })
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label">VAT NO</label>
+                    @Html.TextBox("VatNo", null, new { @class = "form-control", @id = "VatNo", name = "VatNo", autocomplete = "off", maxlength = 15, @oninput = "this.value = this.value.toUpperCase()" })
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Contact Details</h4>
+            <div class="card-options">
+            </div>
+        </div>
+
+        <div class="card-body mt-0">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-3 col-lg-3">
+                    <div class="form-group">
+                        <label class="form-label">Contact Person</label>
+                        @Html.TextBox("ContactPerson", null, new { @class = "form-control", @id = "ContactPerson", name = "ContactPerson", autocomplete = "off", maxlength = 30, @oninput = "this.value = this.value.toUpperCase()" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="form-label">Contact No</label>
+                        @Html.TextBox("ContactNo", null, new { @class = "form-control", type = "number", maxlength = 10, @id = "ContactNo", name = "ContactNo", autocomplete = "off", oninput = "enforceMaxLength(this, 10)" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-lg-3">
+                    <div class="form-group">
+                        <label class="form-label">Email ID</label>
+                        @Html.TextBox("EmailID", null, new { @class = "form-control", @id = "EmailID", name = "EmailID", autocomplete = "off", maxlength = 40 })
+                    </div>
+                </div>
+                <div class="col-lg-1 col-sm-12">
+                    <div class="form-group">
+                        <label class="form-label" style="visibility:hidden"> add</label>
+                        <div class="row gutters-xs">
+                            <div class="col">
+                                <button class="btn btn-sm btn-success" id="Savebtn" onclick="AddContactList()" data-toggle="tooltip" title="Add"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-1" id="">
+                <div class="col-sm-8">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblContactList" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th width="7%" class="all text-center text-white">#</th>
+                                    <th width="4%" class="all text-center text-white"><b>SrNo</b></th>
+                                    <th width="40%" class="all text-left text-white"><b>Contact Person</b></th>
+                                    <th width="18%" class="all text-left text-white"><b>Contact NO</b></th>
+                                    <th width="31%" class="all text-left text-white"><b>Email ID</b></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="card-footer">
+        <div class="float-right">
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="SaveTaskMaster()"> Save</button>
+        </div>  
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+
+
+<script>
+
+    var ContactList = [];
+    var IsPointEdit = 0;
+    var EditPointSrNo = 0;
+
+    $(document).ready(function () {
+
+        if ('@ViewBag.Action' == "Edit") {
+
+            Checkbox = '@ViewBag.IsActive';
+            if (Checkbox == 1) {
+                $('#IsActive').prop('checked', true);
+            } else {
+                $('#IsActive').prop('checked', false);
+            }
+
+            $("#PartnerName").val('@ViewBag.PartnerName');
+            $("#Address").val('@ViewBag.Address');
+            $("#VatNo").val('@ViewBag.VatNo');
+
+            ContactList = [];
+            ContactList = @Html.Raw(Json.Encode(@ViewBag.ContactListD));
+            ContactList = JSON.parse(ContactList);
+            BindTable();
+
+        }
+
+
+
+    });
+
+    function enforceMaxLength(element, maxLength) {
+        if (element.value.length > maxLength) {
+            element.value = element.value.slice(0, maxLength);
+        }
+    }
+
+    function EditItem(id) {
+        var i = ContactList.findIndex(p => p.SrNo == id);
+        var EntryID = ContactList[i].EntryID;
+        var ContactPerson = ContactList[i].ContactPerson;
+        var ContactNo = ContactList[i].ContactNo;
+        var EmailID = ContactList[i].EmailID;
+        $('#ContactPerson').val(ContactPerson);
+        $('#ContactNo').val(ContactNo);
+        $('#EmailID').val(EmailID);
+        IsPointEdit = 1;
+        EditPointSrNo = id;
+    }
+
+
+    function AddContactList() {
+        //// Need to check total qty
+        debugger;
+        var ContactPerson = $('#ContactPerson').val();
+        var ContactNo = $('#ContactNo').val();
+        var EmailID = $('#EmailID').val();
+
+        var EI = $("#EmailID").val();
+        var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        var resultEmailID = regex.test(EI);
+        $("#EmailID").removeClass();
+        if (EI == "") {
+            alert('Please Enter Email Id!');
+            $("#EmailID").addClass("form-control is-invalid state-invalid")
+            return false;
+        }
+        if (resultEmailID == false) {
+            alert('Please Enter valid Email Id!');
+            $("#EmailID").addClass("form-control is-invalid state-invalid")
+            return resultEmailID;
+        }
+        else {
+            $("#EmailID").addClass("form-control is-valid state-valid")
+        }
+
+
+        if (ContactPerson == "" ) {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please enter contact person",
+                icon: 'error'
+            });
+
+            $("#ContactPerson").focus();
+            $("#ContactPerson").val('');
+            return false;
+        }
+        if (EmailID == "") {
+            Swal.fire({
+                title: 'Alert',
+                text: "Please enter email id",
+                icon: 'error'
+            });
+
+            $("#EmailID").focus();
+            $("#EmailID").val('');
+            return false;
+        }
+
+        if (IsPointEdit == 1) {
+            var i = ContactList.findIndex(p => p.SrNo == EditPointSrNo);
+            ContactList[i].ContactPerson = ContactPerson;
+            ContactList[i].ContactNo = ContactNo;
+            ContactList[i].EmailID = EmailID;
+            $("#ContactPerson").val('');
+            $("#ContactNo").val('');
+            $("#EmailID").val('');
+            IsPointEdit = 0;
+            EditPointSrNo = 0;
+            BindTable();
+        }
+        else {
+
+            var element = {};
+            element.ContactPerson = ContactPerson;
+            element.ContactNo = ContactNo;
+            element.EmailID = EmailID;
+
+            var y = 0;
+            var y = ContactList.findIndex(p => p.ContactPerson == ContactPerson );
+
+            if (y == -1) {
+                ContactList.push(element);
+                SetSrNo();
+                $("#ContactPerson").val('');
+                $("#ContactNo").val('');
+                $("#EmailID").val('');
+            } else {
+                $("#ContactPerson").val('');
+                $("#ContactNo").val('');
+                $("#EmailID").val('');
+                alert('already exist ..');
+                return false;
+            }
+            BindTable();
+        }
+
+    }
+
+    function SetSrNo() {
+        var rowNum = 1;
+        for (var i = 0; i < ContactList.length; i++) {
+            ContactList[i].SrNo = rowNum++;
+        }
+    }
+
+    function CancelItem(id) {
+
+        var r = confirm("Are you sure you want to delete this item?");
+        if (r == true) {
+
+            for (i = 0; i < ContactList.length; i++) {
+                if (ContactList[i].SrNo == id) {
+                    ContactList.splice(i, 1);
+                }
+            }
+            BindTable();
+            var table = $('#tblContactList').DataTable();
+            $('#tblContactList tbody').on('click', '.removebutton', function () {
+                table
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+        }
+    }
+
+    function BindTable() {
+        SetSrNo();
+        $('#tblContactList').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": ContactList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "aaSorting": [],
+            "searching": false,
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": false,
+            }],
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<div class=\"btn-list text-center\"><button type=\"button\" class=\"btn btn-sm btn-danger\" name=\"removebutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete\" onclick=\"CancelItem(' + row.SrNo + ')\" ><i class=\"fa fa-trash\" style=\"font-size: 16px;\"></i></button> <button type=\"button\" class=\"btn btn-primary btn-sm\" name=\"editbutton\" style=\"height:25px;\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"EditItem(' + row.SrNo + ')\" ><i class=\"fa fa-edit\" style=\"font-size: 16px;\"></i></button></div>';
+                        return data;
+                    }
+
+                },
+                { "data": "SrNo", "class": "text-center" },
+                { "data": "ContactPerson" },
+                { "data": "ContactNo" },
+                { "data": "EmailID" },
+            ]
+        });
+    }
+
+    function SaveTaskMaster() {
+        debugger;
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+        }
+
+        if ('@ViewBag.Action' == "Add") {
+
+            var Name = document.getElementById("PartnerName").value;
+            Name = Name.trim();
+            Name = Name.toLowerCase();
+            for (i = 0; i < PartnerList.length; i++) {
+                var temp = PartnerList[i].VendorName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    //alert("MaintenanceType Name already exist");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Partner name already exist!'
+                        //footer: '<a href="">Why do I have this issue?</a>'
+                    });
+                    return false;
+                }
+            }
+
+        }
+
+        var IsActive = document.getElementById('IsActive');
+        if (IsActive.checked) {
+            IsActive = 1;
+        } else {
+            IsActive = 0;
+        }
+        var element = {};
+        element.PartnerID = @ViewBag.PartnerID;
+        element.PartnerName = document.getElementById("PartnerName").value;
+        element.PartnerLoc = document.getElementById("PartnerLoc").value;
+        element.ContactPerson = document.getElementById("ContactPerson").value;
+        element.ContactNo = document.getElementById("ContactNo").value;
+        element.EmailID = document.getElementById("EmailID").value;
+        element.VatNo = document.getElementById("VatNo").value;
+        element.Address = document.getElementById("Address").value;
+        element.IsActive = IsActive;
+
+        if (ContactList.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add atleast 1 contact details!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+
+        var data1 = { 'data': element, 'ContactList': ContactList };
+        data = JSON.stringify(data1);
+       // alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/SaveOutsourcePartner',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.Message,
+                }).then((response) => {
+                    document.location = '@Url.Action("OutsourcePartnerSummary", "Master")';
+
+                });
+                //alert(response);
+            },
+            error: function (errormessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errormessage,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                });
+            }
+        });
+    }
+
+    function validateAllDetail() {
+        debugger
+        var isValid = Boolean;
+        isValid = true;
+        var PartnerName = document.getElementById("PartnerName").value;
+        var PartnerLoc = document.getElementById("PartnerLoc").value;
+        var Address = document.getElementById("Address").value;
+        var ContactPerson = document.getElementById("ContactPerson").value;
+        var ContactNo = document.getElementById("ContactNo").value;
+
+        if (PartnerName == "" || PartnerName == undefined) {
+            document.getElementById('PartnerName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('PartnerName').style.borderColor = "Gainsboro";
+        }
+        if (PartnerLoc == "" || PartnerLoc == undefined) {
+            document.getElementById('PartnerLoc').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('PartnerLoc').style.borderColor = "Gainsboro";
+        }
+
+        if (Address == "" || Address == undefined) {
+            document.getElementById('Address').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Address').style.borderColor = "Gainsboro";
+        }
+        //if (ContactPerson == "" || ContactPerson == undefined) {
+        //    document.getElementById('ContactPerson').style.borderColor = "red";
+        //    isValid = false;
+        //} else {
+        //    document.getElementById('ContactPerson').style.borderColor = "Gainsboro";
+        //}
+        //if (ContactNo == "" || ContactNo == undefined) {
+        //    document.getElementById('ContactNo').style.borderColor = "red";
+        //    isValid = false;
+        //} else {
+        //    document.getElementById('ContactNo').style.borderColor = "Gainsboro";
+        //}
+
+        if (isValid == false) {
+            //alert('Please fill the required fields!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill the required fields!'
+                //footer: '<a href="">Why do I have this issue?</a>'
+            });
+        }
+        return isValid;
+    }
+
+</script>
+
+<script>
+    $("#EmailID").on("change", function () {
+        var EI = $("#EmailID").val();
+        var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        var resultEmailID = regex.test(EI);
+        $("#EmailID").removeClass();
+        if (EI == "") {
+            alert('Please Enter Email Id!');
+            $("#EmailID").addClass("form-control is-invalid state-invalid")
+            return false;
+        }
+        if (resultEmailID == false) {
+            alert('Please Enter valid Email Id!');
+            $("#EmailID").addClass("form-control is-invalid state-invalid")
+            return resultEmailID;
+        }
+        else {
+            $("#EmailID").addClass("form-control is-valid state-valid")
+        }
+    });
+
+
+    function restrictAlphabets(e) {
+        var x = e.which || e.keycode;
+        if ((x >= 48 && x <= 57)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+
+
+

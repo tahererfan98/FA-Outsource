@@ -1,0 +1,104 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.State>
+
+<div id="Stage2">
+    <div class="page-header">
+        <h4 class="page-title">  Zone </h4>
+        <div class="float-right">
+            <button class="btn btn-success btn-sm" onclick="GetBack()" data-toggle="tooltip" data-placement="bottom" data-original-title="Back"><i class="fa fa-arrow-left"></i></button>
+        </div>
+    </div>
+    <div class="m-4">
+        <div class="row">
+
+            <div class="col-sm-12 col-lg-12">
+                <div class="row">
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Zone Name</label>
+                                        @Html.TextBox("ZoneName", null, new { @class = "form-control", @id = "ZoneName", name = "ZoneName", autocomplete = "off" })
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-12">
+                                    <h4></h4>
+                                    <div class="row">
+                                        @foreach (var d in Model)
+                                        {
+                                            if (d.Selected == 1)
+                                            {
+
+                                                <div class="col-sm-12 col-lg-3 col-md-4">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            @d.StateName
+                                                            <div class="material-switch pull-right">
+                                                                <input id="StateID_@d.StateID" name="StateID_@d.StateID" class="State" type="checkbox" value="@d.StateID" Checked>
+                                                                <label for="StateID_@d.StateID" class="label-primary"></label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-sm-12 col-lg-3 col-md-4">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            @d.StateName
+                                                            <div class="material-switch pull-right">
+                                                                <input id="StateID_@d.StateID" name="StateID_@d.StateID" class="State" type="checkbox" value="@d.StateID">
+                                                                <label for="StateID_@d.StateID" class="label-primary"></label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        }
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-primary float-right" id="Save" onclick="SaveZone()" title="Save"><i class="fa fa-save"></i></button>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+            $(document).ready(function () {
+                StateList = @Html.Raw(Json.Encode(ViewBag.StateList));
+                StateList = JSON.parse(StateList);
+                  $("#Stage1").hide();
+            });
+
+
+
+</script>
+
+
+

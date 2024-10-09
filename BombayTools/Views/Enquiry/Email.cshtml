@@ -1,0 +1,195 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+    @{
+        ViewBag.Title = "Email";
+        Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+    }
+    <style>
+        .max_Height_email {
+            min-height: 60vh !important;
+            height: 65vh !important;
+            max-height: 85vh !important;
+            overflow-y: scroll;
+        }
+
+            .max_Height_email::-webkit-scrollbar {
+                width: 3px;
+            }
+
+            .max_Height_email::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            }
+    </style>
+    <div class=" content-area overflow-hidden">
+        @*<div class="page-header">
+                <h4 class="page-title">Generate Enquiry by Email</h4>
+            </div>*@
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="container bootstrap snippet">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="action-header clearfix">
+                                <div class="float-left"><h3>Generate Enquiry</h3></div>
+                                <div class="float-right hidden-xs d-flex ml-6">
+                                    @*<button class="btn btn-primary mr-0 float-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back">
+                                        <i class="fa fa-plus"></i></button>*@
+                                    <button class="btn btn-warning ml-0 float-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Refresh" onclick="onRefresh()">
+                                        <i class="fa fa-refresh"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile tile-alt" id="messages-main" style="padding-bottom:0 !important">
+                        <div class="ms-menu max_Height_email">
+                            @*<div class="ms-user clearfix">
+                                    <div>Signed in as <br> phoenixtechnosoftkreations@gmail.com</div>
+                                </div>*@
+                            <div class="list-group lg-alt">
+                                @foreach (var d in Model)
+                                {
+                                    <a class="list-group-item media p-4 border-top mt-0" onclick="showSelectedEmail('@d.FromName','@d.FromEmail',`@d.Subject`,`@d.Body`,`@d.DateSent`)">
+                                        <div class="float-left pr-2">
+                                            <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span>
+                                        </div>
+                                        <div class="media-body" style="cursor: pointer;">
+                                            <div class="list-group-item-heading text-default">@Html.DisplayFor(m => d.FromName)</div>
+                                            <small class="list-group-item-text text-muted">@Html.DisplayFor(m => d.Subject)</small>
+                                        </div>
+                                    </a>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="ms-body">
+                            <div class="max_Height_email">
+                                <div class="message-feed media" id="Emaiheader">
+                                    <div class="float-left pr-2">
+                                        <span class="avatar avatar-md brround" style="background-image: url(/images/img_avatar.png)"></span>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p class="m-0" id="EmailName"></p>
+                                                    <p class="m-0" id="EmailAddress"></p>
+                                                    <small class="mb-2" id="Date"></small>
+                                                    <p class="m-0"><strong>Subject:</strong> <label id="Subject"></label></p>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div id="EmailBody"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div style="position:relative" class="float-right mr-2" id="EmailFooter">
+                                <button class="btn btn-success mr-0" onclick="CreateEnquiry()" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Add Enquiry">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger ml-0" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cancel"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#Emaiheader").hide();
+        $("#EmailFooter").hide();
+    })
+
+    function showSelectedEmail(FromName, FromEmail, Subject, Body, DateSent) {
+        $("#Emaiheader").show();
+        $("#EmailFooter").show();
+        document.getElementById('EmailName').innerHTML = FromName;
+        document.getElementById('EmailAddress').innerHTML = FromEmail;
+        document.getElementById('Subject').innerHTML = Subject;
+        document.getElementById('EmailBody').innerHTML = Body;
+        document.getElementById('Date').innerHTML = DateSent;
+
+    }
+
+    function CreateEnquiry() {
+        var searchtext = document.getElementById('EmailAddress').innerHTML;
+        var desc = document.getElementById('EmailBody').innerHTML;
+        desc = desc.trim();
+        var st = searchtext.trim();
+        $.ajax({
+            url: "/Enquiry/GetCompanyList",
+            data: '{SearchText: ' + JSON.stringify(st) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                if (value.length == 0) {
+                    alert("Customer doesn't exist!");
+                    return;
+                } else {
+                    for (i = 0; value.length; i++) {
+                        if (st = value[i].EmailID) {
+                            var Company = value[i].CompanyName;
+                            var Address = value[i].Location;
+                            var ContactPersonName = value[i].ContactPersonName;
+                            var ContactNo = value[i].ContactNo;
+                            var EmailID = value[i].EmailID;
+                            var ContactPersonID = value[i].ContactPersonID;
+                            var Desc = desc;
+                            Desc = Desc.replace(/(\r\n|\n|\r)/gm, "");
+                            Desc = Desc.replace(/'/g, "");
+                            Desc = Desc.replace(/&amp;/g, "&");
+                            var searchTerm = "<mailto:"
+                            var endOf = Desc.indexOf(searchTerm);
+                            //var  = Desc.length;
+                            Desc = Desc.slice(0, endOf)
+                            OpenEnquiryForm(Company, Address, ContactPersonName, ContactNo, EmailID, ContactPersonID, Desc);
+                        }
+                    }
+                }
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function OpenEnquiryForm(Company, Address, ContactPersonName, ContactNo, EmailID, ContactPersonID, Desc) {
+        var data1 = { 'CompanyName': Company, 'Address': Address, 'ContactPersonName': ContactPersonName, 'EmailID': EmailID, 'ContactNo': ContactNo, 'ContactPersonID': ContactPersonID, 'Desc': Desc }
+                var data = JSON.stringify(data1);
+                $.ajax({
+                    url: "/Enquiry/OpenEnquiryView",
+                    data: data,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        var i = response;
+                        if (response == 1) {
+                            document.location = '@Url.Action("NewEnquiry", "Enquiry")';
+                        }
+                      },
+                    error: function (errormessage) {
+                        alert("error");
+                        alert(errormessage.responseText);
+                    }
+                });
+    }
+
+    function onRefresh() {
+        document.location = '@Url.Action("Email", "Enquiry")';
+    }
+    </script>

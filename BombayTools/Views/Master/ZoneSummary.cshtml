@@ -1,0 +1,278 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Zone>
+
+@{
+    ViewBag.Title = "ZoneSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div id="Stage1">
+    <div class="page-header">
+        <h4 class="page-title">Zone Summary: @ViewBag.ZoneCount</h4>
+        <div class="float-right">
+            <a id="add__new__list" href="#" class="btn btn-sm btn-success " onclick="AddNewZone()" data-toggle="tooltip" data-placement="bottom" data-original-title="Add New Zone"><i class="fa fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="row" id="Summary">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="tblZoneSummary">
+                            <thead>
+                                <tr>
+                                    <th >SrNo</th>
+                                    <th>Zone Name</th>
+                                    <th>State Count</th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in Model)
+                                {
+                                    <tr>
+                                        <td>@d.SrNo</td>
+                                        <td>@d.ZoneName</td>
+                                        <td class="text-center">@d.ZoneCount</td>
+
+                                        <td>
+                                            <a class="btn btn-sm btn-primary" href="#" onclick="EditZoneDetails(@d.ZoneID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit Details"><i class="fa fa-edit"></i></a>
+                                            <a class="btn btn-sm btn-danger" href="#" onclick="DeleteZoneDetails(@d.ZoneID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><i class="fa fa-trash"></i></a>
+
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="Stage2">
+
+
+</div>
+
+<script>
+            var Name = "";
+            var States = "";
+
+            var StateList = [];
+             var ZoneMaster = [];
+             var ZoneID = 0;
+
+     $(document).ready(function () {
+
+        ZoneMaster = @Html.Raw(Json.Encode(ViewBag.ZoneMaster));
+        ZoneMaster = JSON.parse(ZoneMaster);
+
+        $("#Stage2").hide();
+        $('#tblZoneSummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "autoWidth": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "order": [],
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [0] },
+                { 'bSortable': false, 'aTargets': [3] },
+
+            ]
+        });
+     });
+
+       function EditZoneDetails(ID) {
+                var data = { 'ID': ID };
+                ZoneID = ID;
+                data = JSON.stringify(data);
+                $.ajax({
+                    url: "/Master/AddOrEditZone",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: data,
+                    success: function (response) {
+                        $("#Stage2").html(response);
+                        $("#Stage2").show();
+                        $("#Stage1").hide();
+                        for (i = 0; i < ZoneMaster.length; i++) {
+                            if (ZoneMaster[i].ZoneID == ID) {
+                                document.getElementById("ZoneName").value = ZoneMaster[i].ZoneName;
+                                break;
+                            }
+                        }
+                        $("#global-loader").fadeOut("slow");
+                    },
+                    error: function (error) {
+                        $("#global-loader").fadeOut("slow");
+                        let str = error.responseText;
+                        var a = str.indexOf("<title>") + 7;
+                        var b = str.indexOf("</title > ");
+                        str = str.substring(a, b);
+
+
+                            alert("Something went wrong: " + str);
+
+
+                    }
+                });
+            }
+
+     function AddNewZone() {
+         var data = { 'ID': 0 };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Master/AddOrEditZone",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (response) {
+                $("#global-loader").fadeOut("slow");
+                $("#Stage2").html(response);
+                $("#Stage2").show();
+                $("#Stage1").hide();
+
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut("slow");
+                alert("error");
+                alert(errormessage.responseText);
+
+            }
+        });
+    }
+      function SaveZone() {
+              var inputElements = [];
+              var SelectedState = [];
+              var temp = 0;
+              Name = $("#ZoneName").val();
+
+
+            if (Name =="") {
+                temp = 1;
+                alert("Please Enter Zone Name");
+                return false;
+            }
+
+            $('.State:checked').each(function (i, e) {
+                        SelectedState.push($(this).val());
+            });
+
+
+            States = SelectedState.toString();
+
+            if (temp == 1) {
+
+                    return;
+            }
+            console.log(States);
+
+                var element = {};
+                element.IsNew = 1;
+                element.ZoneID = ZoneID;
+                element.ZoneName = Name;
+                element.AddedOn = new Date();
+                element.State = States;
+                element.IsActive = 1;
+                data = JSON.stringify(element);
+
+                console.log(data);
+          if (SelectedState.length == 0) {
+              temp = 1;
+              alert("Please Select States ");
+          }
+          else {
+
+                 $.ajax({
+            type: 'post',
+            url: '/Master/AjaxAddorEditZone',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+               $("#global-loader").fadeOut("slow");
+                alert(response);
+                document.location = '@Url.Action("ZoneSummary", "Master")';
+              // $("#Stage2").hide();
+              //$("#Stage1").show();
+              // $("#Stage1").html(response);
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert("error");
+                alert(errormessage.responseText);
+            }
+                 });
+          }
+
+      }
+
+
+
+
+
+
+
+      function GetBack() {
+        $("#Stage1").show();
+        $("#Stage2").hide();
+        ZoneID = 0;
+        StateList = [];
+     }
+
+     function DeleteZoneDetails(ID) {
+         //debugger;
+                $("#global-loader").fadeIn("slow");
+                   ZoneID = ID;
+                    var ZoneData = {};
+                    for (k = 0; k < ZoneMaster.length; k++) {
+                        if (ZoneMaster[k].ZoneID == ZoneID) {
+                            ZoneData.ZoneName = ZoneMaster[k].ZoneName;
+                            ZoneData.IsNew = 0;
+                            ZoneData.ZoneID = ZoneID;
+                            ZoneData.AddedOn = new Date();
+                            ZoneData.State = States;
+                            ZoneData.IsActive = 0;
+                            break;
+                        }
+
+                    }
+
+                    data = JSON.stringify(ZoneData);
+
+        $.ajax({
+                url: "/Master/AjaxAddorEditZone",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+            success: function (response) {
+                 alert(response);
+                 document.location = '@Url.Action("ZoneSummary", "Master")';
+
+                   //$("#global-loader").fadeOut("slow");
+                   //$("#Stage1").show();
+                   //$("#Stage2").hide();
+                   //$("#Stage1").html(response);
+
+                },
+                error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+
+            });
+
+     }
+
+</script>
+
+

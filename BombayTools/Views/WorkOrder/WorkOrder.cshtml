@@ -1,0 +1,541 @@
+﻿@{
+    ViewBag.Title = "Work Order Summary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div id="summary">
+    <div class="page-header">
+        <div class="row col-12">
+            <div class="col-sm-7 col-lg-5 col-md-5">
+                <h4 class="page-title">Work Orders</h4>
+            </div>
+            <div class="col-sm-2 col-lg-2 col-md-2">
+                <div class="pull-right" style="margin-right: -3%;">
+                    <label class="custom-switch ">
+                        <input type="checkbox" name="custom-switch-checkbox" id="singleCheckbox" value="" class="custom-switch-input toggleSummary pusdeoCharges" onchange="ChangePagging()">
+                        <span class="custom-switch-description mr-1"></span>
+                        <span class="custom-switch-indicator"></span>
+                        <span class="custom-switch-description"><b>Paging</b></span>
+                    </label>
+                    @*<input type="checkbox" id="singleCheckbox" onchange="ChangePagging()" checked style="margin-left:5px;">
+                <span class="checkmark"></span>
+                <label><b style="margin-left:25px"> Paging</b></label>*@
+                </div>
+            </div>
+            <div class="col-sm-2 col-lg-2 col-md-2 m-0 p-0">
+                <div class="pull-right">
+                    <a class="btn btn-success text-white">Record Count : <label id="Count" style="margin:0px;padding:0px;"></label></a>
+                </div>
+            </div>
+            <div class="col-auto m-0 p-0 mr-3 ml-1">
+                <div class="pull-right">
+                    <a class="btn btn-warning text-white">Total SQM : <label id="totalSQM" style="margin:0px;padding:0px;"></label></a>
+                </div>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-md-1">
+                <div class="pull-right">
+                    <div id="buttons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-3">
+            <div class="row no-gutters">
+                <div class="col-7">
+                    <div class="btn-list text-center">
+                        <button class="btn btn-white" onclick="ChangeDate(1)" id="btnToday" data-toggle="tooltip" data-placement="bottom" data-original-title="Today">T</button>
+                        <button class="btn btn-white" onclick="ChangeDate(2)" id="btnWeek" data-toggle="tooltip" data-placement="bottom" data-original-title="Weekly">W</button>
+                        <button class="btn btn-white" onclick="ChangeDate(3)" id="btnMonth" data-toggle="tooltip" data-placement="bottom" data-original-title="Monthly">M</button>
+                    </div>
+                    @*<label class="form-label mt-1">From <i class="fa fa-calendar"></i></label>*@
+                </div>
+                <div class="col-5">
+                    @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-2">
+            <div class="row no-gutters">
+                <div class="col-4">
+                    @*<label class="form-label mt-1">To <i class="fa fa-calendar"></i></label>*@
+                    <label class="form-label mt-1 ml-4"><b> - </b></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3" style="display:none;">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Criteria</label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownList("ddlcriteria", new List<SelectListItem>
+                                { new SelectListItem { Text = "--Select--", Value = ""},
+                                    new SelectListItem { Text = "WO No", Value = "WO No"},
+                                    new SelectListItem { Text = "PI No", Value = "PI No"},
+                                    new SelectListItem { Text = "Customer", Value = "Customer"},
+                                    new SelectListItem { Text = "Project", Value = "Project"},
+                                    new SelectListItem { Text = "Sales Person", Value = "Sales Person"},
+                                    new SelectListItem { Text = "Glass Specification", Value = "Glass Specification"},
+                                    new SelectListItem { Text = "Owner", Value = "Owner"},
+                                    new SelectListItem { Text = "Order Type", Value = "Order Type"},
+                                    new SelectListItem { Text = "PI Amount <=", Value = "PI Amount <="},
+                                    new SelectListItem { Text = "PI Amount >=", Value = "PI Amount >="},
+                                  }, new { @class = "form-control", autocomplete = "off", @id = "ddlcriteria", onchange = "getCriteria()" })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3" id="hid">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <label class="form-label mt-1">Search</label>
+                </div>
+                <div class="col-8">
+                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "Textsearch", name = "Textsearch", autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-1">
+            <button class="btn btn-primary" onclick="GetWorkOrderSummary()"><i class="fa fa-search" style="font-size:14px"></i></button>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" id="tblWorkOrderSummary">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th class="text-white"></th>
+                            <th class="text-white">WO No</th>
+                            <th class="text-white">WO Date</th>
+                            <th class="text-white">PI No</th>
+                            <th class="text-white">PI Date</th>
+                            <th class="text-white">Customer Name</th>
+                            <th class="text-white">Project Name</th>
+                            <th class="text-white">PCS</th>
+                            <th class="text-white">SQM</th>
+                            <th class="text-white">Balance PCS</th>
+                            <th class="text-white">Balance SQM</th>
+                            <th class="text-white">Sales Person</th>
+                            <th class="text-white">Owner</th>
+                            <th class="text-white">EST. DEL. Date</th>
+                            <th class="text-white">DESC</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divPIStatus">
+
+</div>
+
+<script>
+    var IsPagging = 0;
+    $(document).ready(function () {
+        GetWorkOrderSummary();
+        getCriteria();
+        $("#btnToday").removeClass("btn-white");
+        $("#btnToday").addClass("btn-primary");
+    });
+
+    function OpenPIStatus(PINo, Type) {
+
+        $("#global-loader").fadeIn("slow");
+        var data = { 'piNo': PINo };
+        data = JSON.stringify(data)
+        $.ajax({
+            url: "/WorkOrder/_PIStatus",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                $("#summary").hide();
+                $('#divPIStatus').html(response);
+                $("#divPIStatus").show();
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert(errormessage);
+            }
+        });
+    }
+    function BackToWOSummary() {
+        $("#divPIStatus").hide();
+        $("#summary").show();
+    }
+
+    function ChangeDate(Type) {
+        if (Type == 1) {
+
+            $("#btnToday").removeClass("btn-white");
+            $("#btnWeek").removeClass("btn-primary");
+            $("#btnMonth").removeClass("btn-primary");
+            $("#btnWeek").addClass("btn-white");
+            $("#btnMonth").addClass("btn-white");
+            $("#btnToday").addClass("btn-primary");
+
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+
+            document.getElementById("fromDate").value = CurrentDate;
+            document.getElementById("toDate").value = CurrentDate;
+
+            GetWorkOrderSummary();
+        }
+        if (Type == 2) {
+
+            $("#btnWeek").removeClass("btn-white");
+            $("#btnMonth").removeClass("btn-primary");
+            $("#btnToday").removeClass("btn-primary");
+            $("#btnMonth").addClass("btn-white");
+            $("#btnToday").addClass("btn-white");
+            $("#btnWeek").addClass("btn-primary");
+
+            var w = firstDayOfWeek(new Date(), 1);
+            var Monday = w.getDate() + ' ' + w.toString().substr(4, 3) + ' ' + w.getFullYear();
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+
+            document.getElementById("fromDate").value = Monday;
+            document.getElementById("toDate").value = CurrentDate;
+            GetWorkOrderSummary();
+        }
+        if (Type == 3) {
+
+            $("#btnMonth").removeClass("btn-white");
+            $("#btnWeek").removeClass("btn-primary");
+            $("#btnToday").removeClass("btn-primary");
+            $("#btnWeek").addClass("btn-white");
+            $("#btnToday").addClass("btn-white");
+            $("#btnMonth").addClass("btn-primary");
+
+            var date = new Date();
+            var m = new Date(date.getFullYear(), date.getMonth(), 1);
+            var FirstDay = m.getDate() + ' ' + m.toString().substr(4, 3) + ' ' + m.getFullYear();
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+
+            document.getElementById("fromDate").value = FirstDay;
+            document.getElementById("toDate").value = CurrentDate;
+            GetWorkOrderSummary();
+        }
+
+    }
+
+    function firstDayOfWeek(dateObject, firstDayOfWeekIndex) {
+
+        const dayOfWeek = dateObject.getDay(),
+            firstDayOfWeek = new Date(dateObject),
+            diff = dayOfWeek >= firstDayOfWeekIndex ?
+                dayOfWeek - firstDayOfWeekIndex :
+                6 - dayOfWeek
+
+        firstDayOfWeek.setDate(dateObject.getDate() - diff)
+        firstDayOfWeek.setHours(0, 0, 0, 0)
+
+        return firstDayOfWeek
+    }
+
+    function getCriteria() {
+        var x = $('#ddlcriteria option:selected').text();
+        if (x != "--Select--") {
+            $("#hid").show();
+        }
+        else {
+            $("#hid").hide();
+        }
+    }
+
+    function ChangePagging() {
+        var checked = $("#singleCheckbox").is(":checked");
+        if (checked == true) {
+            IsPagging = 1;
+            $('.check').prop('checked', false);
+        }
+        else {
+            IsPagging = 0;
+
+        }
+        //if (IsPagging == 1) {
+        //    IsPagging = 0;
+        //}
+        //else {
+        //    IsPagging = 1;
+        //}
+        GetWorkOrderSummary();
+    }
+
+    function GetWorkOrderSummary() {
+        var FromDate = document.getElementById("fromDate").value;
+        var ToDate = document.getElementById("toDate").value;
+        var SearchCriteria = document.getElementById("ddlcriteria").value;
+        var Search = document.getElementById("Textsearch").value;
+
+        if (FromDate == "" || ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+        var date1 = new Date(FromDate);
+        var date2 = new Date(ToDate);
+        var Today = new Date();
+        if (date1 > date2) {
+            document.getElementById('toDate').style.borderColor = "red";
+            Swal.fire({
+                title: 'Error',
+                text: "To Date should not be less than from date ",
+                icon: 'error'
+            })
+            return false;
+
+        } else {
+            document.getElementById('toDate').style.borderColor = "Gainsboro";
+        }
+
+        var data = { 'startDate': FromDate, 'endDate': ToDate, 'SearchCriteria': SearchCriteria, 'Search': Search };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn("slow");
+
+        $.ajax({
+            url: "/WorkOrder/GetWorkOrderList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger
+                if (response.length > 0) {
+
+                    var Total = 0;
+
+                    for (var i = 0; i < response.length; i++) {
+                        var currentAMT = response[i].SQM;
+                        if (Total == 0) {
+                            Total = parseFloat(currentAMT).toFixed(4);
+                        }
+                        else {
+                            Total = parseFloat(Total) + currentAMT;
+                            Total = parseFloat(Total).toFixed(4);
+                        }
+                    }
+                    console.log(Total);
+                    Total = parseFloat(Total).toFixed(2);
+                    const myArray = Total.split(".");
+                    Total = Total.toString();
+                    if (myArray[0].length > 3) {
+                        var lastThree = Total.substring(Total.length - 3);
+                        var otherNumbers = Total.substring(0, Total.length - 3);
+                        if (otherNumbers != '')
+                            lastThree = ',' + lastThree;
+                        var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+                        res = res.replace(",.", ".");
+                    }
+                    else {
+                        res = Total;
+                    }
+
+                    $("#totalSQM").text(res);
+
+                }
+
+                if (IsPagging == 1) {
+                    $('#tblWorkOrderSummary').DataTable({
+                        "destroy": true,
+                        "bLengthChange": true,
+                        "aaData": response,
+                        "bPaginate": true,
+                        "bInfo": true,
+                        "paging": true,
+                        order: [],
+                        "searching": true,
+                        "columns": [
+                            {
+                                "data": "PINO",
+                                "orderable": false,
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"OpenPIStatus('" + row.PINO + "','WO')\"><i class=\"fe fe-eye\"></i></button>";
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "WONO",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "WODate",
+                                "className": "text-center"
+                            },
+                            {
+                                "data": "PINO",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "PIDate",
+                                "className": "text-center"
+                            },
+                            {
+                                "data": "Customer",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ProjectName",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "PCS",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "SQM",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "BalancePcs",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "BalanceSQM",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "SalesPerson",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "Owner",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ExpectedDeliveryDate",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ShortDescription",
+                                "className": "text-left"
+                            },
+                        ],
+                        mark: true
+                    });
+                }
+                else {
+                    $('#tblWorkOrderSummary').DataTable({
+                        "destroy": true,
+                        "bLengthChange": true,
+                        "aaData": response,
+                        "bPaginate": true,
+                        "bInfo": true,
+                        "paging": false,
+                        order: [],
+                        "searching": true,
+                        "columns": [
+                            {
+                                "data": "PINO",
+                                "orderable": false,
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"OpenPIStatus('" + row.PINO + "','WO')\"><i class=\"fe fe-eye\"></i></button>";
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "WONO",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "WODate",
+                                "className": "text-center"
+                            },
+                            {
+                                "data": "PINO",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "PIDate",
+                                "className": "text-center"
+                            },
+                            {
+                                "data": "Customer",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ProjectName",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "PCS",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "SQM",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "BalancePcs",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "BalanceSQM",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "SalesPerson",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "Owner",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ExpectedDeliveryDate",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "ShortDescription",
+                                "className": "text-left"
+                            },
+                        ],
+                        mark: true
+                    });
+                }
+
+
+
+                table = $('#tblWorkOrderSummary').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+
+                var totalCount = table.data().count();
+                $('#Count').text(totalCount);
+
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire("Error!", "Something went wrong: " + str, "error");
+            }
+        });
+    }
+</script>
+
+

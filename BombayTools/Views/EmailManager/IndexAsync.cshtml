@@ -1,0 +1,28 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+@{
+    ViewBag.Title = "IndexAsync";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<h2>IndexAsync</h2>
+@ViewBag.message;
+<div class="row" id="Inbox">
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-inbox table-hover">
+
+                <tbody>
+                    @foreach (var d in Model)
+                    {
+                        <tr>
+                            <td class="view-message dont-show" style="width:150px;padding-left:10px !important">@Html.DisplayFor(m => d.FromName)</td>
+                            <td class="view-message" onclick="ShowBodyTag('@d.ID','@d.ThreadID')">@Html.DisplayFor(m => d.Subject)</td>
+                            <td class="view-message text-right" style="width:250px;">@Html.DisplayFor(m => d.Display)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,231 @@
+﻿
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title" id="New">Template Master</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" id="ShowSummary" class="btn btn-josph btn-success" style="color:white;align-content:center;"><i class="fa fa-file-text" data-toggle="tooltip" data-placement="bottom" title="Summary" data-original-title="Back"></i>  </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Template Name</label>
+                                @Html.TextBox("TemplateName", null, new { @class = "form-control", @id = "TemplateName", name = "TemplateName", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Body</label>
+                                @Html.TextArea("Body", null, new { @class = "form-control", @id = "Body", name = "Body", autocomplete = "off" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success float-right" id="Save" onclick="SaveTemplate()" title="Save"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-warning float-right" id="Update" onclick="UpdateTemplate()"><i class="fa fa-save"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var SetID = 0;
+
+
+    $(document).ready(function () {
+        console.log("sdc")
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        SetID = '@ViewBag.TemplateID';
+        if (SetID != 0) {
+            $("#Save").hide();
+            $("#Update").show();
+        } else {
+            document.getElementById("TemplateName").value = "";
+            document.getElementById("Body").value = "";
+            $("#Update").hide();
+            $("#Save").show();
+        }
+
+    });
+
+
+    function SaveTemplate() {
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+         }
+        var Name = document.getElementById("TemplateName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < TemplateList.length; i++) {
+            var temp = TemplateList[i].TemplateName;
+            temp = temp.toLowerCase();
+            if (Name.trim() == temp) {
+                alert("Template Name already exist");
+                return false;
+            }
+        }
+        var element = {};
+
+        element.TemplateID = 0;
+         element.TemplateName = document.getElementById("TemplateName").value;
+        element.Body = document.getElementById("Body").value;
+         element.IsNew = 1;
+         data = JSON.stringify(element);
+       // alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/NewSaveTemplate',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("TemplateSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdateTemplate() {
+        var Name = document.getElementById("TemplateName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < TemplateList.length; i++) {
+            if (SetID != TemplateList[i].TemplateID) {
+                var temp = TemplateList[i].TemplateName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    alert("Template Name already exist");
+                    return false;
+                }
+            }
+        }
+
+        var element = {};
+
+        element.TemplateID = SetID;
+        element.TemplateName = document.getElementById("TemplateName").value;
+        element.Body = document.getElementById("Body").value;
+        element.isActive = 1;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+        $.ajax({
+            type: 'post',
+            url: '/Master/UpdateTemplate',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("TemplateSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function CheckPrincipal() {
+        if (PrincipalList.length == 0) {
+            $.ajax({
+                url: "/Master/AjaxGetAllTemplate",
+                //data: '{QuotNo: ' + JSON.stringify(QuotNo) + '}',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    PrincipalList = response;
+                    ValidatePrincipal();
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+        else {
+            ValidatePrincipal();
+        }
+    }
+
+    function ValidatePrincipal() {
+        var EnteredPrincipal = document.getElementById('TemplateName').value;
+        EnteredPrincipal = EnteredPrincipal.toLowerCase();
+        EnteredPrincipal = EnteredPrincipal;
+
+        for (i = 0; i < PrincipalList.length; i++) {
+            var temp = PrincipalList[i].TemplateName.toLowerCase();
+            if (EnteredPrincipal == temp) {
+                alert("Template name already exist");
+                $('#SaveButton').attr('disabled', true);
+                document.getElementById('TemplateName').style.borderColor = "red";
+                return;
+            } else {
+                $('#SaveButton').attr('disabled', false);
+                document.getElementById('TemplateName').style.borderColor = "Gainsboro";
+            }
+        }
+    }
+
+    function validateAllDetail() {
+        var isValid = Boolean;
+        isValid = true;
+        var Principal = document.getElementById("TemplateName").value;
+
+
+        if (Principal == "" || Principal == undefined) {
+            document.getElementById('TemplateName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('TemplateName').style.borderColor = "Gainsboro";
+        }
+
+
+
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+    }
+</script>
+
+
+
+

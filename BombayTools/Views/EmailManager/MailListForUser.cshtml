@@ -1,0 +1,80 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+
+<div class="row">
+    <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-options">
+                        <button id="PreviousList" class="btn btn-primary m-1" onclick="previousMailList()" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Previous Page"><i class="fa fa-angle-left"></i></button>
+                        <button class="btn btn-primary m-1" onclick="nextMailList()" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Next Page"><i class="fa fa-angle-right"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table table-inbox table-hover">
+                            <tbody>
+                                @foreach (var d in Model)
+                                {
+                                    if (d.IsRead == 1)
+                                    {
+                                        <tr>
+                                            <td class="view-message dont-show" style="width:150px;padding-left:10px !important"><strong>@Html.DisplayFor(m => d.FromName)</strong> </td>
+                                            <td class="view-message" onclick="ShowBodyTag('@d.ID','@d.ThreadID')"><strong>@Html.DisplayFor(m => d.Subject)</strong> </td>
+                                            <td class="view-message text-right" style="width:250px;"><strong> @Html.DisplayFor(m => d.Display)</strong></td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="view-message dont-show" style="width:150px;padding-left:10px !important">@Html.DisplayFor(m => d.FromName)</td>
+                                            <td class="view-message" onclick="ShowBodyTag('@d.ID','@d.ThreadID')">@Html.DisplayFor(m => d.Subject)</td>
+                                            <td class="view-message text-right" style="width:250px;">@Html.DisplayFor(m => d.Display)</td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        emailMaster = @Html.Raw(Json.Encode(@ViewBag.MailDetails));
+        emailMaster = JSON.parse(emailMaster);
+        PageToken = '@ViewBag.NextPageToken';
+        //Check if token ady exist
+        for (k = 0; k < TokenMaster.length; k++) {
+            if (TokenMaster[k].PageToken != PageToken) {
+                TokenIndex = TokenIndex + 1;
+                var element = {};
+                element.TokenIndex = TokenIndex;
+                element.PageToken = PageToken;
+                TokenMaster.push(element)
+            }
+        }
+        if (emailMaster.length == 30) {
+            $("#PreviousList").hide();
+        }
+        getMessageID(emailMaster);
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+
+
+    });
+
+
+</script>

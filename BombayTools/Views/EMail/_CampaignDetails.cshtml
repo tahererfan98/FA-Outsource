@@ -1,0 +1,84 @@
+﻿
+@model IEnumerable<BombayToolsEntities.BusinessEntities.CampaignDetails>
+
+<style>
+    .btn_excel {
+        color: #7bd235 !important;
+        background-color: #ffF !important;
+        border-color: #7bd235 !important;
+    }
+
+    span.btn_excel {
+        font-weight: 600;
+    }
+
+    fe fe-arrow-left {
+        font-weight: 700;
+    }
+</style>
+
+<div id="summary1">
+    <div class="page-header">
+        <h4 class="page-title">
+            <b class="mt-2">
+                <a onclick="goToCampaignSummary();" style="color:#595353; align-content:center;">
+                    <i class="fa fa-arrow-left" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back"></i>
+                </a>
+            </b>
+            Campaign Details
+
+        </h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card" id="CD">
+    <!-- --summary -->
+    <div class="card-body">
+        <div class="table-responsive-sm">
+            <table class="table table-bordered table-hover w-100 card-table m-0 " id="CampaignDetailsTable">
+                <thead>
+                    <tr>
+
+                        <th>Campaign Name</th>
+                        <th>Added On</th>
+                        <th>Mail ID</th>
+                        <th>Status</th>
+                        <th>Read Count</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var d in Model)
+                    {
+                        <tr>
+                            <td>@d.CampaignName</td>
+                            <td>@d.AddedOn</td>
+                            <td>@d.MailID</td>
+                            <td>@d.Status</td>
+                            <td>@d.ReadCount</td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function goToCampaignSummary() {
+        $('#summary').show();
+        $('#CS').show();
+        $('#CD').hide();
+        $('#summary1').hide();
+
+    }
+
+</script>

@@ -1,0 +1,1411 @@
+﻿
+
+<style>
+    /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+    .SetUpperCase {
+        text-transform: uppercase;
+    }
+
+    .custom_container_card {
+        background-color: white;
+    }
+
+    #tblPOItemData td {
+        padding: 2px;
+    }
+
+    #tblPORMItemData td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs td {
+        padding: 2px;
+    }
+
+    #tblOtherchrgs2 td {
+        padding: 2px;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            max-width: 98vw;
+        }
+    }
+
+    @@media (min-width: 700px) {
+        .modal-l {
+            max-width: 80vw;
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .ChkWidth {
+        width: 300px !important;
+        min-width: 280px !important;
+        text-align: center;
+    }
+
+    .ChkWidthType {
+        width: 70px !important;
+        min-width: 70px !important;
+        text-align: left;
+    }
+
+
+
+    .cpm {
+        background-color: darkslateblue;
+    }
+
+    .txtInput {
+    }
+
+    .modal-lg {
+        max-width: 1080px;
+    }
+
+    .form-control {
+        padding: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 2px;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: 30px;
+    }
+
+    .page-header {
+        margin: 0.1rem 0 0.1rem;
+    }
+
+    .card-header {
+        min-height: 0.1rem;
+    }
+
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0.8rem;
+        position: relative;
+    }
+
+    #tblTentativeSchedule td {
+        padding: 0rem;
+        vertical-align: top;
+    }
+    .custom-modal-lg .modal-dialog {
+        max-width: 90%; /* Adjust the width as needed */
+    }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Receive Outsource Items</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Entry No</label>
+                    @Html.TextBox("txtERNO", null, new { @class = "form-control", @id = "txtERNO", name = "txtERNO", autocomplete = "off", disabled = "off", placeholder = " NEW" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Date</label>
+                    @Html.TextBox("txtERDate", null, new { @class = "form-control datePickerD", @id = "txtERDate", name = "txtERDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy"), disabled = "off", })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">ENQ No</label>
+                    @Html.TextBox("txtENQNO", null, new { @class = "form-control", @id = "txtENQNO", name = "txtENQNO", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.TextBox("txtCustomerName", null, new { @class = "form-control", @id = "txtCustomerName", name = "txtCustomerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Outsource Partner</label>
+                    @Html.TextBox("txtPartnerName", null, new { @class = "form-control", @id = "txtPartnerName", name = "txtPartnerName", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">INV Amount</label>
+                    @Html.TextBox("txtInvAmount", null, new { @class = "form-control", @id = "txtInvAmount", name = "txtInvAmount", autocomplete = "off", maxlength = "15", Type = "number", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Challan/Invoice No</label>
+                    @Html.TextBox("txtChallanNo", null, new { @class = "form-control", @id = "txtChallanNo", name = "txtChallanNo", autocomplete = "off", maxlength = "200", @oninput = "this.value = this.value.toUpperCase()" })
+                </div>
+            </div>
+            @*<div class="col-sm-12 col-md-2 col-lg-2">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Vehicle Type</label>
+                @Html.DropDownList("ddlVehType", new List<SelectListItem>
+                                                 {
+                                                     new SelectListItem { Text = "FA", Value = "FA"},
+                                                     new SelectListItem { Text = "Outside", Value = "Outside"},
+
+                                                   }, new { @class = "form-control", autocomplete = "off", @id = "ddlVehType" })
+            </div>
+        </div>*@
+
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Transporter </label>
+                    @Html.DropDownList("ddlTransporterDropdown", (IEnumerable<SelectListItem>)ViewBag.TransporterList, "--Select--", new { @class = "form-control", @id = "ddlTransporterDropdown", name = "ddlTransporterDropdown", autocomplete = "off" })
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Driver Name</label>
+                    @Html.TextBox("txtDriverName", null, new { @class = "form-control", @id = "txtDriverName", name = "txtDriverName", autocomplete = "off", maxlength = "40" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Vehicle NO </label>
+                    @Html.TextBox("txtVehicleNo", null, new { @class = "form-control", @id = "txtVehicleNo", name = "txtVehicleNo", autocomplete = "off", maxlength = "12" ,@oninput = "this.value = this.value.toUpperCase()" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Vehicle Cost (AED)</label>
+                    @Html.TextBox("txtTotalVehCost", null, new { @class = "form-control", @id = "txtTotalVehCost", name = "txtTotalVehCost", autocomplete = "off", maxlength = "15", Type = "number" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+
+                @*<button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>*@
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPOItemData" style="width:100%">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th class="all text-center"></th>
+                                    <th class="all text-center">#</th>
+                                    <th class="all text-center">GL No</th>
+                                    <th class="all text-center">PINO</th>
+                                    <th class="all text-center">WONO</th>
+                                    <th class="all text-center">Item Name</th>
+                                    <th class="all text-center">Unit</th>
+                                    @*<th class="all text-center">HSNCode</th>*@
+                                    <th class="all text-center">OTS Qty</th>
+                                    <th class="all text-center">OTS SQM</th>
+                                    <th class="all text-center">Rec Qty</th>
+                                    <th class="all text-center">Rec SQM</th>
+                                    <th class="all text-center">ARQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received Qty"></i></th>
+                                    <th class="all text-center">ARSQM<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received SQM"></i></th>
+                                    <th class="all text-center">BQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance Qty"></i></th>
+                                    <th class="all text-center">BSQM<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance SQM"></i></th>
+                                    <th class="all text-center">App Rate</th>
+                                    <th class="all text-center">Amount</th>
+                                    <th class="all text-center">Type</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2" id="divMainOtherchrgs">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-2">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("RecRemarks", null, new { @class = "form-control", @id = "RecRemarks", name = "RecRemarks", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 mt-2">
+            <div class="form-group label-floating">
+                <label class="form-label" style="font-weight: 600;">Upload Attachment</label>
+                <a @*href="#"*@ onclick="AddAttachment()">
+                    <i class="fa fa-paperclip fa-2x	" style="color:#070884" aria-hidden="true" title="Upload Attachments"></i>
+                    <span class="custom-switch-description" style="font-size:17px;color:#6c4cbb"><b><label id="lblAttachmentForPhoto">0</label></b></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="float-right">
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="OnSave()"><i class="fa fa-save"></i> Save</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+        </div>
+    </div>
+</div>
+
+@* FOR Partial Outsource *@
+<div class="modal fade custom-modal-lg" id="OpenWOSizesList" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sizes details</h4>
+                <button type="button" class="btn btn-primary ml-xl-auto" data-dismiss="modal" onclick="SetPartialQtyDetails(0)" style="background:#9f78ff;">Submit</button>
+                <button type="button" class="close ml-2" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" id="OpenPIListTable">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <h4 style="color:black"> <input style="height:20px;width:20px" type="checkbox" id="IsSelectAllSizes" onclick="addOrRemoveAllSizes()" value="" />  <b>   Select All</b></h4>
+                        </div>
+                        <table class="table table-bordered th_Background" style="width:100%;" id="tblOpenPISizesList">
+                            <thead class="head bg-primary">
+                                <tr>
+                                    <th class="all text-center" width="4%"></th>
+                                    <th class="all text-center" width="3%">SrNo</th>
+                                    <th class="all text-center" width="4%">Step SrNo</th>
+                                    <th class="all text-center" width="3%">Width</th>
+                                    <th class="all text-center" width="3%">Height</th>
+                                    <th class="all text-center" width="7%">Qty</th>
+                                    <th class="all text-center" width="7%">SQM</th>
+                                    <th class="all text-center" width="7%">Rec Qty</th>
+                                    <th class="all text-center" width="7%">Rec SQM</th>
+                                    <th class="all text-center" width="7%">ARQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received Qty"></i></th>
+                                    <th class="all text-center" width="7%">ARSQM<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Already Received SQM"></i></th>
+                                    <th class="all text-center" width="7%">BQ<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance Qty"></i></th>
+                                    <th class="all text-center" width="7%">BSQM<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Balance SQM"></i></th>
+                                    <th class="all text-center" width="15%">Remark</th>
+                                    <th class="all text-center" width="12%">WONO</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td class="all text-center" width="4%">Total</td>
+                                    <td class="all text-center" width="3%"></td>
+                                    <td class="all text-center" width="4%"></td>
+                                    <td class="all text-center" width="3%"></td>
+                                    <td class="all text-center" width="3%"></td>
+                                    <td class="all text-right" width="7%">
+                                        <label id="totQty"></label>
+                                    </td>
+                                    <td class="all text-right" width="7%">
+                                        <label id="totSQM"></label>
+                                    </td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="7%"></td>
+                                    <td class="all text-center" width="15%"></td>
+                                    <td class="all text-center" width="12%"></td>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="GetAllCheckedDNItemList()" style="background:#9f78ff;">Submit</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var CustomerD = [];
+    var poItemM = [];
+    var PIItemList = [];
+    var PIItemListSearch = [];
+
+    var ScheduleList = [];
+    var IsPointEdit = 0;
+    var EditPointSrNo = 0;
+
+    var EANO = "0";
+    var isDraft = 0;
+    ////////////////////////////
+    var PISizesM = [];
+    var PISizesList = [];
+    var PISizesListSearch = [];
+    var TotQty = 0;
+    var TotSQM = 0;
+    var ItemSrNo = 0;
+    var ItemWONO = 0;
+    var IsPartial = 0;
+    var IsAllSelected = 0;
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+        ]
+    });
+
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+        e.preventDefault();
+        return false;
+    });
+
+    $(document).ready(function () {
+        debugger;
+        var Action01 = '@ViewBag.Action';
+
+        $("#txtENQNO").val('@ViewBag.ENQNO');
+        $("#txtCustomerName").val('@ViewBag.CustomerName');
+        $("#txtPartnerName").val('@ViewBag.PartnerName');
+
+        poItemM = [];
+        poItemM = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+        poItemM = JSON.parse(poItemM);
+        addCOItemToTable();
+
+        if (Action01 == 'View') {
+            $('#Savebtn').hide();
+
+            $("#txtERNO").val('@ViewBag.ERNO');
+            $("#txtENQNO").val('@ViewBag.ENQNO');
+            $("#txtENQDate").val('@ViewBag.ERDate');
+            $("#txtChallanNo").val('@ViewBag.ChallanNo');
+            $("#txtInvAmount").val('@ViewBag.InvAmount');
+            $("#ddlTransporterDropdown").val('@ViewBag.TransporterID');
+            $("#txtDriverName").val('@ViewBag.DriverName');
+            $("#txtVehicleNo").val('@ViewBag.VehicleNo');
+            $("#txtTotalVehCost").val('@ViewBag.TotalVehCost');
+            $("#RecRemarks").val('@ViewBag.Remarks');
+
+            $("#txtENQDate").prop('disabled', true);
+            $("#ddlCustomerDropdown").prop('disabled', true);
+            $("#ddlProjectDropdown").prop('disabled', true);
+            $("#ddlVehType").prop('disabled', true);
+            $("#txtChallanNo").prop('disabled', true);
+            $("#txtInvAmount").prop('disabled', true);
+            $("#txtTotalVehCost").prop('disabled', true);
+            $("#RecRemarks").prop('disabled', true);
+
+            poItemM = [];
+            poItemM = @Html.Raw(Json.Encode(@ViewBag.ENQItemD));
+            poItemM = JSON.parse(poItemM);
+            addCOItemToTable();
+
+            BillAttachment = @Html.Raw(Json.Encode(@ViewBag.AttachmentD));
+            BillAttachment = JSON.parse(BillAttachment);
+
+            if (BillAttachment.length > 0) {
+                var RowCount = BillAttachment.length;
+                //$("#lblAttachmentForPhoto").val(RowCount);
+                document.getElementById('lblAttachmentForPhoto').innerHTML = RowCount;
+            } else {
+                document.getElementById('lblAttachmentForPhoto').innerHTML = 0;
+            }
+        }
+    });
+
+    function addCOItemToTable() {
+        debugger;
+        $('#tblPOItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": poItemM,
+            "bPaginate": false,
+            "bInfo": false,
+            "pa": false,
+            "bFilter": false, //Disable search box
+            "columnDefs": [{
+                "targets": '_all',
+                "orderable": false,
+            }],
+            "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                $('td', row).css('font-weight', 'bold');
+            },
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="CancelItem(' + row.SrNo + ')" ><i class="fa fa-trash" style="font-size: 16px;"></i></button> <button type="button" class="btn btn-icon btn-info " data-original-title=\"Partial Outsource\" style="height:35px;" onclick="searchWOSizesList(' + row.SrNo + ', `' + row.PINO + '`, `' + row.WONO + '`)" ><i class="fa fa-angle-right" style="font-size: 16px;"></i></button>'
+
+                        return data;
+                    }
+                },
+                { "data": "SrNo" },
+                { "data": "SpecID" },
+                //{
+                //    "data": "GLNO",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text"  class="form-control noborder width" style="text-transform:uppercase;" id="GLNO_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                //        return data;
+                //    }
+                //},
+                { "data": "PINO" },
+                { "data": "WONO" },
+                {
+                    "className": "ChkWidth", "data": "ItemDescription",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea disabled type="text" rows="2" class="form-control noborder width" style="text-transform:uppercase;" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" ></textarea> ';
+                        return data;
+                    }
+                },
+                { "data": "Unit" },
+                {
+                    "data": "OutQty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "OutSQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="SQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled> ';
+                        return data;
+                    }
+                },
+                {
+                    "data": "RecQty",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="RecQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "RecSQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" id="RecSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "ARQty",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="ARQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "ARSQM",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="ARSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "BQty",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="BQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled >';
+                        return data;
+                    }
+                },
+                {
+                    "data": "BSQM",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="BSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "ApprovedRate",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="ApprovedRate_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, row, meta) {
+                        //if (row.SQFT == '' || row.SQFT == )
+                        data = '<input type="number"  class="form-control text-right width" id="Amount_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" disabled>';
+                        return data;
+                    }
+                },
+                {
+                    "className": "ChkWidthType", "data": "OutType",
+                    "render": function (data, type, row, meta) {
+                        data = '<input   class="form-control text-LEFT width" style="width=200px" id="OutType_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" disabled>';
+                        return data;
+                    }
+                },
+
+            ]
+        });
+
+        for (i = 0; i < poItemM.length; i++) {
+            var temp1 = "ItemDescription_" + poItemM[i].SrNo;
+            document.getElementById(temp1).value = poItemM[i].ItemDescription;
+        }
+    }
+
+    function UpdateDetailsInArray(SrNo) {
+        debugger;
+        var z = poItemM.findIndex(p => p.SrNo == SrNo);
+        var RecQty = $("#RecQty_" + SrNo).val();
+        RecQty = parseInt(RecQty);
+
+        if (parseInt(RecQty) > (parseInt(poItemM[z].OutQty) - parseInt(poItemM[z].ARQty) ) ) {
+            $("#RecQty" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec Qty can not be greater than bal Qty!",
+                icon: 'error'
+            });
+            $("#RecQty_" + SrNo).val(0);
+            return false;
+        }
+        if (RecQty === poItemM[z].OutQty) {
+            $("#RecSQM_" + SrNo).val(poItemM[z].OutSQM);
+        }
+
+        var BQty = (parseInt(poItemM[z].OutQty) - parseInt(poItemM[z].ARQty)) - parseInt(RecQty) ;
+        BQty = parseInt(BQty);
+        $("#BQty_" + SrNo).val(BQty);
+
+        /////////////////////////////////////////// SQM
+        var RecSQM = $("#RecSQM_" + SrNo).val();
+        RecSQM = parseFloat(RecSQM);
+
+        if (RecSQM > (parseFloat(poItemM[z].OutSQM) - parseInt(poItemM[z].ARSQM) ) ) {
+            $("#RecSQM_" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec SQM can not be greater than bal SQM!",
+                icon: 'error'
+            });
+            $("#RecSQM_" + SrNo).val(0);
+            return false;
+        }
+
+        var BSQM = (parseFloat(poItemM[z].OutSQM) - parseFloat(poItemM[z].ARSQM)) - (parseFloat(RecSQM) );
+        BSQM = parseFloat(BSQM);
+        $("#BSQM_" + SrNo).val(BSQM);
+        /////////////
+
+        var Amount = parseFloat(poItemM[z].ApprovedRate) * parseFloat(RecSQM);
+        Amount = parseFloat(Amount).toFixed(2);
+        $("#Amount_" + SrNo).val(Amount);
+
+        poItemM[z].Amount = Amount;
+        poItemM[z].RecQty = RecQty;
+        poItemM[z].RecSQM = RecSQM;
+
+        poItemM[z].BQty = BQty;
+        poItemM[z].BSQM = BSQM;
+
+        var OutType = $("#OutType_" + SrNo).val();
+        poItemM[z].OutType = OutType;
+
+        //var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        //poItemM[z].ItemDescription = ItemDescription;
+        //01getTotalWeightForPackingList();
+        setInvoiceAmount();
+    }
+
+    function setInvoiceAmount() {
+        var InvAmount = 0;
+        for (var i = 0; i < poItemM.length; i++) {
+            InvAmount = InvAmount + parseFloat(poItemM[i].Amount);
+        }
+        InvAmount = parseFloat(InvAmount).toFixed(2);
+        $("#txtInvAmount").val(InvAmount);
+    }
+
+
+    function CancelItem(SrNo) {
+        debugger;
+        var r = confirm("Are you sure you want to delete this item?");
+        if (r == true) {
+            for (i = 0; i < poItemM.length; i++) {
+                if (poItemM[i].SrNo == SrNo) {
+                    poItemM.splice(i, 1);
+                }
+            }
+
+            addCOItemToTable();
+            //var table = $('#tblPOItemData').DataTable();
+            //$('#tblPOItemData tbody').on('click', '.removebutton', function () {
+            //    table
+            //        .row($(this).parents('tr'))
+            //        .remove()
+            //        .draw();
+            //});
+
+        }
+    }
+
+
+</script>
+
+<script>
+
+    function BindSizesTable() {
+       
+    }
+
+    ////////////////////////////////////////////////////////  Sizes select list
+    function searchWOSizesList(SrNo, PINO, WONO) {
+        debugger;
+        var ENQNO = '@ViewBag.ENQNO';
+        var EANO = '@ViewBag.EANO';
+        ItemSrNo = SrNo;
+        ItemWONO = WONO;
+        var data = { 'PINO': PINO, 'WONO': WONO, 'ENQNO': ENQNO, 'EANO': EANO };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/GetENQNOTemplateList",
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                $("#OpenWOSizesList").modal();
+                $("#OpenWOSizesList").show();
+                debugger;
+                PISizesList = response;
+                TotQty = 0;
+                TotSQM = 0;
+                //for (var i = 0; i < PISizesList.length; i++) {
+                //    TotQty = TotQty + parseInt(PISizesList[i].Qty);
+                //    TotSQM = TotSQM + parseFloat(PISizesList[i].SQM);
+                //}
+                for (var i = 0; i < PISizesList.length; i++) {
+                    if (PISizesList[i].WONO == ItemWONO) {
+                        if (PISizesList[i].IsStepGlass == 0) {
+                            TotQty = TotQty + parseInt(PISizesList[i].Qty);
+                            TotSQM = TotSQM + parseFloat(PISizesList[i].SQM);
+                        }
+                        else {
+                            if (PISizesList[i].StepSrNo.indexOf('A') !== -1) {
+                                TotQty = TotQty + parseInt(PISizesList[i].Qty);
+                                TotSQM = TotSQM + parseFloat(PISizesList[i].SQM);
+                            }
+                        }
+                    }
+                }
+
+                TotQty = parseInt(TotQty);
+                TotSQM = parseFloat(TotSQM).toFixed(4);
+                $("#totQty").html(parseFloat(TotQty));
+                $("#totSQM").html(parseFloat(TotSQM));
+
+                document.getElementById("IsSelectAllSizes").checked = false;
+
+                $('#tblOpenPISizesList').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": PISizesList,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "autoWidth": false,
+                    searching: false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": '_all',
+                        "orderable": false,
+                    }],
+
+                    "columns": [
+                        {
+                            "data": "SrNo",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+
+                                data = "<div class=\"form-group\"><label class=\"custom-switch\"><input type=\"checkbox\" name=\"Scheckbox_" + data + "\" id=\"Scheckbox_" + data + "\" onclick=\"addOrRemovePISizes(" + data + ")\" class=\"custom-switch-input _po_check_data\"><span class=\"custom-switch-indicator\"></span></label></div>";
+
+                                return data;
+                            }
+                        },
+                        { "data": "SrNo" },
+                        { "data": "StepSrNo" },
+                        { "data": "Width", className: 'text-right' },
+                        { "data": "Height", className: 'text-right' },
+                        //{ "data": "Qty", className: 'text-right' },
+                        //{ "data": "SQM", className: 'text-right' },
+                        {
+                            "data": "Qty",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "SQM",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "RecQty",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SRecQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "RecSQM",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SRecSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "ARQty",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SARQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "ARSQM",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SARSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "BQty",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SBQty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "BSQM",
+                            "render": function (data, type, row, meta) {
+                                data = '<input type="number"  class="form-control text-right width" id="SBSQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateSizesDetailsInArray(' + row.SrNo + ',`' + row.WONO + '`)" onClick="selectAllText(this)" disabled> ';
+                                return data;
+                            }
+                        },
+                        { "data": "Remark" },
+                        { "data": "WONO" },
+
+                    ]
+                });
+
+                for (var j = 0; j < PISizesM.length; j++) {
+                    if (PISizesM[j].WONO == WONO) {
+                        if ($("#Scheckbox_" + PISizesM[j].SrNo).length == 0) {
+                            //it doesn't exist
+                        } else {
+                            document.getElementById("Scheckbox_" + PISizesM[j].SrNo).checked = true;
+                            $("#SRecQty_" + PISizesM[j].SrNo).attr("disabled", false);
+                            $("#SRecQty_" + PISizesM[j].SrNo).val(PISizesM[j].RecQty);
+                            $("#SRecSQM_" + PISizesM[j].SrNo).attr("disabled", false);
+                            $("#SRecSQM_" + PISizesM[j].SrNo).val(PISizesM[j].RecSQM);
+                            UpdateSizesDetailsInArray(PISizesM[j].SrNo, PISizesM[j].WONO);
+                        }
+                    }
+                }
+
+                for (var j = 0; j < poItemM.length; j++) {
+                    if (poItemM[j].WONO == WONO) {
+                        if (poItemM[j].IsAllSelected == 1) {
+                            document.getElementById("IsSelectAllSizes").checked = true;
+                            break;
+                        } else {
+                            document.getElementById("IsSelectAllSizes").checked = false;
+                        }
+                    }
+                }                
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+            }
+        });
+    }
+
+    function UpdateSizesDetailsInArray(SrNo, WONO) {
+        debugger;
+        var z = PISizesM.findIndex(p => p.SrNo == SrNo && p.WONO == WONO);
+        var RecQty = $("#SRecQty_" + SrNo).val();
+        RecQty = parseInt(RecQty);
+    
+
+        if (parseInt(RecQty) > (parseInt(PISizesM[z].Qty) - parseInt(PISizesM[z].ARQty))) {
+            $("#SRecQty_" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec Qty can not be greater than bal Qty!",
+                icon: 'error'
+            });
+            $("#SRecQty_" + SrNo).val(parseInt(PISizesM[z].BQty));
+            return false;
+        }
+       
+        //if (RecQty === PISizesM[z].Qty) {
+            //$("#SRecSQM_" + SrNo).val(PISizesM[z].BSQM);
+        //}
+
+        var BQty = (parseInt(PISizesM[z].Qty) - parseInt(PISizesM[z].ARQty)) - parseInt(RecQty);
+        BQty = parseInt(BQty);
+        $("#SBQty_" + SrNo).val(BQty);
+
+        if (BQty > 0) {
+            var totRecQty = $("#SRecQty_" + SrNo).val();
+            if (totRecQty == "" || totRecQty == undefined) {
+                totRecQty = 0;
+            }
+            totRecQty = parseInt(totRecQty);
+        }
+
+        PISizesM[z].BQty = BQty;
+        PISizesM[z].RecQty = RecQty;
+
+
+        /////////////////////////////////////////// SQM
+        var totRecQty = $("#SRecQty_" + SrNo).val();
+        totRecQty = parseInt(totRecQty);
+            var totSQM = (((parseFloat(PISizesM[z].Width) * parseFloat(PISizesM[z].Height)) / 1000000) * totRecQty);
+            if (totSQM == "" || totSQM == undefined) {
+                totSQM = 0;
+            }
+            totSQM = parseFloat(totSQM).toFixed(4);
+        
+        $("#SRecSQM_" + SrNo).val(parseFloat(totSQM));
+        RecSQM = parseFloat(totSQM).toFixed(4);
+
+        if (parseFloat(RecSQM) > (parseFloat(PISizesM[z].SQM) - parseFloat(PISizesM[z].ARSQM))) {
+            $("#SRecSQM_" + SrNo).val(0);
+            Swal.fire({
+                title: 'Alert',
+                text: "Rec SQM can not be greater than bal SQM!",
+                icon: 'error'
+            });
+            $("#SRecSQM_" + SrNo).val(PISizesM[z].BSQM);
+            return false;
+        }
+
+        var BSQM = (parseFloat(PISizesM[z].SQM) - parseFloat(PISizesM[z].ARSQM)) - (parseFloat(RecSQM));
+        BSQM = parseFloat(BSQM).toFixed(4);
+        $("#SBSQM_" + SrNo).val(BSQM);
+        /////////////
+      
+        PISizesM[z].RecSQM = RecSQM;
+        PISizesM[z].BSQM = BSQM;
+
+        //var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        //PISizesM[z].ItemDescription = ItemDescription;
+
+        //01getTotalWeightForPackingList();
+    }
+
+    function addOrRemoveAllSizes() {
+        debugger;
+        var SrNo = PISizesM.length;
+        var chk1 = document.getElementById("IsSelectAllSizes");
+        if (chk1.checked) {
+            var y = 0
+            //var y = VariableChargesM.findIndex(p => p.VariableChargesID == data)
+            //if (y == -1) {
+            IsAllSelected = 1;
+            for (var i = 0; i < PISizesList.length; i++) {
+                var element = {};
+                //SrNo = parseInt(SrNo) + 1;
+                element.SrNo = PISizesList[i].SrNo;
+                element.StepSrNo = PISizesList[i].StepSrNo;
+                element.AutoID = PISizesList[i].AutoID;
+                element.SpecID = PISizesList[i].SpecID;
+                element.PINO = PISizesList[i].PINO.trim();
+                element.WONO = PISizesList[i].WONO.trim();
+                element.Height = PISizesList[i].Height;
+                element.Width = PISizesList[i].Width;
+                element.Qty = PISizesList[i].Qty;
+                element.SQM = PISizesList[i].SQM;
+                element.RecQty = PISizesList[i].RecQty;
+                element.RecSQM = PISizesList[i].RecSQM;
+                element.ARQty = PISizesList[i].ARQty;
+                element.ARSQM = PISizesList[i].ARSQM;
+                element.BQty = PISizesList[i].BQty;
+                element.BSQM = PISizesList[i].BSQM;
+                element.Remark = PISizesList[i].Remark;
+                element.IsStepGlass = PISizesList[i].IsStepGlass;
+                element.IsAllSelected = 1;
+                PISizesM.push(element);
+            }
+            for (var j = 0; j < PISizesM.length; j++) {
+                if ($("#Scheckbox_" + PISizesM[j].SrNo).length == 0) {
+                    //it doesn't exist
+                } else {
+                    document.getElementById("Scheckbox_" + PISizesM[j].SrNo).checked = true;
+                    $("#SRecQty_" + PISizesM[j].SrNo).attr("disabled", false);
+                    $("#SRecQty_" + PISizesM[j].SrNo).val(PISizesM[j].BQty);
+                    UpdateSizesDetailsInArray(PISizesM[j].SrNo, PISizesM[j].WONO);
+                }
+            }
+
+            for (var k = 0; k < poItemM.length; k++) {
+                if (poItemM[k].WONO == ItemWONO) {
+                    poItemM[k].IsAllSelected = 1;
+                }
+            }
+        }
+        else {
+            for (var j = 0; j < PISizesM.length; j++) {
+                if ($("#Scheckbox_" + PISizesM[j].SrNo).length == 0) {
+                    //it doesn't exist
+                } else {
+                    document.getElementById("Scheckbox_" + PISizesM[j].SrNo).checked = false;
+                    $("#SRecQty_" + PISizesM[j].SrNo).attr("disabled", true);
+                }
+            }
+            //$("#OutQty_" + ItemSrNo).val(0);
+            //$("#OutSQM_" + ItemSrNo).val(0);
+            //UpdateDetailsInArray(ItemSrNo);
+            PISizesM = [];
+        }
+
+
+    }
+
+    function addOrRemovePISizes(data) {
+        debugger;
+        document.getElementById("IsSelectAllSizes").checked = false;
+        var SrNo = PISizesList.length;
+        var chk1 = document.getElementById("Scheckbox_" + data);
+        if (chk1.checked) {
+            var y = 0;
+            var y = PISizesListSearch.findIndex(p => p.SrNo == data)
+            if (y == -1) {
+                for (var i = 0; i < PISizesList.length; i++) {
+                    if (data == PISizesList[i].SrNo) {
+                        var element = {};
+                        element.SrNo = PISizesList[i].SrNo;
+                        element.StepSrNo = PISizesList[i].StepSrNo;
+                        element.AutoID = PISizesList[i].AutoID;
+                        element.SpecID = PISizesList[i].SpecID;
+                        element.PINO = PISizesList[i].PINO.trim();
+                        element.WONO = PISizesList[i].WONO.trim();
+                        element.Height = PISizesList[i].Height;
+                        element.Width = PISizesList[i].Width;
+                        element.Qty = PISizesList[i].Qty;
+                        element.SQM = PISizesList[i].SQM;
+                        element.RecQty = PISizesList[i].RecQty;
+                        element.RecSQM = PISizesList[i].RecSQM;
+                        element.ARQty = PISizesList[i].ARQty;
+                        element.ARSQM = PISizesList[i].ARSQM;
+                        element.BQty = PISizesList[i].BQty;
+                        element.BSQM = PISizesList[i].BSQM;
+                        element.Remark = PISizesList[i].Remark;
+                        element.IsStepGlass = PISizesList[i].IsStepGlass;
+                        element.IsAllSelected = 0;
+                        PISizesM.push(element);
+                        $("#SRecQty_" + data).attr("disabled", false);
+                        $("#SRecQty_" + data).val(PISizesList[i].BQty);
+                        $("#SRecSQM_" + data).attr("disabled", false);
+                        $("#SRecSQM_" + data).val(PISizesList[i].BSQM);
+                        UpdateSizesDetailsInArray(data, ItemWONO);
+                        break;
+                    }
+                }
+
+                for (var j = 0; j < poItemM.length; j++) {
+                    if (poItemM[j].WONO == ItemWONO) {
+                        poItemM[j].IsAllSelected = 0;
+                    }
+                }
+
+            }
+            else {
+                alert("Already exist..!");
+                $("#Scheckbox_" + data).attr("checked", false);
+                $("#SRecQty_" + data).attr("disabled", true);
+                $("#SRecQty_" + data).val(0);
+                UpdateSizesDetailsInArray(data, ItemWONO);
+                return false;
+            }
+        } else {
+            for (var i = 0; i < PISizesM.length; i++)
+                if (PISizesM[i].SrNo == data) {
+                    PISizesM.splice(i, 1);
+                    $("#SRecQty_" + data).attr("disabled", true);
+                    $("#SRecQty_" + data).val(0);
+                    UpdateSizesDetailsInArray(data, ItemWONO);
+                    break;
+                }
+        }
+    }
+
+    function SetPartialQtyDetails(PINO) {
+        debugger;
+        //$("#ddlCurrencyDropdown").val(CurrencyID);
+        //$("#exchangeRate").val(ExchangeRate);
+        IsPartial = 1;
+        var outQty = 0;
+        var outSQM = 0;
+        //for (i = 0; i < PISizesM.length; i++) {
+        //    if (PISizesM[i].WONO == ItemWONO) {
+        //        outQty = parseInt(outQty) + parseInt(PISizesM[i].Qty);
+        //        outSQM = parseFloat(outSQM) + parseFloat(PISizesM[i].SQM);
+        //    }
+        //}
+        for (var i = 0; i < PISizesM.length; i++) {
+            if (PISizesM[i].WONO == ItemWONO) {
+                if (PISizesM[i].IsStepGlass == 0) {
+                    outQty = outQty + parseInt(PISizesM[i].RecQty);
+                    outSQM = outSQM + parseFloat(PISizesM[i].RecSQM);
+                }
+                else {
+                    if (PISizesM[i].StepSrNo.indexOf('A') !== -1) {
+                        outQty = outQty + parseInt(PISizesM[i].RecQty);
+                        outSQM = outSQM + parseFloat(PISizesM[i].RecSQM);
+                    }
+                }
+            }
+        }
+
+        outQty = parseInt(outQty);
+        outSQM = parseFloat(outSQM).toFixed(4);
+
+        $("#RecQty_" + ItemSrNo).val(outQty);
+        $("#RecSQM_" + ItemSrNo).val(outSQM);
+
+        //$("#OutQty_" + ItemSrNo).prop('disabled', true);
+        //$("#OutSQM_" + ItemSrNo).prop('disabled', true);
+        UpdateDetailsInArray(ItemSrNo);
+        ItemSrNo = 0;
+        ItemWONO = 0;
+
+    }
+
+</script>
+
+<script>
+
+    function OnSave() {
+        debugger;
+        var basicElement = {};
+        basicElement.ERNO = '0';
+        basicElement.ERID = 0;
+        basicElement.EANO = '@ViewBag.EANO';
+        basicElement.ESNO = '@ViewBag.ESNO';
+        basicElement.ENQNO = '@ViewBag.ENQNO';
+        basicElement.ERDate = $("#txtERDate").val();
+        basicElement.CustomerID = '@ViewBag.CustomerID';
+        basicElement.ProjectID = '@ViewBag.ProjectID';
+        basicElement.PartnerID = '@ViewBag.PartnerID';
+        basicElement.ChallanNo = $("#txtChallanNo").val();
+        basicElement.InvAmount = $("#txtInvAmount").val();
+        basicElement.VehType = '-';
+        basicElement.TransporterID = $("#ddlTransporterDropdown option:selected").val();
+        basicElement.DriverName = $("#txtDriverName").val();
+        basicElement.VehicleNo = $("#txtVehicleNo").val();
+        basicElement.TotalVehCost = $("#txtTotalVehCost").val();
+        basicElement.Remarks = $("#RecRemarks").val();
+
+        if (basicElement.PIAmount == "" || basicElement.PIAmount == null || basicElement.PIAmount == undefined || basicElement.PIAmount == 0) {
+            basicElement.PIAmount = 0;
+        }
+
+        if (basicElement.TransporterID == "" || basicElement.TransporterID == null || basicElement.TransporterID == undefined || basicElement.TransporterID == '--Select--') {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Transporter",
+                icon: 'error'
+            });
+
+            $("#ddlTransporterDropdown").focus();
+            return false;
+        }
+        if (basicElement.TotalVehCost == "" || basicElement.TotalVehCost == null || basicElement.TotalVehCost == undefined || basicElement.TotalVehCost == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter Vehicle cost in AED",
+                icon: 'error'
+            });
+
+            $("#txtTotalVehCost").focus();
+            return false;
+        }
+
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Item!",
+                icon: 'error'
+            })
+            return false;
+        }
+        if (PISizesM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select sizes details to proceed.!",
+                icon: 'error'
+            })
+            return false;
+        }
+
+        for (var i = 0; i < poItemM.length; i++) {
+
+            if (poItemM[i].RecQty == "" || poItemM[i].RecQty == undefined || poItemM[i].RecQty == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: "Please enter rec qty for " + poItemM[i].WONO,
+                    icon: 'error'
+                });
+                return false;
+            }
+            if (poItemM[i].RecSQM == "" || poItemM[i].RecSQM == undefined || poItemM[i].RecSQM == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: "Please enter rec SQM for " + poItemM[i].WONO,
+                    icon: 'error'
+                });
+                return false;
+            }
+        }
+
+        // Attachment
+        TotalAttchment = [];
+        TotalAttchment = BillAttachment;
+        for (i = 0; i < TotalAttchment.length; i++) {
+            var element2 = {};
+            element2.DocName = TotalAttchment[i].DocFileName;
+            element2.FilePath = TotalAttchment[i].FilePath;
+            element2.ContentType = TotalAttchment[i].ContentType;
+            MasterAttachment.push(element2);
+        }
+
+        $("#global-loader").fadeIn("slow");
+        var data = { 'BasicDetails': basicElement, 'ItemListD': poItemM, 'SizesListD': PISizesM, '': MasterAttachment };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/SaveReceiveOutsourceItem',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#Savebtn").prop("disabled", true);
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("EnquiryReceiveSummary", "Enquiry")';
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+</script>
+
+
+
+
+
+
+@* *** Upload Attachment *@
+<script>
+    function AddAttachment() {
+        debugger;
+        //  var data = {'name': name };
+        //data = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Enquiry/_AddAttachmentReceiveDetails",
+            //  data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        })
+    }
+</script>
+
+@* *** Generate Template  *@
+
+<script>
+
+    function GenerateTemplate() {
+        debugger;
+    var ENQNO = '@ViewBag.ENQNO'
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items to proceed!",
+                icon: 'error'
+            })
+            return false;
+        }
+        //var flatPINOArrayString = Array.prototype.map.call(poItemM, function (item) { return "'" + item.PINO + "'"; }).join(', ');
+        //var flatPINOArrayString = JSON.stringify(poItemM);
+        //var itemListJson = JSON.stringify(poItemM);
+        //window.location = "/Enquiry/ExportToExcelWODetailsTemplate?ENQNO=" + ENQNO + "&ItemListD=" + itemListJson;
+
+        var data = { 'ENQNO': ENQNO, 'ItemListD': poItemM  };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Enquiry/StorePINoInTemp',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                document.location = '@Url.Action("ExportToExcelWODetailsTemplate", "Enquiry")';
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+
+            }
+        });
+
+    }
+
+
+</script>
+
+<script>
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    jQuery('.txtInput').click(function () { selectAllText(jQuery(this)) });
+
+</script>
+
+

@@ -1,0 +1,626 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.StreakData>
+<script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <button class="btn btn-success float-right" onclick="getBackToDashboard1()"><i class="fa fa-arrow-left"></i></button>
+    </div>
+</div>
+<div class="card mt-5">
+    <div class="card-body" id="Main">
+        <div class="row">
+            <div class="col-lg-4 col-sm-12" id="ddStageID">
+                <div class="form-group">
+                    <label class="form-label">Stage</label>
+                    @Html.DropDownList("StageDropdownD", (IEnumerable<SelectListItem>)ViewBag.StageDropdownD, "ALL", new { @class = "form-control custom-select", @id = "StageDropdownD", name = "StageDropdownD", autocomplete = "off" })
+                </div>
+            </div>
+
+            <div class="col-lg-1 col-sm-12" id="divShowDetails">
+                <div class="form-group">
+                    <label class="form-label" style="visibility:hidden">.</label>
+                    <div class="row gutters-xs">
+                        <div class="col">
+
+                            <button class="btn btn-primary" id="btnShow" onclick="GetData()" type="button"><i class="fe fe-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table style="width:100%" class="table table-striped table-bordered compact" id="tblStreakData">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Stage</td>
+                        <td>Probabilty</td>
+                        <td>DealSize</td>
+                        <td>LeadSource</td>
+                        <td>Vertical</td>
+                        <td>Company</td>
+                        <td>Location</td>
+                        <td>Principal</td>
+                        <td>Sector</td>
+                        <td>Industry</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in Model)
+                    {
+                        <tr id="Streak_@d.ID">
+                            <td>
+                                <button class="btn btn-primary" onclick="ValidateData(@d.ID) "><i class="fa fa-edit"></i></button>
+                            </td>
+                            <td>@Html.DisplayFor(m => d.Name)</td>
+                            <td ondblclick="EditStageOfData(@d.ID,'@d.Stage')"  id="Stage_@d.ID">@Html.DisplayFor(m => d.Stage)</td>
+                            <td ondblclick="EditProbabiltyOfData(@d.ID,'@d.Probabilty')" id="Probabilty_@d.ID">@Html.DisplayFor(m => d.Probabilty)</td>
+                            <td ondblclick="EditDealSizeOfData(@d.ID,'@d.DealSize')" id="DealSize_@d.ID">@Html.DisplayFor(m => d.DealSize)</td>
+                            <td>@Html.DisplayFor(m => d.LeadSource)</td>
+                            <td>@Html.DisplayFor(m => d.Vertical)</td>
+                            <td>@Html.DisplayFor(m => d.CompanyFromMaster)</td>
+                            <td>@Html.DisplayFor(m => d.Location)</td>
+                            <td ondblclick="EditPrincipal(@d.ID,@d.PrincipalID,@d.CompanyID)" id="Principal_@d.ID"> @Html.DisplayFor(m => d.Principal)</td>
+                            <td ondblclick="EditSector(@d.ID,@d.SectorID,@d.CompanyID)" id="Sector_@d.ID">@Html.DisplayFor(m => d.Sector)</td>
+                            <td ondblclick="EditIndustry(@d.ID,@d.IndustryID,@d.CompanyID)" id="Industry_@d.ID">@Html.DisplayFor(m => d.Industry)</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="normalmodal" tabindex="-1" role="dialog" aria-labelledby="normalmodal" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12" id="ddPricipalID">
+                        <div class="form-group">
+                            <label class="form-label">Principal</label>
+                            @Html.DropDownList("PrincipalDropdownD", (IEnumerable<SelectListItem>)ViewBag.PrincipalDropdownD, "--Select--", new { @class = "form-control custom-select", @id = "PrincipalDropdownD", name = "PrincipalDropdownD", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-12" id="ddSectorID">
+                        <div class="form-group">
+                            <label class="form-label">Sector</label>
+                            @Html.DropDownList("SectorDropdownD", (IEnumerable<SelectListItem>)ViewBag.PrincipalDropdown, "--Select--", new { @class = "form-control custom-select", @id = "SectorDropdownD", name = "SectorDropdownD", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-12" id="ddIndustryID">
+                        <div class="form-group">
+                            <label class="form-label">Industry</label>
+                            @Html.DropDownList("IndustryDropdownD", (IEnumerable<SelectListItem>)ViewBag.PrincipalDropdown, "--Select--", new { @class = "form-control custom-select", @id = "IndustryDropdownD", name = "IndustryDropdownD", autocomplete = "off" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary " data-dismiss="modal" onclick="UpdateChangesForSDID()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="StageEdit" tabindex="-1" role="dialog" aria-labelledby="normalmodal" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12" id="StageEditV">
+                        <div class="form-group">
+                            <label class="form-label">Stage</label>
+                            @Html.DropDownList("StreakStage", (IEnumerable<SelectListItem>)ViewBag.StageDropdownD, "--Select--", new { @class = "form-control custom-select", @id = "StreakStage", name = "StreakStage", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-12" id="DealSizeEditV">
+                        <div class="form-group">
+                            <label class="form-label">Deal Size</label>
+                            @Html.TextBox("DealSize", null, new { @class = "form-control", @id = "DealSize", name = "DealSize", autocomplete = "off" })
+
+                        </div>
+                    </div>        
+                    <div class="col-12" id="ProbabiltyEditV">
+                        <div class="form-group">
+                            <label class="form-label">Probabilty</label>
+                            @Html.TextBox("Probabilty", null, new { @class = "form-control", @id = "Probabilty", name = "Probabilty", autocomplete = "off" })
+
+                        </div>
+                    </div>
+                </div>
+  
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary " data-dismiss="modal" onclick="UpdateStageForStreak()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var StreakdataID = 0;
+    var SDType = 0;
+    var SDCompanyID = 0;
+    var MainID = 0;
+    var StreakMaster = @Html.Raw(Json.Encode(@ViewBag.StreakMaster));
+    var TypeOfData = 0;
+    StreakMaster = JSON.parse(StreakMaster);
+    $(document).ready(function () {
+        console.log("test");
+        MainID = @ViewBag.ID;
+        $('#normalmodal').modal('hide');
+
+        $('#tblStreakData').DataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            //"bFilter": false,
+            "paging": false,
+            //"dom": 'Bfrtip',
+            "order": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0],
+                }
+            ],
+                        "fixedHeader": true,
+
+        });
+    });
+
+    function ValidateData(ID) {
+        var data = { 'ID': ID }
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Dashboard/StreakDataCheck",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#EditStreakData').html(response);
+                $('#EditStreakData').show();
+                $('#StreakData').hide();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function EditPrincipal(ID, PrincipalID, CompanyID) {
+        $('#normalmodal').modal('show');
+        $("#ddPricipalID").show();
+        $("#ddSectorID").hide();
+        $("#ddIndustryID").hide();
+        var principal = document.getElementById("PrincipalDropdownD");
+        principal.value = PrincipalID;
+        StreakdataID = ID;
+        SDType = 1;
+        SDCompanyID = CompanyID;
+    }
+    function EditSector(ID, SectorID, CompanyID) {
+        $('#normalmodal').modal('show');
+        $("#ddSectorID").show();
+        $("#ddPricipalID").hide();
+        $("#ddIndustryID").hide();
+        var Sector = document.getElementById("SectorDropdownD");
+        Sector.value = SectorID;
+        StreakdataID = ID;
+        SDType = 2;
+        SDCompanyID = CompanyID;
+    }
+    function EditIndustry(ID, IndustryID, CompanyID) {
+        $('#normalmodal').modal('show');
+        $("#ddIndustryID").show();
+        $("#ddSectorID").hide();
+        $("#ddPricipalID").hide();
+        var industry = document.getElementById("IndustryDropdownD");
+        industry.value = IndustryID;
+        StreakdataID = ID;
+        SDType = 3;
+        SDCompanyID = CompanyID;
+    }
+
+    function EditStageOfData(ID, Stage) {
+        var StageID;
+        StreakdataID = ID;
+        for (i = 0; i < StreakMaster.length; i++) {
+            if (StreakMaster[i].Stage == Stage) {
+                StageID = StreakMaster[i].SrNo;
+            }
+        }
+        $('#StageEdit').modal('show');
+        $('#StageEditV').show();
+        $('#DealSizeEditV').hide();
+        $('#ProbabiltyEditV').hide();
+        var stage = document.getElementById("StreakStage");
+        stage.value = StageID;
+        TypeOfData =1
+    }
+
+    function EditProbabiltyOfData(ID, Stage) {
+        var StageID;
+        StreakdataID = ID;
+
+        $('#StageEdit').modal('show');
+        $('#StageEditV').hide();
+        $('#DealSizeEditV').hide();
+        $('#ProbabiltyEditV').show();
+        var stage = document.getElementById("Probabilty");
+        stage.value = Stage;
+        TypeOfData = 2;
+    }
+    
+    function EditDealSizeOfData(ID, Stage) {
+        var StageID;
+        StreakdataID = ID;
+        $('#StageEdit').modal('show');
+        $('#StageEditV').hide();
+        $('#DealSizeEditV').show();
+        $('#ProbabiltyEditV').hide();
+        var stage = document.getElementById("DealSize");
+        stage.value = Stage;
+        TypeOfData = 3;
+    }
+
+    function UpdateStageForStreak() {
+        if (TypeOfData == 1) {
+            var temp = $('#StreakStage :selected').text();
+            var tempID = "#Stage_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        }
+        if (TypeOfData == 2) {
+            var temp = $('#Probabilty').val();
+            var tempID = "#Probabilty_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        }
+        if (TypeOfData == 3) {
+            var temp = $('#DealSize').val();
+            var tempID = "#DealSize_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        }
+
+        var data = { 'TypeOfData': TypeOfData,'ID': StreakdataID, 'Stage': temp }
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Requirement/AjaxUpdateStreakStage',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                TypeOfData = 0;
+
+                ////getBackToDashboard1();
+                //setTimeout(function () { GetStreakUserData(tempIDC); }, 500);
+
+                //$('html, body').animate({
+
+                //    scrollTop: $("#Streak_" + StreakdataID).offset().top
+                //}, 2000);
+
+            },
+            error: function (error) {
+                alert(error.responseText);
+                return false;
+            }
+        });
+    }
+
+
+    function UpdateChangesForSDID() {
+        $('#normalmodal').modal('hide');
+        $("#cute-loader").fadeIn("fast");
+
+        var ID = 0;
+        if (SDType == 1) {
+            var e = document.getElementById("PrincipalDropdownD");
+            ID = e.options[e.selectedIndex].value;
+            var temp = $('#PrincipalDropdownD :selected').text();
+            var tempID = "#Principal_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        } else if (SDType == 2) {
+            var e = document.getElementById("SectorDropdownD");
+            ID = e.options[e.selectedIndex].value;
+            var temp = $('#SectorDropdownD :selected').text();
+            var tempID = "#Sector_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        } else {
+            var e = document.getElementById("IndustryDropdownD");
+            ID = e.options[e.selectedIndex].value;
+            var temp = $('#IndustryDropdownD :selected').text();
+            var tempID = "#Industry_" + StreakdataID;
+            $(tempID).empty();
+            $(tempID).text(temp);
+        }
+        var data = { 'Type': SDType, 'CompanyID': SDCompanyID, 'ID': ID }
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Requirement/CompanyDataUpdation',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+
+                ////getBackToDashboard1();
+                //setTimeout(function () { GetStreakUserData(tempIDC); }, 500);
+
+                //$('html, body').animate({
+
+                //    scrollTop: $("#Streak_" + StreakdataID).offset().top
+                //}, 2000);
+
+            },
+            error: function (error) {
+                alert(error.responseText);
+                return false;
+            }
+        });
+
+
+        var ID1 = MainID;
+        var Stage = $("#StageDropdownD option:selected").text();
+
+        var data1 = { 'ID': ID1, 'Stage': Stage };
+        var data = JSON.stringify(data1);
+
+        $.ajax({
+            url: "/Dashboard/AjaxGetSearchDetailStageWise",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                $('#tblStreakData').dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "bPaginate": false,
+                    "searching": true,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaData": data,
+
+
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary btn-size m_1 \" name=\"removebutton\"  data-toggle=\"tooltip\" data-placement=\"bottom\"  data-original-title=\"Approved With Edit Details\" style=\"height:35px;\" onclick=\"ValidateData('" + data + "')\"><i class=\"fa fa-edit\" style=\"font-size: 16px;\"></i></button> "
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Name" },
+                        {
+                            "data": "Stage",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditStageOfData(" + row.ID + ",'" + row.Stage + "')\">" + row.Stage + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Probabilty" },
+                        { "data": "DealSize" },
+                        { "data": "LeadSource" },
+                        { "data": "Vertical" },
+                        { "data": "CompanyFromMaster" },
+                        { "data": "Location" },
+                        {
+                            "data": "Principal",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditPrincipal(" + row.ID + "," + row.PrincipalID + "," + row.CompanyID + ")\">" + row.Principal + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Sector",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditSector(" + row.ID + "," + row.SectorID + "," + row.CompanyID + ")\">" + row.Sector + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Industry",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditIndustry(" + row.ID + "," + row.IndustryID + "," + row.CompanyID + ")\">" + row.Industry + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        }
+
+
+                    ]
+            });
+
+
+    },
+
+    error: function (errormessage) {
+        alert(errormessage.responseText);
+    }
+        });
+        $("#cute-loader").fadeOut("slow");
+
+    }
+
+    function GetData() {
+
+        var ID1 = MainID;
+        var Stage = $("#StageDropdownD option:selected").text();
+
+        var data1 = {'ID': ID1, 'Stage': Stage };
+        var data = JSON.stringify(data1);
+
+        $.ajax({
+            url: "/Dashboard/AjaxGetSearchDetailStageWise",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                $('#tblStreakData').dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "bPaginate": false,
+                    "searching": true,
+                    "bInfo": false,
+                    "paging": false,
+                    "aaData": data,
+
+
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<button type=\"button\" class=\"btn btn-icon btn-primary btn-size m_1 \" name=\"removebutton\"  data-toggle=\"tooltip\" data-placement=\"bottom\"  data-original-title=\"Approved With Edit Details\" style=\"height:35px;\" onclick=\"ValidateData('" + data + "')\"><i class=\"fa fa-edit\" style=\"font-size: 16px;\"></i></button> "
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "Name" },
+                        {
+                            "data": "Stage",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditStageOfData(" + row.ID + ",'" + row.Stage + "')\">" + row.Stage + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Probabilty",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditProbabiltyOfData(" + row.ID + ",'" + row.Probabilty + "')\">" + row.Probabilty + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "DealSize",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditDealSizeOfData(" + row.ID + ",'" + row.DealSize + "')\">" + row.DealSize + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        { "data": "LeadSource" },
+                        { "data": "Vertical" },
+                        { "data": "CompanyFromMaster" },
+                        { "data": "Location" },
+                        {
+                            "data": "Principal",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditPrincipal(" + row.ID + "," + row.PrincipalID + "," + row.CompanyID + ")\">" + row.Principal+" </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Sector",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditSector(" + row.ID + "," + row.SectorID + "," + row.CompanyID + ")\">" + row.Sector + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Industry",
+                            "orderable": false,
+
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+
+                                    data = "<div onclick=\"EditIndustry(" + row.ID + "," + row.IndustryID + "," + row.CompanyID + ")\">" + row.Industry + " </div>"
+
+
+                                }
+                                return data;
+                            }
+                        }
+
+                         
+
+                    ]
+                });
+
+
+            },
+
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+</script>

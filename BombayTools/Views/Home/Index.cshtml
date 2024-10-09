@@ -1,0 +1,126 @@
+﻿@model BombayToolsEntities.BusinessEntities.UserDetail
+@{
+    ViewBag.Title = "login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<body class="login-img">
+    @* defines the controller name , method and the type *@
+    <div class="page">
+
+        @using (Html.BeginForm("login", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="page-single">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            @*Bombay Tools logo to FG*@
+                            @*<img src="~/images/btc/FG_01.svg" style="margin-top:-75px" class="pull-right" />*@
+                            @*<img src="~/images/btc/FG_02.png" style="margin-top:-75px; height:60px;width:200px" class="pull-right" />*@
+                            @*<img src="~/images/btc/FG_FavG.png" />*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mx-auto">
+                            <div class="text-center mb-6">
+                                @*<img src="~/images/loginpagelogo.png" class="" alt="">*@
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-4">
+                                    <div class="card-group mb-0">
+                                        <div class="card p-4">
+                                            <div class="card-body">
+                                                <div class="text-center mt-2 p-0">
+                                                    @*<img src="~/images/btc/Logo_Infinity.svg" class="img-responsive "/>*@
+                                                    @*<img src="~/images/btc/FG_02.png" class="img-responsive" />*@
+                                                    @*<img src="~/images/btc/glassPro_500px_PNG.png" class="img-responsive" />*@
+                                                    <h3 style="color:#0E1A52; font-size: 40px; font-weight:800; ">OutSource</h3>
+                                                    @*<img src="~/images/btc/glassPro_500px_PNG.png" class="img-responsive" />*@
+                                                    <div class="mt-0 mb-2 float-right"><span style="font-size:12px; color:black; font-family:Comic Sans MS; font-weight:900;"><u>V-1.0.0</u></span></div>
+                                                </div>
+                                                <div class="input-group mb-3" id="divusername">
+                                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                    @* <input type="text" class="form-control" placeholder="Username">*@
+                                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @id = "txtusername", name = "username", placeholder = "Username", autocomplete = "off" } })
+                                                    <div class="invalid-feedback" style="display:none" id="userrequired">User Name is required</div>
+                                                </div>
+                                                <div class="input-group mb-4" id="divpassword">
+                                                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                                    @*<input type="password" class="form-control" placeholder="Password">*@
+                                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "txtpassword", name = "password", placeholder = "Password", autocomplete = "off", type = "password" } })
+                                                    <div class="invalid-feedback" style="display:none" id="passwordrequired">Password is required</div>
+                                                    @* <span class="invalid-feedback" style="display:none" id="passwordrequired">Password is required</span>*@
+                                                </div>
+                                                <span class="text-danger" id="usernameinvalid">@Html.DisplayFor(model => model.LoginErrorMessage)</span>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="pull-left">
+                                                            <label class="custom-control custom-checkbox">
+                                                                @Html.EditorFor(model => model.rememberme, new { htmlAttributes = new { @class = "custom-control-input", @id = "rememberme", name = "rememberme", placeholder = "rememberme", autocomplete = "off", type = "checkbox" } })
+                                                                <span class="custom-control-label">Remember Me</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <a href="@Url.Action("ForgotPassword", "Home")" style="margin-top:-8px" class="btn btn-link box-shadow-0 px-0">Forgot password?</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 text-center py-2">
+                                                        <input type="submit" class="btn btn-primary px-8" id="login" name="login" value="Login" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#login').click(function () {
+                var username = document.getElementById('txtusername').value;
+                var password = document.getElementById('txtpassword').value;
+
+
+                if (username == "") {
+                    $('#txtusername').addClass('is-invalid state-invalid');
+                    $('#userrequired').show();
+                    document.getElementById("usernameinvalid").style.visibility = "hidden";
+                    event.preventDefault();
+                }
+                if (password == "") {
+                    $('#txtpassword').addClass('is-invalid state-invalid');
+                    $('#passwordrequired').show();
+                    document.getElementById("usernameinvalid").style.visibility = "hidden";
+                    event.preventDefault();
+                }
+
+
+
+
+
+            });
+            //$('#btnRemoveCSS').click(function () {
+            //    $('#divsample').removeClass('divclass')
+            //});
+        })
+    </script>
+    <script type="text/javascript">
+
+        function onservice() {
+            alert("Under revision..!")
+        }
+
+    </script>
+</body>

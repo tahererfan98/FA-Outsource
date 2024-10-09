@@ -1,0 +1,343 @@
+﻿
+@{
+    ViewBag.Title = "Activity Log";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<style>
+
+    div.dataTables_wrapper div.dataTables_filter {
+        /*margin-left: 0.5em;*/
+        display: none;
+    }
+    
+</style>
+
+<div id="summary">
+    <div class="page-header">
+        <div class="row col-12 ml-0 mr-0 pl-0 pr-0">
+            <h4 class="page-title">Activity Log</h4>
+            @*<div class="col-sm-2 col-lg-2 col-md-2">
+                <div class="pull-right mt-1" style="margin-right: -3%;">
+                    <label class="custom-switch ">
+                        <input type="checkbox" name="custom-switch-checkbox" id="singleCheckbox" value="" class="custom-switch-input toggleSummary pusdeoCharges" onchange="ChangePagging()">
+                        <span class="custom-switch-description mr-1"></span>
+                        <span class="custom-switch-indicator"></span>
+                        <span class="custom-switch-description"><b>Paging</b></span>
+                    </label>
+                </div>
+            </div>*@
+            <div class="col-sm-1 col-lg-10 col-md-12 mt-2">
+                <div class="pull-right">
+                    <div id="buttons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-lg-12 col-sm-12">
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-md-4 col-lg-2 col-sm-12">
+                        <label class="label">From Date</label>
+                        @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "fromDate", name = "fromDate", @Value = DateTime.Now.AddDays(-7).ToString("dd MMM yyyy HH:mm") })
+                    </div>
+                    <div class="col-md-4 col-lg-2 col-sm-12">
+                        <label class="label">To Date</label>
+                        @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "toDate", name = "toDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                    </div>
+                    <div class="col-md-4 col-lg-2 col-sm-12">
+                        <label class="label">User</label>
+                        @Html.DropDownList("ddlUser", (IEnumerable<SelectListItem>)ViewBag.AssignToList, "ALL", new { @class = "form-control custom-select", @id = "ddlUser", name = "ddlUser", autocomplete = "off" })
+
+                    </div>
+                    <div class="col-md-4 col-lg-2 col-sm-12 mt-5">
+                        <label class="label" style="display:none">.</label>
+                        <button class="btn btn-lg btn-primary" onclick="GetActivityLogSummary()"><i class="fa fa-search" style="font-size:15px !important"></i></button>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-12">
+                        <label class="label">Search</label>
+                        @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", autocomplete = "off" })
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" id="tblActivityLog">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th class="text-white" style="width:5% !important">Sr No</th>
+                            <th class="text-white" style="width:30% !important">Activity</th>
+                            <th class="text-white" style="width:10% !important">Activity Date</th>
+                            <th class="text-white" style="width:10% !important">User name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        var currDate = new Date();
+        $(".datetime1").datetimepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy hh:ii',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true
+        })
+    });
+
+    var IsPagging = 0;
+    $(document).ready(function () {
+        ChangeDate(2);
+        $('#tblActivityLog').dataTable({
+             "destroy": true,
+             "bLengthChange": false,
+             "bPaginate": true,
+             "bInfo": false,
+             "paging": true,
+             order: [],
+             "searching": true,
+         });
+    });
+
+    function ChangeDate(Type) {
+        if (Type == 1) {
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+            document.getElementById("fromDate").value = CurrentDate;
+            document.getElementById("toDate").value = CurrentDate;
+
+        }
+        if (Type == 2) {
+            var w = firstDayOfWeek(new Date(), 1);
+            var Monday = w.getDate() + ' ' + w.toString().substr(4, 3) + ' ' + w.getFullYear();
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+            document.getElementById("fromDate").value = Monday;
+            document.getElementById("toDate").value = CurrentDate;
+
+        }
+        if (Type == 3) {
+            var date = new Date();
+            var m = new Date(date.getFullYear(), date.getMonth(), 1);
+            var FirstDay = m.getDate() + ' ' + m.toString().substr(4, 3) + ' ' + m.getFullYear();
+            var d = new Date();
+            var CurrentDate = d.getDate() + ' ' + d.toString().substr(4, 3) + ' ' + d.getFullYear();
+            document.getElementById("fromDate").value = FirstDay;
+            document.getElementById("toDate").value = CurrentDate;
+        }
+
+        GetActivityLogSummary();
+    }
+
+    function firstDayOfWeek(dateObject, firstDayOfWeekIndex) {
+
+        const dayOfWeek = dateObject.getDay(),
+            firstDayOfWeek = new Date(dateObject),
+            diff = dayOfWeek >= firstDayOfWeekIndex ?
+                dayOfWeek - firstDayOfWeekIndex :
+                6 - dayOfWeek
+
+        firstDayOfWeek.setDate(dateObject.getDate() - diff)
+        firstDayOfWeek.setHours(0, 0, 0, 0)
+
+        return firstDayOfWeek
+    }
+     
+    function ChangePagging() {
+        var checked = $("#singleCheckbox").is(":checked");
+        if (checked == true) {
+            IsPagging = 1;
+            $('.check').prop('checked', false);
+        }
+        else {
+            IsPagging = 0;
+
+        }
+        GetActivityLogSummary();
+    }
+
+    function GetActivityLogSummary() {
+        var FromDate = document.getElementById("fromDate").value;
+        var ToDate = document.getElementById("toDate").value;
+        var UserID = document.getElementById("ddlUser").value;
+
+        if (FromDate == "" || ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+        var date1 = new Date(FromDate);
+        var date2 = new Date(ToDate);
+        var Today = new Date();
+        if (date1 > date2) {
+            document.getElementById('toDate').style.borderColor = "red";
+            Swal.fire({
+                title: 'Error',
+                text: "To Date should not be less than from date ",
+                icon: 'error'
+            })
+            return false;
+
+        } else {
+            document.getElementById('toDate').style.borderColor = "Gainsboro";
+        }
+        if (UserID == "") {
+            UserID = 0;
+        }
+        var data = { 'FromDate': FromDate, 'ToDate': ToDate, 'UserID': UserID };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn("slow");
+
+        $.ajax({
+            url: "/Dashboard/AjaxGetActivityLogSummary",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger
+                $('#tblActivityLog').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": false,
+                    order: [],
+                    "searching": true,
+                    "columns": [
+                        {
+                            "data": "SrNo",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "ActivityName",
+                            "className": "text-left"
+                        },
+                        {
+                            "data": "ActivityDate",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "UserName",
+                            "className": "text-left"
+                        },
+                    ],
+                    "sScrollY": "55vh",
+                    "sScrollX": "100%",
+                    "sScrollXInner": "200%",
+                    "bScrollCollapse": true,
+                    mark: true
+                });
+                //if (IsPagging == 1) {
+                //    $('#tblActivityLog').DataTable({
+                //        "destroy": true,
+                //        "bLengthChange": true,
+                //        "aaData": response,
+                //        "bPaginate": true,
+                //        "bInfo": false,
+                //        "paging": true,
+                //        order: [],
+                //        "searching": true,
+                //        "columns": [
+                //            {
+                //                "data": "SrNo",
+                //                "className": "text-center"
+                //            },
+                //            {
+                //                "data": "ActivityName",
+                //                "className": "text-left"
+                //            },
+                //            {
+                //                "data": "ActivityDate",
+                //                "className": "text-center"
+                //            },
+                //            {
+                //                "data": "UserName",
+                //                "className": "text-left"
+                //            },
+                //        ],
+                //        "sScrollY": "55vh",
+                //        "sScrollX": "100%",
+                //        "sScrollXInner": "200%",
+                //        "bScrollCollapse": true,
+                //        mark: true
+                //    });
+                //}
+                //else {
+                //    $('#tblActivityLog').DataTable({
+                //        "destroy": true,
+                //        "bLengthChange": false,
+                //        "aaData": response,
+                //        "bPaginate": true,
+                //        "bInfo": false,
+                //        "paging": false,
+                //        order: [],
+                //        "searching": true,
+                //        "columns": [
+                //            {
+                //                "data": "SrNo",
+                //                "className": "text-center"
+                //            },
+                //            {
+                //                "data": "ActivityName",
+                //                "className": "text-left"
+                //            },
+                //            {
+                //                "data": "ActivityDate",
+                //                "className": "text-center"
+                //            },
+                //            {
+                //                "data": "UserName",
+                //                "className": "text-left"
+                //            },
+                //        ],
+                //        "sScrollY": "55vh",
+                //        "sScrollX": "100%",
+                //        "sScrollXInner": "200%",
+                //        "bScrollCollapse": true,
+                //        mark: true
+                //    });
+                //}
+
+                $('#searchText').on('keyup', function () {
+                    table.search(this.value).draw();
+                });
+
+                table = $('#tblActivityLog').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+
+                var totalCount = table.data().count();
+                $('#Count').text(totalCount);
+
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert(error.responseText);
+            }
+        });
+    }
+
+</script>
+
+

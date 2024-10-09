@@ -1,0 +1,152 @@
+﻿
+
+
+@{
+    ViewBag.Title = "CampaignSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<style>
+    .btn_excel {
+        color: #7bd235 !important;
+        background-color: #ffF !important;
+        border-color: #7bd235 !important;
+    }
+
+    span.btn_excel {
+        font-weight: 600;
+    }
+</style>
+
+<div id="summary">
+    <div class="page-header">
+        <h4 class="page-title">Campaign Summary</h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card" id="CS">
+    <!-- --summary -->
+    <div class="card-body">
+        <div class="table-responsive-sm">
+            <table class="table table-bordered table-hover w-100 card-table m-0 text-nowrap" id="CampaignSummaryTable">
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Campaign Name</th>
+                        <th>Added On</th>
+                        <th>Added By</th>
+                        <th style="width:50px;">Action</th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="CampaignDetails"></div>
+
+<script>
+
+    $(document).ready(function () {
+        OnLoadCampaignTableSummary();
+
+    });
+
+    var CapaignSummaryList = [];
+    function OnLoadCampaignTableSummary() {
+
+        $.ajax({
+            type: 'POST',
+            url: '/EMail/AjaxGetCampaignSummary',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                CapaignSummaryList = [];
+                CapaignSummaryList = response;
+                $('#CampaignSummaryTable').DataTable({
+                    "destroy": true,
+                    dom: 'Bfrtip',
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    "searching": false,
+                    "dom": '<"top"i>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+                    "aaData": CapaignSummaryList,
+                    "columns": [
+                        { "data": "RecordID" },
+                        { "data": "CampaignName" },
+                        { "data": "DisplayAddedOn" },
+                        { "data": "DisplayAddedOnName" },
+                        {
+                            "data": "RecordID",
+                            "data": "CampaignName",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = "<button onclick=\"OnViewCampaignDetails(" + row.RecordID + ")\" class=\"btn btn-sm btn-primary \"><i class=\"fa fa-eye\" aria-hidden=\"true\"></i></button>"
+                                }
+                                return data;
+                            }
+                        },
+                    ],
+
+                });
+
+                table = $('#CampaignSummaryTable').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+
+            },
+
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Error: " + str);
+            }
+        });
+    }
+
+
+    function OnViewCampaignDetails(RecordID) {
+        //var element = {};
+        //element.RecordID = RecordID;
+        var data = { 'RecordID': RecordID };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'POST',
+            url: '/EMail/_CampaignDetails',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#CampaignDetails').show();
+                $('#CS').hide();
+                $('#summary').hide();
+                $('#CampaignDetails').html(response);
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Error: " + str);
+            }
+        });
+    }
+
+</script>

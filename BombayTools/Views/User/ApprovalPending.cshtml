@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "ApprovalPending";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title">Approval Pending</h4>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-7">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                           <p>Please wait for manual verification. You will be notified when your details are verified.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#cute-loader").fadeOut("slow");
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+    });
+
+</script>

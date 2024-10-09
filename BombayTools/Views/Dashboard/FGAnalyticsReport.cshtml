@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "FGAnalyticsReport";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="page-header m-0 p-0" id="DailyVisitSummary">
+    <h4 class="page-title">FA Analytics</h4>
+</div>
+
+<div class="col-12">
+    <div class="tab m-0 p-0">
+        @if (ViewBag.UserID == 211)
+        {
+
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiYWI1OTBmOTMtMmViMy00MjdiLTkxNzktYjc3NTVkZmFhOTljIiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else if (ViewBag.TLID == 59)
+        {
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiNjBkYzAzYzAtNTI3Mi00MjVjLThjYmEtZTM0N2FhYjI4ZTdlIiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else if (ViewBag.TLID == 123)
+        {
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiYjIwODNmZTAtZmQ0MC00NmZjLTliMWMtZThmM2I2MmQwMDBjIiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else if (ViewBag.TLID == 79)
+        {
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiZGI1ZmE1YTAtYWIwYy00MDU5LWEzN2ItZjcxZjZjZDZkMzc1IiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else if (ViewBag.TLID == 57)
+        {
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiOGI1MDkzMWQtMTBkNi00ZDY1LWFkOTctNzU0MGU4NDhhZmVhIiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else if (ViewBag.TLID == 212)
+        {
+            <iframe title="FG Analytics" width="1040" height="536" src="https://app.powerbi.com/view?r=eyJrIjoiZjAxNzExNmUtNjNmMS00YWI0LTkxMWUtYWZkYjIxMzQ5MDZlIiwidCI6IjIxYzM3ZGMyLThlYjctNDZiYi05NDcwLTBjZTE2ZjNkOTExYyJ9" frameborder="0" allowFullScreen="true"></iframe>
+        }
+        else
+        {
+            < iframe title = "FG Analytics" width = "1040" height = "536" src = "https://app.powerbi.com/view?r=eyJrIjoiNjdkMTBjYzgtY2E3Zi00NTk3LTk4NTYtZDQ1NGFjOTYzYmJhIiwidCI6IjI4ZDJlOTViLWM0MzAtNDY4Yy05YmJmLTA1ZDMwNjA2YWVlMCJ9" frameborder = "0" allowFullScreen = "true" ></ iframe >
+        }
+    </div>
+</div>

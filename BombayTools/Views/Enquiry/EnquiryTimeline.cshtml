@@ -1,0 +1,124 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.EnquiryFollowUp>
+
+<style>
+    .card-header {
+        border-color: #9F79FF;
+    }
+
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            /*margin: 20px 0;
+            padding-left: 20px;*/
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #9F79FF;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+
+    .temp_p {
+        padding: 10px 39px 10px 39px !important;
+        margin: 1px;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="m-4">Follow Ups</h4>
+        <ul class="timeline">
+            @foreach (var d in Model)
+            {
+                <li>
+                    <a style="margin-left:45px" href="#">@Html.DisplayFor(m => d.FollowUpName)</a>
+                    <a href="#" class="float-right mr-2">@Html.DisplayFor(m => d.DisplayDate)</a>
+                    <p class="temp_p">@Html.DisplayFor(m => d.FollowUpNote)</p>
+                </li>
+            }
+            <li class="addNewFollowUp">
+                <a style="margin-left:45px" class="btn btn-success btn-sm" href="#" id="newComment" onclick="toggleContact()">New Comment</a>
+                <a style="margin-left:45px" class="btn btn-danger btn-sm" href="#" id="cancelComment" onclick="toggleContact()">Cancel</a>
+            </li>
+        </ul>
+        <div class="card" id="commentForm">
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-group">Follow up Type</label>
+                    @Html.DropDownList("ddlFollowUp", (IEnumerable<SelectListItem>)ViewBag.ddlFollowUp, "--Select--", new { @class = "form-control custom-select", @id = "ddlFollowUp", name = "ddlFollowUp", autocomplete = "off" })
+                </div>
+                <div class="form-group">
+                    <label class="form-group">Note</label>
+                    @Html.TextArea("FollowUpNote", null, new { @class = "form-control", @id = "FollowUpNote", name = "FollowUpNote", autocomplete = "off", style = "width:100%" })
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm float-right" onclick="SaveFollowUp()"><i class="fa fa-save" style="    font-size: 14px !important;"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#cancelComment").hide();
+        $("#commentForm").hide();
+    });
+
+    function toggleContact() {
+        $("#cancelComment").toggle();
+        $("#commentForm").toggle();
+        $("#newComment").toggle();
+    }
+
+    function SaveFollowUp() {
+        var p = document.getElementById("ddlFollowUp");
+        var FollowUpID = p.options[p.selectedIndex].value;
+        var FollowUpNote = document.getElementById("FollowUpNote").value;
+        if (FollowUpNote == "" || FollowUpID == 0 || FollowUpID == undefined || FollowUpNote == undefined) {
+            alert("Please fill all details");
+            return;
+        }
+        var data = { 'FollowUpID': FollowUpID, 'EnquiryNo': EnquiryNo, 'FollowUpNote': FollowUpNote };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: '/Enquiry/AddFollowUpDetails',
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                ShowTimeline();
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function GetBackToRequirement() {
+        $('#ReqFollowUP').hide();
+        $('#Summary').show();
+    }
+</script>

@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "CreateNewUser";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<div id="cute-loader"></div>
+
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title">Create New User</h4>
+        <ol class="breadcrumb" id="IsDirect">
+            <li class="breadcrumb-item">
+                <a onclick="GetBack();" class="btn btn-primary btn-success" style="color:white;align-content:center;">
+                    <i class="fa fa-arrow-left" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back"></i>
+                </a>
+            </li>
+        </ol>
+    </div>
+
+    <div class="row" id="Summary">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Employee Name</label>
+                                @Html.TextBox("UserName", null, new { @class = "form-control", @id = "UserName", name = "UserName", autocomplete = "off", placeholder = "", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Email ID(UserName)</label>
+                                @Html.TextBox("EmailID", null, new { @class = "form-control", @id = "EmailID", name = "EmailID", autocomplete = "off", placeholder = "", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Tempoary Password</label>
+                                @Html.TextBox("Password", null, new { @class = "form-control", @id = "Password", name = "Password", autocomplete = "off", placeholder = "", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Date Of Joining</label>
+                                @Html.TextBox("datePicker", null, new { @class = "form-control", @id = "datePicker", name = "datePicker", autocomplete = "off", @maxlength = 100 })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-success" onclick="AddNewUser()">Add User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $("#cute-loader").fadeOut("slow");
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+    });
+
+    function GetBack() {
+        document.location = '@Url.Action( "UserSummary", "User")';
+    }
+
+    function AddNewUser() {
+        $("#cute-loader").fadeIn("slow");
+        var UserName = $("#UserName").val();
+        var EmailID = $("#EmailID").val();
+        var Joining = $("#datePicker").val();
+        var Password = $("#Password").val();
+        var AddedOn = new Date();
+        var Body = "";
+        if (UserName == undefined || UserName == "") {
+            document.getElementById('UserName').style.borderColor = "red";
+            $("#cute-loader").fadeOut("slow");
+            return;
+        } else {
+            document.getElementById('UserName').style.borderColor = "Gainsboro";
+        }
+        if (EmailID == undefined || EmailID == "") {
+            document.getElementById('EmailID').style.borderColor = "red";
+            $("#cute-loader").fadeOut("slow");
+            return;
+        } else {
+            document.getElementById('EmailID').style.borderColor = "Gainsboro";
+        }
+        if (Joining == undefined || Joining == "") {
+            document.getElementById('datePicker').style.borderColor = "red";
+            $("#cute-loader").fadeOut("slow");
+            return;
+        } else {
+            document.getElementById('datePicker').style.borderColor = "Gainsboro";
+        }
+        if (Password == undefined || Password == "") {
+            document.getElementById('Password').style.borderColor = "red";
+            $("#cute-loader").fadeOut("slow");
+            return;
+        } else {
+            document.getElementById('Password').style.borderColor = "Gainsboro";
+        }
+
+        Body = "<html><body><p>Dear " + UserName + ",<br />Your login details are mentioned below <br />UserName: <strong>" + EmailID + " </strong><br />Password: <strong>" + Password + "</strong></p><p>Please login on the portal and complete your verification.</p><p>Portal Link : https://infinitycrm-fg.ddplapps.com</p></body></html>";
+        var data = { 'UserName': UserName, 'UserEmail': EmailID, 'DateOfJoining': Joining, 'UserPassword': Password, 'AddedOn': AddedOn, 'Body': Body }
+        data = JSON.stringify(data);
+         $.ajax({
+             url: "/User/AddNewUser",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+             success: function (result) {
+                 $("#cute-loader").fadeOut("slow");
+                    document.location = '@Url.Action( "UserSummary", "User")';
+                },
+             error: function (error) {
+                 $("#cute-loader").fadeOut("slow");
+                 let str = error.responseText;
+                 var a = str.indexOf("<title>") + 7;
+                 var b = str.indexOf("</title>");
+                 str = str.substring(a, b);
+                 alert("Something went wrong: " + str);
+             }
+            })
+    }
+
+
+</script>
+
+

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="eFleetMain" targetNamespace="http://tempuri.org/eFleetMain.xsd" xmlns:mstns="http://tempuri.org/eFleetMain.xsd" xmlns="http://tempuri.org/eFleetMain.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="eFleetMain" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="eFleetMain" msprop:Generator_UserDSName="eFleetMain">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GRNBarcode" msprop:Generator_TableClassName="GRNBarcodeDataTable" msprop:Generator_TableVarName="tableGRNBarcode" msprop:Generator_RowChangedName="GRNBarcodeRowChanged" msprop:Generator_TablePropName="GRNBarcode" msprop:Generator_RowDeletingName="GRNBarcodeRowDeleting" msprop:Generator_RowChangingName="GRNBarcodeRowChanging" msprop:Generator_RowEvHandlerName="GRNBarcodeRowChangeEventHandler" msprop:Generator_RowDeletedName="GRNBarcodeRowDeleted" msprop:Generator_RowClassName="GRNBarcodeRow" msprop:Generator_UserTableName="GRNBarcode" msprop:Generator_RowEvArgName="GRNBarcodeRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ingspare_ID" msprop:Generator_ColumnVarNameInTable="columnIngspare_ID" msprop:Generator_ColumnPropNameInRow="Ingspare_ID" msprop:Generator_ColumnPropNameInTable="Ingspare_IDColumn" msprop:Generator_UserColumnName="Ingspare_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="txtspare_code" msprop:Generator_ColumnVarNameInTable="columntxtspare_code" msprop:Generator_ColumnPropNameInRow="txtspare_code" msprop:Generator_ColumnPropNameInTable="txtspare_codeColumn" msprop:Generator_UserColumnName="txtspare_code" type="xs:string" minOccurs="0" />
+              <xs:element name="SpareBar" msprop:Generator_ColumnVarNameInTable="columnSpareBar" msprop:Generator_ColumnPropNameInRow="SpareBar" msprop:Generator_ColumnPropNameInTable="SpareBarColumn" msprop:Generator_UserColumnName="SpareBar" type="xs:string" minOccurs="0" />
+              <xs:element name="txtspare_name" msprop:Generator_ColumnVarNameInTable="columntxtspare_name" msprop:Generator_ColumnPropNameInRow="txtspare_name" msprop:Generator_ColumnPropNameInTable="txtspare_nameColumn" msprop:Generator_UserColumnName="txtspare_name" type="xs:string" minOccurs="0" />
+              <xs:element name="txtSpareGrp_name" msprop:Generator_ColumnVarNameInTable="columntxtSpareGrp_name" msprop:Generator_ColumnPropNameInRow="txtSpareGrp_name" msprop:Generator_ColumnPropNameInTable="txtSpareGrp_nameColumn" msprop:Generator_UserColumnName="txtSpareGrp_name" type="xs:string" minOccurs="0" />
+              <xs:element name="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnDataColumn1" msprop:Generator_ColumnPropNameInRow="DataColumn1" msprop:Generator_ColumnPropNameInTable="DataColumn1Column" msprop:Generator_UserColumnName="DataColumn1" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="eFleetMain" msprop:Generator_TableClassName="eFleetMainDataTable" msprop:Generator_TableVarName="tableeFleetMain" msprop:Generator_TablePropName="_eFleetMain" msprop:Generator_RowDeletingName="eFleetMainRowDeleting" msprop:Generator_RowChangingName="eFleetMainRowChanging" msprop:Generator_RowEvHandlerName="eFleetMainRowChangeEventHandler" msprop:Generator_RowDeletedName="eFleetMainRowDeleted" msprop:Generator_UserTableName="eFleetMain" msprop:Generator_RowChangedName="eFleetMainRowChanged" msprop:Generator_RowEvArgName="eFleetMainRowChangeEvent" msprop:Generator_RowClassName="eFleetMainRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ingspare_ID" msprop:Generator_ColumnVarNameInTable="columnIngspare_ID" msprop:Generator_ColumnPropNameInRow="Ingspare_ID" msprop:Generator_ColumnPropNameInTable="Ingspare_IDColumn" msprop:Generator_UserColumnName="Ingspare_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="txtspare_code" msprop:Generator_ColumnVarNameInTable="columntxtspare_code" msprop:Generator_ColumnPropNameInRow="txtspare_code" msprop:Generator_ColumnPropNameInTable="txtspare_codeColumn" msprop:Generator_UserColumnName="txtspare_code" type="xs:string" minOccurs="0" />
+              <xs:element name="SpareBar" msprop:Generator_ColumnVarNameInTable="columnSpareBar" msprop:Generator_ColumnPropNameInRow="SpareBar" msprop:Generator_ColumnPropNameInTable="SpareBarColumn" msprop:Generator_UserColumnName="SpareBar" type="xs:string" minOccurs="0" />
+              <xs:element name="txtspare_name" msprop:Generator_ColumnVarNameInTable="columntxtspare_name" msprop:Generator_ColumnPropNameInRow="txtspare_name" msprop:Generator_ColumnPropNameInTable="txtspare_nameColumn" msprop:Generator_UserColumnName="txtspare_name" type="xs:string" minOccurs="0" />
+              <xs:element name="txtSpareGrp_name" msprop:Generator_ColumnVarNameInTable="columntxtSpareGrp_name" msprop:Generator_ColumnPropNameInRow="txtSpareGrp_name" msprop:Generator_ColumnPropNameInTable="txtSpareGrp_nameColumn" msprop:Generator_UserColumnName="txtSpareGrp_name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

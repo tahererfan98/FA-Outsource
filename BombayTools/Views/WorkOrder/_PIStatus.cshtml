@@ -1,0 +1,773 @@
+﻿<style>
+    .hori_old_timelines_wrap-wrap {
+        background: #fff;
+        border-radius: 4px;
+        overflow: hidden;
+        padding: 0 0 0px 0; /* 0 0 50px 0-*/
+        margin: 0px 0 0px 12px;
+        min-width: 40%;
+        width: 100%;
+    }
+    /* ---- old_timelines_wrap elements ---- */
+    .hori_old_timelines_wrap li {
+        position: relative;
+        display: inline-block;
+        /* width:330px; */
+        width: 220px;
+        font: bold 14px arial;
+        height: 42px;
+    }
+
+    .hori_old_timelines_wrap ul {
+        margin: 5px 0;
+    }
+
+    .hori_li {
+        padding: 3px 0;
+        /* display: flex; */
+        justify-content: center;
+        background-color: #FFCC00;
+        border: 3px solid #FFCC00;
+        position: relative;
+        transition: all 200ms ease-in;
+    }
+
+    .hori_timestamp {
+        margin-bottom: 20px;
+        padding: 0px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 100;
+        text-align: justify;
+        white-space: nowrap;
+    }
+
+    .hori_li {
+        font-size: 18px;
+        text-align: justify;
+        white-space: nowrap;
+    }
+
+        .hori_li:before {
+            content: "";
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 25px;
+            border: 15px solid #FFCC00;
+            position: absolute;
+            top: -12px;
+            left: 89%;
+            /* left: 92%; */
+            /* left: 45%; */
+            transition: all 600ms ease-in;
+        }
+
+    .hori_active {
+        border: 3px solid #77CC45;
+        background-color: #77CC45;
+    }
+
+        .hori_active:before {
+            border: 15px solid #77CC45;
+            transition: all 600ms ease-in;
+        }
+
+    .hori_li.hori_active.hori_status h4 {
+        color: #E7505A;
+    }
+
+    .hori_stage_No {
+        margin: 15px 0;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        font-size: 15px;
+        line-height: 1.5em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 100;
+        text-align: justify;
+        white-space: nowrap;
+    }
+
+    #contentWrap {
+        position: relative;
+        width: 100%;
+        margin: 10px 0 0;
+        overflow: hidden;
+        -webkit-transition: height .4s;
+        -moz-transition: height .4s;
+        transition: height .4s;
+        color: #333;
+        height: 307px;
+    }
+
+        #contentWrap > ul {
+            padding: 0;
+        }
+
+            #contentWrap > ul > li {
+                position: absolute;
+                z-index: 1;
+                width: 100%;
+                left: 0;
+                top: 0;
+                -webkit-transform: translateX(-100%);
+                -moz-transform: translateX(-100%);
+                -ms-transform: translateX(-100%);
+                -o-transform: translateX(-100%);
+                transform: translateX(-100%);
+                padding: 0;
+                opacity: 0;
+                -webkit-animation-duration: .4s;
+                -moz-animation-duration: .4s;
+                animation-duration: .4s;
+                -webkit-animation-timing-function: ease-in-out;
+                -moz-animation-timing-function: ease-in-out;
+                animation-timing-function: ease-in-out;
+                margin: 0 auto;
+                font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+                font-variant: small-caps;
+            }
+
+                #contentWrap > ul > li.selected {
+                    position: relative;
+                    z-index: 2;
+                    opacity: 1;
+                    -webkit-transform: translateX(0);
+                    -moz-transform: translateX(0);
+                    -ms-transform: translateX(0);
+                    -o-transform: translateX(0);
+                    transform: translateX(0);
+                    font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+                    font-variant: small-caps;
+                }
+
+    .navigateRighttButton,
+    .navigateLeftButton {
+        color: #E7505A;
+        border: 2px solid #E7505A;
+        border-radius: 30px;
+        line-height: 0.9em;
+        width: 28px;
+        height: 28px;
+        margin: 43px 0;
+    }
+
+    .inactive {
+        cursor: not-allowed;
+    }
+
+    .collection-item.avatar {
+        min-height: 48px;
+        padding: 0px 52px 0 8px;
+    }
+
+    .hori_timestamp span {
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        font-size: 18px;
+        line-height: 1.5em;
+    }
+
+    .hori_stage_wrapper .hori_old_timelines_wrap li {
+        width: 435px;
+    }
+
+    .hori_stage_wrapper .hori_li:before {
+        left: 94%;
+    }
+
+    .z_wrapper {
+        margin: 0 0;
+        /* padding: 0 22px; */
+        -ms-transform: rotate(45deg);
+        -ms-transform-origin: 20% 40%;
+        -webkit-transform: rotate(45deg);
+        -webkit-transform-origin: 20% 40%;
+        -webkit-transform: rotate(-14deg);
+        transform: rotate(-15deg);
+        -webkit-transform-origin: 67% 240%;
+        transform-origin: 67% 240%;
+        background: transparent !important;
+    }
+
+        .z_wrapper .old_timelines_wrap li {
+            width: 660px;
+        }
+
+        .z_wrapper .li:before {
+            left: -3%;
+        }
+
+        .z_wrapper .timestamp {
+            padding: 0px 180px 0 0px;
+        }
+
+        .z_wrapper .old_timelines_wrap-wrap {
+            background: transparent !important;
+            border-radius: 4px;
+            overflow: hidden;
+            padding: 0 0 0px 0;
+            margin: 0px 0 0px 0px;
+            min-width: 40%;
+            width: 98%;
+        }
+
+    .bottom_wraaper {
+        margin: 255px 0 0 25px
+    }
+
+        .bottom_wraaper .old_timelines_wrap li {
+            width: 422px;
+        }
+
+    .wo_stage_wrap {
+        margin: 10px 0;
+    }
+
+    .vert_wrapp li {
+        width: 3px;
+        height: 46px;
+        border: 3px solid #E7505A;
+        margin: 0 40px;
+    }
+
+        .vert_wrapp li:before {
+            content: "";
+            width: 100px;
+            height: 100px;
+            background-color: #FFCC00;
+            border-radius: 0px;
+            border: 15px solid #FFCC00;
+            position: absolute;
+            top: 298px;
+            left: 110px;
+            transition: all 600ms ease-in;
+        }
+
+    .fulldesc {
+        margin: 0 0;
+        padding: 0px 0px 0px;
+    }
+
+    .old_timelines_wrap {
+        --uiold_timelines_wrapMainColor: var(--old_timelines_wrapMainColor, #222);
+        --uiold_timelines_wrapSecondaryColor: var(--old_timelines_wrapSecondaryColor, #fff);
+        position: relative;
+        /* padding-top: 3rem;
+      padding-bottom: 3rem; */
+    }
+
+        .old_timelines_wrap:before {
+            content: "";
+            width: 0px; /* vertical line width: 4px*/
+            height: 100%;
+            background-color: var(--uiold_timelines_wrapMainColor);
+            position: absolute;
+            top: 0;
+        }
+
+    .old_timelines_wrap__group {
+        position: relative;
+    }
+
+        .old_timelines_wrap__group:not(:first-of-type) {
+            margin-top: 4rem;
+        }
+
+    .old_timelines_wrap__year {
+        padding: .5rem 1.5rem;
+        color: var(--uiold_timelines_wrapSecondaryColor);
+        background-color: var(--uiold_timelines_wrapMainColor);
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+    }
+
+    .old_timelines_wrap__box {
+        position: relative;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        margin: 10px 0;
+    }
+
+        .old_timelines_wrap__box:not(:last-of-type) {
+            margin-bottom: 30px;
+        }
+
+        .old_timelines_wrap__box:before {
+            content: "";
+            /* width: 100%; */
+            width: 0px;
+            height: 2px;
+            background-color: var(--uiold_timelines_wrapMainColor);
+            position: absolute;
+            left: 0;
+            z-index: -1;
+            font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+            font-variant: small-caps;
+        }
+
+    .old_timelines_wrap__date {
+        min-width: 65px;
+        position: absolute;
+        left: 0;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        box-sizing: border-box;
+        padding: .5rem 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        background-color: var(--uiold_timelines_wrapMainColor);
+        color: var(--uiold_timelines_wrapSecondaryColor);
+    }
+
+    .old_timelines_wrap__day {
+        font-size: 1rem;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        font-weight: 700;
+        display: block;
+    }
+
+    .old_timelines_wrap__month {
+        display: block;
+        font-size: 1em;
+        text-transform: uppercase;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+    }
+
+    .old_timelines_wrap__post {
+        padding: 0rem 0 0px 12px;
+        border-radius: 2px;
+        border-left: 3px solid var(--uiold_timelines_wrapMainColor);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 1px 2px 0 rgba(0, 0, 0, .24);
+        background-color: var(--uiold_timelines_wrapSecondaryColor);
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        height: 700px;
+        position: absolute;
+        /*top: -27px;*/
+    }
+
+    .department_wrap {
+        display: flex;
+    }
+
+    pre {
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        /* margin: 0 30px 15px; */
+        margin: 0 5px 15px;
+    }
+
+    .message {
+        margin-top: 15px;
+    }
+
+        .message label {
+            font-size: 0.99em;
+            margin: 8px 2px;
+            color: #D50000;
+        }
+
+    .prod_stage_wrap {
+        margin: 0px 10px 16px 10px;
+        background-color: #FFCC00;
+        padding: 3px 12px;
+    }
+
+    .stage_heading {
+        font-size: 0.59em;
+    }
+
+    .header_name {
+        font-size: 18px;
+        color: #d50000;
+        margin: 0;
+        padding: 0;
+    }
+
+    .count_wrap {
+        width: 125px;
+        border-radius: 0px;
+        background-color: #F19F21;
+        color: #000000;
+        margin: 3px 8px 11px 0px;
+        padding: 5px 0px 0 2px;
+        box-shadow: 0px 0px 7px #888888;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        height: 37px;
+        cursor: pointer;
+    }
+
+        .count_wrap label {
+            font-size: 14px;
+            color: #fff;
+        }
+
+            .count_wrap label span {
+                font-size: 15px;
+                color: #fff;
+            }
+
+    .auth_wrap {
+        margin-bottom: 18px;
+    }
+
+    .dc__stage_wrap {
+        margin: 11px 0 0 88px;
+        background-color: #FFCC00;
+        padding: 12px 18px;
+        clear: both;
+        width: 80%;
+        float: none;
+        height: 250px;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+    }
+
+    .clear {
+        clear: both;
+        float: none;
+    }
+
+    .dc_count_wrap {
+        /* width: 98%; */
+        border-radius: 0px;
+        background-color: #F19F21;
+        color: #000000;
+        margin: 8px 0 0 12px;
+        padding: 4px 9px;
+        box-shadow: 0px 0px 7px #888888;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        height: 185px;
+        /* cursor: pointer; */
+        float: none;
+    }
+
+    .old_timelines_wrap__content {
+        display: grid;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+    }
+
+    .old_timelines_wrap {
+        margin: 30px 0;
+    }
+
+    .dc_stage_heading {
+        font-size: 0.9em;
+        font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+        font-variant: small-caps;
+        color: #d50000;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dc_header_name label {
+        color: #fff;
+        font-size: 18px;
+        display: block;
+    }
+
+        .dc_header_name label span {
+            color: #fff;
+            font-size: 20px;
+        }
+
+    .dc_table_wrap .table {
+        width: 98%;
+        margin: 6px 0px;
+        max-height: 60px !important;
+        height: 50px !important;
+        overflow: scroll;
+    }
+
+        .dc_table_wrap .table td, th {
+            padding: 6px 11px;
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .dc_table_wrap .table th {
+            font-family: Raleway, "Raleway",Helvetica,Arial,sans-serif;
+            font-variant: small-caps;
+            font-size: 14px;
+            border-bottom: 2px solid rgba(0,0,0,0.12);
+            line-height: 1em;
+            font-weight: 600;
+            text-transform: capitalize;
+            background-color: #F19F21;
+            color: #fafafa;
+            word-break: normal
+        }
+
+        .dc_table_wrap .table td {
+            font-family: 'Segoe UI';
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dc_table_wrap .table tr {
+            border-bottom: 0px solid rgba(0,0,0,0.12);
+        }
+
+        .dc_table_wrap .table .row:hover td {
+            background-color: #F19F21;
+        }
+
+        .dc_table_wrap .table .row td:hover {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .dc_table_wrap .table thead tr th:hover {
+            background-color: #F19F21 !important;
+        }
+
+    .dc_table_wrap .text_align_right {
+        text-align: right !important;
+    }
+
+    .dc_table_wrap .text_align_left {
+        text-align: left !important;
+    }
+
+    .header_wrap {
+        margin: 17px 0px 0px 3px;
+        /* clear: both; */
+        float: left;
+    }
+
+    .dc_table_wrap .fixed_headers {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+        .dc_table_wrap .fixed_headers th,
+        .dc_table_wrap .fixed_headers td {
+            padding: 5px;
+            text-align: left;
+        }
+
+            .dc_table_wrap .fixed_headers td:nth-child(1),
+            .dc_table_wrap .fixed_headers th:nth-child(1) {
+                min-width: 120px;
+            }
+
+            .dc_table_wrap .fixed_headers td:nth-child(2),
+            .dc_table_wrap .fixed_headers th:nth-child(2) {
+                min-width: 90px;
+            }
+
+            .dc_table_wrap .fixed_headers td:nth-child(3),
+            .dc_table_wrap .fixed_headers th:nth-child(3) {
+                min-width: 60px;
+            }
+
+            .dc_table_wrap .fixed_headers td:nth-child(4),
+            .dc_table_wrap .fixed_headers th:nth-child(4) {
+                min-width: 115px;
+            }
+
+            .dc_table_wrap .fixed_headers td:nth-child(5),
+            .dc_table_wrap .fixed_headers th:nth-child(5) {
+                min-width: 100px;
+            }
+
+        .dc_table_wrap .fixed_headers thead {
+            background-color: #F19F21;
+            color: #F19F21;
+        }
+
+            .dc_table_wrap .fixed_headers thead tr {
+                display: block;
+                position: relative;
+            }
+
+        .dc_table_wrap .fixed_headers tbody {
+            display: block;
+            overflow: auto;
+            width: 100%;
+            height: 140px;
+        }
+
+            .dc_table_wrap .fixed_headers tbody tr:nth-child(even) {
+                background-color: #F19F21;
+            }
+
+    .dc_table_wrap .old_ie_wrapper {
+        height: 380px;
+        width: 750px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+        .dc_table_wrap .old_ie_wrapper tbody {
+            height: auto;
+        }
+    /* .dc_table_wrap .table tbody tr:last-child {
+      background:#e2ff00 !important;
+    } */
+
+    .close .material-icons {
+        font-size: 34px;
+        cursor: pointer;
+        vertical-align: middle;
+        margin: 0 0;
+    }
+
+    .close label {
+        font-size: 1.5rem;
+        line-height: 0.9em;
+        color: #000000;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .row {
+        /* background: #ffffff; */
+    }
+
+    .right {
+        float: right !important;
+    }
+
+    .content-area {
+        background: #ffffff !important;
+        overflow: scroll !important;
+        min-height: 87% !important;
+        max-height: 150% !important;
+        height: 100% !important;
+        padding: 0 30px 0 10px !important;
+    }
+</style>
+
+<div class="content-area" style="min-height: 1000px !important;">
+    <div class="page-header">
+        <h4 class="page-title"> PI status </h4>
+        <i class="fa fa-arrow-left mr-4" onclick="BackToWOSummary()"></i>
+        @*<button type="button" class="close pull-right" title="Back" onclick="BackToWOSummary()">
+            <i class="fa fa-arrow-left"></i>
+        </button>*@
+
+    </div>
+    <div>
+        <div class="hori_old_timelines_wrap-wrap">
+            <div class="hori_old_timelines_wrap-container">
+                <div class="hori_old_timelines_wrap" id="hori_old_timelines_wrap">
+                    <ul>
+                        @if (ViewBag.PIStages.isPIStageApproved == true)
+                        {
+                            <li>
+                                <div class="hori_timestamp">
+                                    <span style="color: #3489b7;">PI No</span>
+                                    <span class="hori_date" style="color: #3489b7;">@ViewBag.PIStages.PIDate1</span>
+                                </div>
+                                <div class="hori_li hori_active"></div> <!-- [ngStyle]="{'border-top-color':  piStatus.circleColor}"-->
+                                <div class="hori_stage_No">  <span class="hori_date" style="color: #3489b7;">@ViewBag.PIStages.PINO</span></div>
+                            </li>
+                        }
+
+                        @if (ViewBag.PIStages.isCustomerStageApproved == true)
+                        {
+                            <li>
+                                <div class="hori_timestamp">
+                                    <span style="color: #997e16;">Approval by customer</span>
+                                    <span class="hori_date" style="color: #997e16;">@ViewBag.PIStages.CustomerApprovedDate1</span>
+                                </div>
+                                <div class="hori_li hori_active"></div> <!-- [ngStyle]="{'border-top-color':  piStatus.circleColor}"-->
+                                <div class="hori_stage_No">  <span class="hori_date" style="color: #997e16;">@ViewBag.PIStages.CustomerName</span></div>
+                            </li>
+                        }
+
+                        @if (ViewBag.PIStages.isAccountStageApproved == true)
+                        {
+                            <li>
+                                <div class="hori_timestamp">
+                                    <span style="color: #ffcc00;">Approval by account</span>
+                                    <span class="hori_date" style="color: #ffcc00;">@ViewBag.PIStages.ApprovalDateByAccountDept1</span>
+                                </div>
+                                <div class="hori_li hori_active" style="color: #ffcc00;"></div> <!-- [ngStyle]="{'border-top-color':  piStatus.circleColor}"-->
+                                <div class="hori_stage_No">  <span class="hori_date" style="color: #ffcc00;">@ViewBag.PIStages.ApproversName</span></div>
+                            </li>
+                        }
+
+                        @if (ViewBag.PIStages.isWOStageApproved == true)
+                        {
+                            <li>
+                                <div class="hori_timestamp">
+                                    <span style="color: #77ccff;">Generating Wo NO</span>
+                                    <span class="hori_date" style="color: #77ccff;">@ViewBag.PIStages.LatestWODate1</span>
+                                </div>
+                                <div class="hori_li hori_active"></div> <!-- [ngStyle]="{'border-top-color':  piStatus.circleColor}"-->
+                                <div class="hori_stage_No">  <span class="hori_date" style="color: #77ccff;">Count: @ViewBag.PIStages.WOCount</span></div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="message"><label></label></div>
+        <div class="row row-cards">
+            <div class="col-lg-2" @*style="min-height: 70px;"*@>
+                @foreach (var d in ViewBag.WODetails)
+                {
+                    <div class="col-12 mb-4 pb-2" style="background-color: #4557bb;max-height: 70px;min-height:50px;">
+                        <div class="old_timelines_wrap__date" onclick="openWODetails(`@d.WONO`)">
+                            <span class="old_timelines_wrap__day text-white">@d.WODate1</span>
+                            <span class="old_timelines_wrap__month text-white">@d.WONO</span>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-10">
+                <div id="divWODetails">
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    function openWODetails(WONo) {
+        $("#global-loader").fadeIn("slow");
+        var data = { 'WONO': WONo };
+        data = JSON.stringify(data)
+        $.ajax({
+            url: "/WorkInProgress/_WODetails",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (response) {
+                debugger;
+                $('#divWODetails').html(response);
+                $("#divWODetails").show();
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert(errormessage);
+            }
+        });
+
+    }
+
+
+</script>

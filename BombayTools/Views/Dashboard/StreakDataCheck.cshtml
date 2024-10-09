@@ -1,0 +1,274 @@
+﻿<div class="row mt-5">
+    <div class="col-12">
+        <button class="btn btn-success float-right" onclick="getToStreakList()"><i class="fa fa-arrow-left"></i></button>
+    </div>
+</div>
+
+<div class="card mt-5">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    @Html.TextBox("SDName", null, new { @class = "form-control", @id = "SDName", name = "SDName", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Stage</label>
+                    @Html.TextBox("SDStage", null, new { @class = "form-control", @id = "SDStage", name = "SDStage", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Probability</label>
+                    @Html.TextBox("SDProbabilty", null, new { @class = "form-control", @id = "SDProbabilty", name = "SDProbabilty", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Deal Size</label>
+                    @Html.TextBox("SDDealSize", null, new { @class = "form-control", @id = "SDDealSize", name = "SDDealSize", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Lead Source</label>
+                    @Html.TextBox("SDLeadSource", null, new { @class = "form-control", @id = "SDLeadSource", name = "SDLeadSource", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Vertical</label>
+                    @Html.TextBox("SDVertical", null, new { @class = "form-control", @id = "SDVertical", name = "SDVertical", autocomplete = "off", disabled = "disabled" })
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                    <label class="form-label">Company</label>
+                    @Html.TextBox("SDCompanyName", null, new { @class = "form-control", @id = "SDCompanyName", name = "SDCompanyName", autocomplete = "on" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    @Html.TextBox("SDLocationN", null, new { @class = "form-control", @id = "SDLocationN", name = "SDLocationN", autocomplete = "on" })
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group label-floating">
+                    <label class="form-label">Principal</label>
+                    @Html.DropDownList("ddlPrincipalDropdown", (IEnumerable<SelectListItem>)ViewBag.PrincipalDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlPrincipalDropdown", name = "ddlPrincipalDropdown", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group label-floating">
+                    <label class="form-label">Sector</label>
+                    @Html.DropDownList("ddlSectorDropdown", (IEnumerable<SelectListItem>)ViewBag.SectorDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlSectorDropdown", name = "ddlSectorDropdown", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group label-floating">
+                    <label class="form-label">Industry</label>
+                    @Html.DropDownList("ddlIndustryDropdown", (IEnumerable<SelectListItem>)ViewBag.IndustryDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlIndustryDropdown", name = "ddlIndustryDropdown", autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-lg-12">
+                <button id="saveCustomer" class="btn btn-success float-right" onclick="SaveStreakData()"><i class="fa fa-save"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var StreakDataID =@ViewBag.ID;
+    var TempCompanyID = @ViewBag.CompanyID;
+    var TempLocationID = @ViewBag.LocationID;
+    var CompanyList = [];
+    var LocationList = [];
+    var CompanyID = 0;
+    var LocationID = 0;
+    $("#SDCompanyName").keyup(function () {
+        CompanyListSD();
+    });
+
+    $("#SDCompanyName").focusout(function () {
+        LocationListSD();
+
+    });
+
+    function CompanyListSD() {
+        var searchtext = document.getElementById("SDCompanyName").value;
+        CompanyID = 0;
+        LocationID = 0;
+        if (searchtext.length > 0) {
+            var data = { 'SearchText': searchtext };
+            data = JSON.stringify(data);
+            $.ajax({
+                type: 'post',
+                url: '/ManageContact/CompanyList',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function (list) {
+                    if (list.length != 0) {
+                        CompanyList = list;
+                        var itemList = [];
+                        var sortedList = [];
+                        var compID = 0;
+                        for (k = 0; k < list.length; k++) {
+                            if (compID != list[k].CompanyID) {
+                                compID = list[k].CompanyID;
+                                var element = {};
+                                element.CompanyName = list[k].CompanyName;
+                                sortedList.push(element);
+                            }
+                        }
+
+                        for (i = 0; i < sortedList.length; i++) {
+
+                            itemList[i] = sortedList[i].CompanyName;
+
+                        }
+
+                        $("#SDCompanyName").autocomplete({
+                            source: itemList
+                        });
+                    }
+
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
+    function LocationListSD() {
+        LocationList = [];
+        var searchtext = document.getElementById("SDCompanyName").value;
+        for (i = 0; i < CompanyList.length; i++) {
+            if (searchtext != "" || searchtext != undefined) {
+                if (searchtext == CompanyList[i].CompanyName) {
+
+                    var element = {};
+                    CompanyID = CompanyList[i].CompanyID;
+                    element.LocationID = CompanyList[i].LocationID;
+                    element.Location = CompanyList[i].Location;
+                    LocationList.push(element);
+                }
+            }
+        }
+        var itemList = [];
+        for (i = 0; i < LocationList.length; i++) {
+
+            itemList[i] = LocationList[i].Location;
+
+        }
+
+        $("#SDLocationN").autocomplete({
+            source: itemList
+        });
+        $("#cute-loader").fadeOut("slow");
+
+    }
+
+    $(document).ready(function () {
+        $("#cute-loader").fadeIn("slow");
+        var principal = document.getElementById("ddlPrincipalDropdown");
+        principal.value = @ViewBag.PrincipalID;
+        var sector = document.getElementById("ddlSectorDropdown");
+        sector.value = @ViewBag.SectorID;
+        var industry = document.getElementById("ddlIndustryDropdown");
+        industry.value = @ViewBag.IndustryID;
+        CompanyListSD();
+        setTimeout(function () { LocationListSD(); }, 3000);
+    });
+
+    function getToStreakList() {
+        $('#EditStreakData').hide();
+        $('#StreakData').show();
+    }
+
+    function SaveStreakData() {
+        var Type = 0;
+        var Company = document.getElementById("SDCompanyName").value;
+        var Location = document.getElementById("SDLocationN").value;
+        if (Company == "" || Location=="") {
+            alert("Please Fill require details");
+            return false;
+        }
+
+        for (i = 0; i < CompanyList.length; i++) {
+            if (CompanyList[i].CompanyName == Company) {
+                CompanyID = CompanyList[i].CompanyID;
+                break;
+            }
+        }
+
+        for (j = 0; j < LocationList.length; j++) {
+            if (LocationList[j].Location == Location) {
+                LocationID = LocationList[j].LocationID;
+                break;
+            }
+        }
+
+
+        if (CompanyID == undefined || CompanyID == '' || CompanyID ==0) {
+            Type = 1;
+        } else if (LocationID == undefined || LocationID == '' || LocationID == 0) {
+            Type = 2;
+        } else {
+            Type = 3;
+        }
+
+        var element = {};
+        var e = document.getElementById("ddlPrincipalDropdown");
+        element.PrincipalID = e.options[e.selectedIndex].value;
+        var c = document.getElementById("ddlIndustryDropdown");
+        element.IndustryID = c.options[c.selectedIndex].value;
+        var s = document.getElementById("ddlSectorDropdown");
+        element.SectorID = s.options[s.selectedIndex].value;
+        element.Type = Type;
+        if (Type == 1) {
+            if (element.PrincipalID == "" || element.SectorID == "" || element.IndustryID == "") {
+                alert("Please fill all required field")
+                return false;
+            }
+        }
+
+        element.CompanyID = CompanyID;
+        element.CompanyName = Company;
+        element.Location = Location;
+        element.LocationID = LocationID;
+        element.ID = StreakDataID;
+        element.IsUpdate = 1;
+        element.Addedon = new Date();
+        var data = { 'Data': element };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/Requirement/Dataupdation',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (list) {
+                alert("Record Saved Successfully");
+                $('#EditStreakData').hide();
+
+                GetStreakUserData(tempIDC);
+            },
+            error: function (error) {
+                alert(error.responseText);
+                return false;
+            }
+        });
+    }
+</script>

@@ -1,0 +1,13 @@
+﻿@media (min-width: 280px) and (max-width: 680px) {
+    .iframeReport {
+        height: 470px !important;
+        width: 260px !important;
+    }
+}
+
+@media (min-width: 681px) and (max-width: 1280px) {
+    .iframeReport {
+        height: 2070px !important;
+        width: 850px !important;
+    }
+}

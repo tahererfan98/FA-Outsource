@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "UserDetails";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<h2>UserDetails</h2>
+
+<script>
+        $(document).ready(function () {
+        $("#cute-loader").fadeOut("slow");
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+    });
+</script>

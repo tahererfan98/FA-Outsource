@@ -1,0 +1,359 @@
+﻿
+<div>
+    <div class="modal-header">
+        <h5 class="modal-title" id="example-Modal3"> Upload Attachments </h5><label id="MSNoFile" style="visibility:hidden"></label>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" id="divAttach" style="color:black">
+        <form id="myForm">
+            <div class="form-group" id="divFileUpload">
+                <input type="file" id="fileJOAttachment" name="postedFile" />
+                <input type="Button" id="btnUpload" value="Upload" class="btn btn-primary" /><br>
+                @*File Name : <input type="text" id="NewFileName" name="NewFileName" />*@
+            </div>
+            <div class="form-group">
+                <div class="table-responsive">
+                    <table id="JOAttachment" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p sorting">File Name</th>
+                                <th style="width:15px"></th>
+                                <th style="width:15px"></th>
+                                @*<th style="width:15px">File Name</th>*@
+                            </tr>
+                        </thead>
+                        <tbody style="box-sizing :border-box;"></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="btnDone" value="Done" class="btn btn-info pull-right" data-dismiss="modal" aria-label="Close">Done</button>
+    </div>
+</div>
+@using (Html.BeginForm("DownloadENQFile", "Enquiry", FormMethod.Post))
+{
+    <input type="hidden" id="hfFileId" name="id" />
+    <input type="submit" id="btnDownload" value="Download" style="display:none" />
+}
+<script>
+    var type = 'Approve';
+
+    var table = [];
+
+    $(document).ready(function () {
+        $('#JOAttachment').dataTable({
+            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bFilter": false,
+            "paging": false
+
+        })
+        debugger;
+        table = BillAttachment;
+
+        if (table.length != 0) {
+            $('#JOAttachment').dataTable({
+                "bLengthChange": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "bFilter": false,
+                "paging": false,
+                "destroy": true,
+                "bLengthChange": false,
+                "aaData": table,
+                "columns": [
+                    { "data": "DocFileName" },
+                    {
+                        "data": "FilePath",
+                        "render": function (data, type, row, meta) {
+                            if (type === 'display') {
+
+                                data = '<a   onclick="DownloadAttachment(' + row.RunningID + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a>';
+                            }
+
+                            return data;
+                        }
+
+
+                    },
+                    {
+                        "data": "FilePath",
+                        "render": function (data, type, row, meta) {
+                            if (type === 'display') {
+
+                                data = '<a   onclick="DeleteAttachment(' + row.RunningID + ')"  href="#" class="btn btn-danger"  title="Download"><i class="fa fa-trash-o"></i></a>';
+                            }
+
+                            return data;
+                        }
+
+                    }
+
+                ]
+            });
+            CountRows();
+        }
+
+});
+
+
+    $('#btnUpload').click(function () {
+        debugger;
+        var MSNoFile1 = "";
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#fileJOAttachment").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+            if (files.length == 0) {
+                alert("Please select File!")
+                return false;
+            }
+            else {
+                AddAttachmentNoWise(type);
+
+            }
+        }
+        else {
+            alert("FormData is not supported");
+        }
+    });
+
+    var runningno = 0;
+    //var BillAttachment = [];
+
+    function AddAttachmentNoWise(data) {
+
+        debugger;
+        $("#global-loader").fadeIn("slow");
+       // var NewFileName = $("#NewFileName").val();
+
+        var fileUpload = $("#fileJOAttachment").get(0);
+        var files = fileUpload.files;
+        var fileData = new FormData();
+        var UploadType = data;
+       // var NewFileName = NewFileName;
+        //var UploadType = data;
+        //End Of maximum meetin number
+        var iSize = document.getElementById('fileJOAttachment').files[0].size / 1024
+        iSize = (Math.round((iSize / 1024) * 100) / 100)
+        if (iSize > 25) {
+            alert("Selected file size more than 25 MB");
+            $("#global-loader").fadeOut("slow");
+            return false;
+        }
+        // Looping over all files and add it to FormData object
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+        }
+        fileData.append('EnqType', UploadType);
+        runningno++;
+        $.ajax({
+            url: '/Enquiry/UploadAttachmentApproveDetails',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (Data) {
+                $("#global-loader").fadeOut("slow");
+
+                    var element = {};
+                    element.DocFileName = Data.DocName;
+                    element.RunningID = runningno;
+                    element.FilePath = Data.FilePath;
+                    element.ContentType = Data.ContentType;
+                    element.UploadType = type;
+                    BillAttachment.push(element);
+                    table = BillAttachment;
+
+                $('#JOAttachment').dataTable({
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bPaginate": false,
+                    "bFilter": false,
+                    "paging": false,
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": table,
+                    "columns": [
+                        { "data": "DocFileName" },
+                        {
+                            "data": "FilePath",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = '<a   onclick="DownloadAttachment(' + row.RunningID + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a>';
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "ContentType",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = '<a   onclick="DeleteAttachment(' + row.RunningID + ')"  href="#" class="btn btn-danger removebutton"  title="Download"><i class="fa fa-trash-o"></i></a>';
+                                 }
+                                return data;
+                            }
+                        }
+                    ]
+                });
+                CountRows();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                console.log(errormessage.responseText)
+                $("#global-loader").fadeOut("slow");
+            }
+
+
+        });
+        $("#fileJOAttachment").val('');
+    }
+
+
+    function DownloadAttachment(runningno) {
+        debugger;
+        var no = runningno;
+        var docname, Filepath, contentType;
+
+        console.log(table);
+        for (i = 0; i < table.length; i++) {
+            if (table[i].RunningID == no) {
+                docname = table[i].DocFileName;
+                Filepath = table[i].FilePath;
+                contentType = table[i].ContentType;
+            }
+        }
+        var id = 0;
+        var data = { 'DocName': docname, 'Filepath': Filepath, 'ContentType': contentType }
+        data = JSON.stringify(data);
+        $.ajax({
+            url: '/Enquiry/TempDataForENQSentM',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (Data) {
+                id = Data;
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+         $("#hfFileId").val(id);
+        $("#btnDownload")[0].click();
+    }
+
+
+    function DeleteAttachment(id) {
+
+        var DocName = "";
+        var FilePath = "";
+        var ContentType = "";
+        var EstimationNo = "";
+        var ESNO = "";
+
+        var r = confirm("Are you sure want to delete this file!");
+        if (r == true) {
+
+            //debugger;
+            var no = id;
+
+
+            for (i = 0; i < table.length; i++) {
+                if (table[i].RunningID == no) {
+                    ESNO = ESNO;
+                 DocName = table[i].DocFileName;
+                 FilePath = table[i].FilePath;
+                 ContentType = table[i].ContentType;
+                }
+
+            }
+
+             for (i = 0; i < table.length; i++) {
+                if (table[i].RunningID == no) {
+                    table.splice(i, 1);
+                }
+            }
+
+
+            for (i = 0; i < BillAttachment.length; i++) {
+                if (BillAttachment[i].RunningID == no) {
+                    BillAttachment.splice(i, 1);
+                }
+            }
+
+            var data = { 'ESNO': ESNO, 'DocName': DocName, 'Filepath': FilePath, 'ContentType': ContentType }
+            data = JSON.stringify(data);
+
+            $.ajax({
+                url: '/Enquiry/DeleteFileEnquirySentM',
+            type: "POST",
+            data:data,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (Data) {
+                $('#JOAttachment').dataTable({
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bPaginate": false,
+                    "bFilter": false,
+                    "paging": false,
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": table,
+                    "columns": [
+                        { "data": "DocFileName" },
+                        {
+                            "data": "FilePath",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = '<a   onclick="DownloadAttachment(' + row.RunningID + ')"  href="#" class="btn btn-primary"  title="Download"><i class="fa fa-download"></i></a>';
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "ContentType",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    data = '<a   onclick="DeleteAttachment(' + row.RunningID + ')"  href="#" class="btn btn-danger removebutton"  title="Download"><i class="fa fa-trash-o"></i></a>';
+                                }
+                                return data;
+                            }
+                        }
+                    ]
+                });
+                CountRows();
+                },
+                error: function (error) {
+                    alert(error.responseText);
+                }
+             });
+
+        }
+
+    }
+
+
+    function CountRows() {
+        var table = $('#JOAttachment').DataTable();
+
+        var RowCount = table.rows().count();
+        document.getElementById('lblAttachmentForPhoto').innerHTML = RowCount;
+
+    }
+
+
+    //function HideColumns()
+
+
+</script>
+
+

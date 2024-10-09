@@ -1,0 +1,24 @@
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.pdb
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.AssemblyReference.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.CoreCompileInputs.cache
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.dll
+C:\Vishal\MVC\FGCRMNew-dev-FGA_18032023\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.pdb
+D:\MVC\FACRM\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.dll
+D:\MVC\FACRM\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.pdb
+D:\MVC\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.AssemblyReference.cache
+D:\MVC\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.CoreCompileInputs.cache
+D:\MVC\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.dll
+D:\MVC\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.pdb
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.AssemblyReference.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.CoreCompileInputs.cache
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.dll
+D:\01 Rohit MVC Projects\09_FACRM\FACRM\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.pdb
+D:\FAOutsource\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.dll
+D:\FAOutsource\BombayToolsDBConnector\bin\Debug\BombayToolsDBConnector.pdb
+D:\FAOutsource\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.AssemblyReference.cache
+D:\FAOutsource\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.csproj.CoreCompileInputs.cache
+D:\FAOutsource\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.dll
+D:\FAOutsource\BombayToolsDBConnector\obj\Debug\BombayToolsDBConnector.pdb

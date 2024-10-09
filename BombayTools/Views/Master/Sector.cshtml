@@ -1,0 +1,239 @@
+﻿
+<div class=" content-area" id="Summary">
+    <div class="page-header">
+        <h4 class="page-title" id="New">Sector Master</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" id="ShowSummary" class="btn btn-josph btn-success" style="color:white;align-content:center;"><i class="fa fa-file-text" data-toggle="tooltip" data-placement="bottom" title="Summary" data-original-title="Back"></i>  </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <label class="form-label">Sector Name</label>
+                                @Html.TextBox("SectorName", null, new { @class = "form-control", @id = "SectorName", name = "SectorName", autocomplete = "off", })
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success float-right" id="Save" onclick="SavePrincipal()" title="Save"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-warning float-right" id="Update" onclick="UpdatePrincipal()"><i class="fa fa-save"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var SetID = 0;
+
+
+    $(document).ready(function () {
+        SetID = '@ViewBag.SectorID';
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        if (SetID != 0) {
+            $("#Save").hide();
+            $("#Update").show();
+        } else {
+            document.getElementById("SectorName").value = "";
+            $("#Update").hide();
+            $("#Save").show();
+        }
+
+    });
+
+
+     function SavePrincipal() {
+        var res = validateAllDetail();
+        if (res == false) {
+            return false;
+         }
+         var Name = document.getElementById("SectorName").value;
+         Name = Name.trim()
+         Name = Name.toLowerCase();
+         for (i = 0; i < SectorList.length; i++) {
+             var temp = SectorList[i].SectorName;
+             temp = temp.toLowerCase();
+             if (Name.trim() == temp) {
+                 alert("Sector Name already exist");
+                 return false;
+             }
+         }
+         var element = {};
+         element.SectorID = 0;
+         element.SectorName = document.getElementById("SectorName").value;
+
+         element.IsNew = 1;
+         data = JSON.stringify(element);
+       // alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/NewSaveSector',
+          //  url: '/Principal/NewPrincipal',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("SectorSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdatePrincipal() {
+        var Name = document.getElementById("SectorName").value;
+        Name = Name.trim()
+        Name = Name.toLowerCase();
+        for (i = 0; i < SectorList.length; i++) {
+            if (SetID != SectorList[i].SectorID) {
+                var temp = SectorList[i].SectorName;
+                temp = temp.toLowerCase();
+                if (Name.trim() == temp) {
+                    alert("Sector Name already exist");
+                    return false;
+                }
+            }
+        }
+        var element = {};
+
+        element.SectorID = '@ViewBag.SectorID';
+        element.SectorName = document.getElementById("SectorName").value;
+
+        element.isActive = 1;
+        element.IsNew = 0;
+        data = JSON.stringify(element);
+       // alert(data);
+        //data = JSON.stringify(data);
+        //alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/UpdateSector',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("SectorSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+     function DeletePrincipal() {
+
+        var element = {};
+
+         element.SectorID = '@ViewBag.SectorID';
+         element.SectorName = document.getElementById("SectorName").value;
+        data = JSON.stringify(element);
+        //alert(data);
+        //data = JSON.stringify(data);
+        //alert(data);
+        $.ajax({
+            type: 'post',
+            url: '/Master/DeleteNewSector',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                alert(response);
+                document.location = '@Url.Action("SectorSummary", "Master")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    var PrincipalList = [];
+    function CheckPrincipal() {
+        if (PrincipalList.length == 0) {
+            $.ajax({
+                url: "/Master/AjaxGetAllSector",
+                //data: '{QuotNo: ' + JSON.stringify(QuotNo) + '}',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    PrincipalList = response;
+                    ValidatePrincipal();
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+        else {
+            ValidatePrincipal();
+        }
+    }
+
+    function ValidatePrincipal() {
+        var EnteredPrincipal = document.getElementById('SectorName').value;
+        EnteredPrincipal = EnteredPrincipal.toLowerCase();
+        EnteredPrincipal = EnteredPrincipal;
+
+        for (i = 0; i < PrincipalList.length; i++) {
+            var temp = PrincipalList[i].SectorName.toLowerCase();
+            if (EnteredPrincipal == temp) {
+                alert("Sector name already exist");
+                $('#SaveButton').attr('disabled', true);
+                document.getElementById('SectorName').style.borderColor = "red";
+                return;
+            } else {
+                $('#SaveButton').attr('disabled', false);
+                document.getElementById('SectorName').style.borderColor = "Gainsboro";
+            }
+        }
+    }
+
+    function validateAllDetail() {
+        var isValid = Boolean;
+        isValid = true;
+        var Principal = document.getElementById("SectorName").value;
+
+
+        if (Principal == "" || Principal == undefined) {
+            document.getElementById('SectorName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('SectorName').style.borderColor = "Gainsboro";
+        }
+
+
+
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+    }
+</script>
+
+
+
+

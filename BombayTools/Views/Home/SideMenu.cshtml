@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.SubmenuInfo>
+@{
+
+    if (Session["MenuList"] != null)
+    {
+        @GetTreeMenus(Session["MenuList"] as IEnumerable<BombayToolsEntities.BusinessEntities.SubmenuInfo>, 0)
+
+    }
+
+}
+@helper GetTreeMenus(IEnumerable<BombayToolsEntities.BusinessEntities.SubmenuInfo> siteMenu, Nullable<int> parentID)
+{
+/**/
+
+
+foreach (var i in siteMenu.Where(a => a.ParentID.Equals(parentID)))
+{
+
+    // var submenu = siteMenu.Where(a => a.ParentID.Equals(i.MenuID)).Count();
+    var submenu = siteMenu.Where(a => a.ParentID.Equals(i.MenuID)).ToList();
+    string action = i.Action;
+    string controller = i.ControllerName;
+    if (i.MenuID != 0 && (i.MenuID == 1 || i.MenuID == 2 || i.MenuID == 7 || i.MenuID == 4 || i.MenuID == 22 || i.MenuID == 11 || i.MenuID == 6 || i.MenuID == 5 || i.MenuID == 10 || i.MenuID == 12 || i.MenuID == 13 || i.MenuID == 16 || i.MenuID == 14 || i.MenuID == 17 || i.MenuID == 18))
+    {
+            <li onclick="setDefaultHeight()">
+                @foreach (var e in submenu)
+                    {
+
+                    <a href="/@e.ControllerName/@e.Action" onclick="GetSetMenuLogDetails(@i.MenuID,@e.SubMenu_ID,'/@e.ControllerName/@e.Action')">
+                        <i class="@i.menuIcon" style="color:#F89C32"></i> <span>@e.MenuText</span>
+                    </a>
+                }
+            </li>
+        }
+        else
+{
+            <li onclick="setDefaultHeight()">
+                <a href="#@i.MenuID" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
+                    <i class="@i.menuIcon" style="color:#F89C32"></i> @i.MenuText
+                </a>
+                <ul class="collapse list-unstyled" id=@i.MenuID data-parent="#accordion">
+                    @foreach (var e in submenu)
+                    {
+                        <li>
+                            <a href="/@e.ControllerName/@e.Action"  onclick="GetSetMenuLogDetails(@i.MenuID,@e.SubMenu_ID,'/@e.ControllerName/@e.Action')">
+                                <span>@e.MenuText</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+
+        @*<li onclick="setDefaultHeight()">
+                <a href="#@i.MenuID" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
+                    <i class="@i.menuIcon" style="color:#F89C32"></i> @i.MenuText
+                </a>
+                <ul class="collapse list-unstyled" id=@i.MenuID data-parent="#accordion">
+                    @foreach (var e in submenu)
+                    {
+                        <li>
+                            <a href="/@e.ControllerName/@e.Action">
+                                <span>@e.MenuText</span>
+                            </a>
+                        </li>
+
+                    }
+                </ul>
+            </li>*@
+
+    }
+
+}
+
+
+<script>
+
+    function GetSetMenuLogDetails(menuID, submenuID, redirectView) {
+
+        var data = { "MenuID": menuID, 'SubMenuID': submenuID, 'RedirectView': redirectView };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Home/AjaxSaveMenuLogDetails",
+            data: data,
+            type: "POST",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger
+                console.log(response);
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                alert("Something went wrong: " + str);
+            }
+        });
+
+    }
+
+</script>

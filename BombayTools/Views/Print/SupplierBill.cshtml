@@ -1,0 +1,215 @@
+﻿@model BombayToolsEntities.BusinessEntities.SupplierBillDetailsData
+
+@{
+    ViewBag.Title = "PurchaseOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    html {
+        background-color: white !important;
+    }
+
+    body {
+        color: #000000 !important;
+        background-color: white !important;
+    }
+
+    .table-responsive {
+        border: 1px;
+    }
+
+    pre {
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    .table td {
+        padding: 0.5rem !important;
+        vertical-align: top;
+    }
+
+    .normal-p {
+        font-family: 'Quicksand', sans-serif !important;
+        font-size: 14px;
+        font-weight: 400;
+        color: inherit !important;
+        padding: inherit !important;
+        overflow: auto;
+        font-size: 100%;
+        line-height: 1.45;
+        border-left: 0px;
+        background-color: inherit !important;
+        border-radius: 3px;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        text-shadow: 0 1px white;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+    }
+</style>
+<div class="row m-5 ">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h3><strong><u>Supplier Bill</u></strong></h3>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <p class="m-0"><strong>Transaction No.:</strong> <label>@Model.SupplierBillData.SupplierBillNo</label></p>
+                <p class="m-0"><strong>Date:</strong> <label>@Model.SupplierBillData.BillDisplayDate</label></p>
+                <p class="m-0"><strong>Vendor:</strong> <label>@Model.SupplierBillData.VendorName</label></p>
+
+            </div>
+            <div class="col-md-4 pr-5">
+
+            </div>
+            <div class="col-md-4">
+                @*<p class="m-0"> Details</p>
+                <p class="m-0"><strong>QTN No #:</strong> <label>@Model.SupplierBillData.</label></p>
+                <p class="m-0"><strong>GST #:</strong> <label id="Date">27AAFCB2492P1Z5</label></p>
+                <p class="m-0"><strong>PAN #:</strong> <label id="DueDate">AAFCB2492P</label></p>*@
+            </div>
+        </div>
+
+        @*header ends*@
+        @*Item-start*@
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="">
+                    <table class="table table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:15px">Sr No</th>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>HSN Code</th>
+                                <th>Tally Name</th>
+                                <th>Make</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Discount (%)</th>
+                                <th>Discount Amount</th>
+                                <th>Amount (After Discount)</th>
+                                <th>GST (%)</th>
+                                <th>GST Amount</th>
+                                <th>Total Amount</th>
+                                <th>Remarks</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @{int i = 0;}
+                            @foreach (var d in Model.SupplierBillItemList)
+                            {
+                                i++;
+                                <tr>
+
+                                    <td>@i</td>
+                                    <td>@d.ItemCode</td>
+                                    <td class="remarkwidth">@d.Name</td>
+                                    <td>@d.HSNCodeName</td>
+                                    <td class="remarkwidth">@d.ExpenseHeadName</td>
+                                    <td>@d.Make</td>
+                                    <td style="text-align:right">@d.ReceivedQTY</td>
+                                    <td style="text-align:right">@d.Rate</td>
+                                    <td style="text-align:right">@d.Amount</td>
+                                    <td style="text-align:right">@d.DiscountPer</td>
+                                    <td style="text-align:right">@d.DiscountAmount</td>
+                                    <td style="text-align:right">@d.AmountAD</td>
+                                    <td style="text-align:right">@d.GSTID</td>
+                                    <td style="text-align:right">@d.GSTAmount</td>
+                                    <td style="text-align:right">@d.TotalAmount</td>
+                                    <td>@d.RemarkD</td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*item ends*@
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Other Details</h4>
+                <table class="table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:15px">Sr No</th>
+                            <th>Freight Name</th>
+                            <th>Freight Amount</th>
+                            <th>GST Percent</th>
+                            <th>SGST</th>
+                            <th>CGST</th>
+                            <th>IGST</th>
+                            <th>Freight Total </th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{int j = 0;}
+                        @foreach (var d in Model.SupplierBillFreightList)
+                        {
+                            j++;
+                            <tr>
+
+                                <td style="text-align:left">@j</td>
+                                <td style="text-align:left">@d.FreightName</td>
+                                <td style="text-align:right">@d.Amount</td>
+                                <td style="text-align:right">@d.GSTPercent</td>
+                                <td style="text-align:right">@d.SGST</td>
+                                <td style="text-align:right">@d.CGST</td>
+                                <td style="text-align:right">@d.IGST</td>
+                                <td style="text-align:right">@d.FreightAmount</td>
+
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered" style="width:100%; " id="tblExtraDisc">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>ADDITIONAL DISCOUNT</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Aditional Discount Amount</td>
+                            <td style="text-align:right">@Model.SupplierBillData.AditionalDiscountAmount</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Amount : </strong> @Model.SupplierBillData.BasicAmount</li>
+                    <li class="list-group-item"><strong>Discount Amount : </strong>@Model.SupplierBillData.DiscountAmount</li>
+                    <li class="list-group-item"><strong>GST Amount : </strong> @Model.SupplierBillData.GSTAmount</li>
+                    <li class="list-group-item"><strong>Freight Total : </strong>@Model.SupplierBillData.FreightTotal</li>
+                    <li class="list-group-item"><strong>Net Amount : </strong>@Model.SupplierBillData.AmountBeforeAditionalDiscount</li>
+                    <li class="list-group-item"><strong>Grand Total Before Round Off : </strong>@Model.SupplierBillData.BeforeRoundGrandTotal</li>
+                    <li class="list-group-item"><strong>Round Off : </strong>@Model.SupplierBillData.RoundDifference</li>
+                    <li class="list-group-item"><strong>Grand Total : </strong>@Model.SupplierBillData.GrandTotal</li>
+                    <li class="list-group-item"><strong>Remarks : </strong>@Model.SupplierBillData.Remark</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>

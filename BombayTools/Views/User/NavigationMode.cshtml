@@ -1,0 +1,32 @@
+﻿
+@{
+                /**/
+
+                ViewBag.Title = "NavigationMode";
+                Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+                string mode = Convert.ToString(Session["mode"]);
+}
+
+<div class="page-header">
+    <h4 class="page-title">
+        Navigation Control
+    </h4>
+</div>
+
+@if (mode == "default")
+{
+    <div class="card">
+        <div class="card-body">
+            <strong>Navigation set to default user.</strong>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <strong>Navigation set to selected user.</strong>
+            <p>A red border will be set around browser screen.</p>
+        </div>
+    </div>
+}

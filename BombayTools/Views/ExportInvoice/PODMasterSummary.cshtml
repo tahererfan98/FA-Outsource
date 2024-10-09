@@ -1,0 +1,295 @@
+﻿
+@{
+    ViewBag.Title = "PODMasterSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<style>
+    pre {
+        color: white;
+        padding: 0;
+        overflow: auto;
+        font-size: 85%;
+        line-height: 1.45;
+        border-left: none;
+        background-color: white;
+        border-radius: 3px;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        text-shadow: 0 1px white;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+    }
+
+    .isSavedAsDraft_1 {
+        background-color: #ffb2b6;
+    }
+</style>
+
+<div id="summary">
+    <div class="page-header">
+        <h4 class="page-title">POD Master <label class="bg-primary text-white br-7 pl-3 pr-3" id="poCount"></label></h4>
+        <div class="pull-right">
+            <div id="buttons"></div>
+        </div>
+    </div>
+
+    <div class="card mt-3 p-1">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center table-hover w-100 card-table m-0 text-nowrap" id="tblPOSummary">
+                    <thead class="head bg-primary">
+                        <tr>
+                            <th class="text-center text-white">Sr No</th>
+                            <th class="text-center text-white">POD Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="GRNForm"></div>
+<div id="ViewForm"></div>
+<div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content" id='myModalContent'>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        getCriteria()
+        GetGRNSummary();
+    });
+
+    function addExportInvoice(id) {
+        var data = { 'PODID': id };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/ExportInvoice/_AddOrEditPOD",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+
+                $('#summary').hide();
+                $('#GRNForm').html(response);
+                $('#GRNForm').show();
+                $("#global-loader").fadeOut();
+
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+
+    function GetGRNSummary() {
+        debugger;
+       
+        $("#global-loader").fadeIn("slow");
+        $.ajax({
+            url: "/ExportInvoice/GetPODMasterSummary",
+            //data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                $('#tblPOSummary').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "paging": true,
+                    order: [],
+                    "searching": true,
+                    "dom": '<"top"f>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+                    "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                        $('td', row).css('color', 'black');
+                        $('td', row).css('font-weight', 'bold');
+                    },
+                    "columns": [
+                        //{
+                        //    "data": "EXINO",
+                        //    "orderable": false,
+                        //    "render": function (data, type, row, meta) {
+                        //        if (type === 'display') {
+
+                        //            if (row.IsForwarding == 1) {
+
+                        //                data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewExportInvoice('" + row.EXINO + "')\"><i class=\"fe fe-eye\"></i></button><button class=\"btn btn-sm btn-info\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addExportInvoice('" + row.PODID + "')\"><i class=\"fa fa-edit\"></i></button><button class=\"btn btn-sm btn-warning\" onclick=\"PrintExportInvoice('" + row.EXINO + "')\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Export Print\"><i class=\"fa fa-print\"></i></button><button class=\"btn btn-sm btn-warning\" onclick=\"PrintPackingList('" + row.EXINO + "')\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Packing Print\" disabled><i class=\"fa fa-print\"></i></button> "; /*<button class=\"btn btn-sm btn-success\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Send to Packing List\" onclick=\"addPackingList('" + row.EXINO + "')\"><i class=\"fa fa-mail-forward\"></i></button>*/
+                        //            }
+                        //            else {
+
+                        //                data = "<div class=\"btn-list text-center\"><button class=\"btn btn-sm btn-primary\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View\" onclick=\"ViewExportInvoice('" + row.EXINO + "')\"><i class=\"fe fe-eye\"></i></button><button class=\"btn btn-sm btn-info\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit\" onclick=\"addExportInvoice('" + row.PODID + "')\"><i class=\"fa fa-edit\"></i></button><button class=\"btn btn-sm btn-warning\" onclick=\"PrintExportInvoice('" + row.EXINO + "')\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Export Print\"><i class=\"fa fa-print\"></i></button><i class=\"fa fa-mail-forward\"></i></button><button class=\"btn btn-sm btn-warning\" onclick=\"PrintPackingList('" + row.EXINO + "')\"  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Packing Print\"><i class=\"fa fa-print\"></i></button> ";
+                        //            }
+                        //        }
+                        //        return data;
+                        //    }
+                        //},
+                        {
+                            "data": "PODID"   },
+                        {
+                            "data": "PODName",
+                            className: 'text-left'
+},
+                       
+
+                    ],
+                    mark: true
+                });
+               $("div.newQuote").html('<div class="float-right" style="display:flex"><div class="mr-3 mt-1"> </div><button class="btn btn-primary"  onclick="addExportInvoice(0)"><i class="fa fa-plus"></i> Add New POD</button></div>');
+                var table = $('#tblPOSummary').DataTable();
+                //$('#searchText').on('keyup', function () {
+                //    table.search(this.value).draw();
+                //});
+
+                table = $('#tblPOSummary').DataTable();
+                var buttons = new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                            titleAttr: 'Excel',
+                            className: 'btn btn_excel'
+                        }
+                    ]
+                }).container().appendTo($('#buttons'));
+                $("#global-loader").fadeOut();
+            },
+            error: function (error) {
+                $("#global-loader").fadeOut();
+                alert(error.responseText);
+            }
+        });
+    }
+
+     function GetCancelModel(EXINO) {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you sure you want to cancel GRN?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                var data1 = { 'EXINO': EXINO };
+                data = JSON.stringify(data1);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/GRN/AjaxGetCancelGRN',
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (response) {
+                               $("#global-loader").fadeOut("slow");
+                                if (response.Status != 0) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: response.Message,
+                                        icon: 'success'
+                                    }).then((result) => {
+                                     document.location = '@Url.Action("GRNSummary", "GRN")';
+
+                                });
+
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.Message,
+                                        icon: 'error'
+                                    })
+                                }
+                    },
+                    error: function (error) {
+                        $("#global-loader").fadeOut();
+                        let str = error.responseText;
+                        var a = str.indexOf("<title>") + 7;
+                        var b = str.indexOf("</title>");
+                        str = str.substring(a, b);
+                        Swal.fire("Error!", "Something went wrong: " + str, "error");
+                    }
+                });
+
+            }
+        })
+     }
+
+
+    function getBack() {
+        $('#ViewForm').hide();
+        $('#GRNForm').hide();
+        $('#summary').show();
+    }
+
+    function getBack2() {
+        $('#ViewForm').hide();
+        $('#GRNForm').hide();
+        $('#summary').show();
+    }
+    function PrintExportInvoice(EXINO) {
+        var url = '/Print/ExportInvoicePdf?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function PrintPackingList(EXINO) {
+        var url = '/Print/PackingListPrint?EXINO=' + EXINO;
+        window.open(url, '_blank');
+    }
+
+    function getCriteria() {
+        var x = $('#ddlcriteria option:selected').text();
+        if (x == "--Select--") {
+            $("#hid").hide();
+        }
+        else {
+            $("#hid").show();
+        }
+    }
+
+    function SetGRNStatusForApproval(EXINO) {
+            var data = { 'EXINO': EXINO }
+         data = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/GRN/_GRNApprovalView",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#myModalContent').html(response);
+                $('#myModal').modal('show');
+
+            },
+            failure: function (response) {
+                alert(response);
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        })
+    }
+
+
+</script>

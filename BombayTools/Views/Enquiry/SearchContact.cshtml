@@ -1,0 +1,131 @@
+﻿
+<div class="modal-header"  style="background:linear-gradient(269deg, #32cafe,#867efc);display:inherit">
+    <h5 class="modal-title text-white text-center" id="example-Modal3">Search Contact</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -50px;display: initial;font-size: 27px;color: white;opacity:1 !important">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="">
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="form-group p-2">
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-search"></i>
+                    </span>
+                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchTextContact", name = "searchTextContact", autocomplete = "off", onkeyup = "CheckInputField()" })
+
+                </div>
+                <div class="btn-list  pull-right">
+                    <button class="btn btn-sm btn-success " data-toggle="tooltip" data-placement="left" title="" data-original-title="Add Contact" id="addRow" onclick="AddOrEditCompany(0)"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <table class="table table-bordered table-hover card-table w-100 text-wrap" id="tblContactSearch">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company Name</th>
+                    <th>Location</th>
+                    <th>Contact Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tblContactSearch').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+        });
+
+        });
+
+
+    function CheckInputField() {
+        var st = document.getElementById("searchTextContact").value;
+        if (st.length > 4) {
+            GetContactSummary();
+        }
+    }
+
+    function GetContactSummary() {
+        var st = document.getElementById("searchTextContact").value;
+        st = st.trim();
+        if (st === "" || st == undefined) {
+            return;
+        }
+        var data = { 'SearchText': st };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/GetCompanyListForEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (data) {
+                if (data == null) {
+                    alert("Please enter proper details")
+                }
+                $('#CustomerDetail').show();
+                $('#tblContactSearch').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": data,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    searching: false,
+                    "columns": [
+                        { "data": "index" },
+                        { "data": "CompanyName" },
+                        { "data": "Location" },
+                        { "data": "ContactPersonName" },
+                        {
+                            "data": "index",
+                            "orderable": false,
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (type === 'display') {
+                                    //var url = '/Enquiry/AddorEditEnquiry?ContactPersonID=' + row.ContactPersonID + '&EnquiryNo=0&Status=0';
+                                    data = "<a href=\"#\" onclick=\"CreateNew(" + row.ContactPersonID + ")\" data-dismiss=\"modal\" class=\"btn btn-icon btn-sm btn-primary \"  data-toggle=\"tooltip\" data-placement=\"bottom\"  data-original-title=\"Add New\" ><i class=\"fe fe-edit\"</i></a>"
+                                }
+                                return data;
+                            }
+                        }
+                    ]
+                });
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error',
+                    text: str,
+                    icon: 'error'
+                })
+            }
+        });
+
+    }
+
+    $("#searchTextContact").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            GetContactSummary();
+        }
+    });
+
+
+
+</script>

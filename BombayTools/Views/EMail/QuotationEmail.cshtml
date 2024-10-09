@@ -1,0 +1,66 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+<div class=" content-area overflow-hidden" id="EmailForQuotation">
+    <div class="page-header">
+        <h4 class="page-title">Email Linked</h4>
+        <div class="breadcrumb">
+            <button class="btn btn-success" onclick="ShowSummaryScreen()"><i class=" fa fa-arrow-left"></i></button>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.QuotID</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-2 col-lg-3">
+                            @foreach (var d in Model)
+                            {
+                                <a class="list-group-item media p-4 border-top mt-0" href="#" onclick="ShowSelectedMessage('@d.ID')">
+                                    <div class="media-body">
+                                        <div class="list-group-item-heading text-default font-weight-semibold">@Html.DisplayFor(m => d.FromName)</div>
+                                        <small class="list-group-item-text text-muted">@Html.DisplayFor(m => d.Subject)</small>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                        <div class="col-sm-10 col-lg-9">
+                            <iframe id="MailText" style="height:600px;border:none;width:100%;"></iframe>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+        function ShowSelectedMessage(id) {
+            MessageID = id;
+            var data = { 'ID': id };
+            data = JSON.stringify(data);
+            $("#backButton").show();
+
+            $.ajax({
+                url: "/EMail/GetEMailBody",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //  dataType: "json",
+                success: function (response) {
+                    var ifrm = $('#MailText')[0].contentWindow.document;
+                    $('body', ifrm).html(response.Body);
+                    $('#MailText').show();
+                    //$('#text').text(response.PlainText);
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+            //var ifrm = $('#MailText')[0].contentWindow.document;
+            //$('body', ifrm).html(body);
+        }
+    </script>

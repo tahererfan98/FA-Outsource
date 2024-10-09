@@ -1,0 +1,3685 @@
+﻿<style>
+        /*.Pretag {
+            white-space: pre-line;
+        }
+    */
+        .SetUpperCase {
+            text-transform: uppercase;
+        }
+
+        .custom_container_card {
+            background-color: white;
+        }
+
+        #tblPOItemData td {
+            padding: 2px;
+        }
+
+        #tblPORMItemData td {
+            padding: 2px;
+        }
+
+        #tblOtherchrgs td {
+            padding: 2px;
+        }
+
+        #tblOtherchrgs2 td {
+            padding: 2px;
+        }
+
+        @@media (min-width: 992px) {
+            .modal-xl {
+                max-width: 98vw;
+            }
+        }
+
+        @@media (min-width: 700px) {
+            .modal-l {
+                max-width: 80vw;
+            }
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        .ChkWidth {
+            width: 300px !important;
+            min-width: 280px !important;
+            text-align: center;
+        }
+
+        .cpm {
+            background-color: darkslateblue;
+        }
+
+        .txtInput {
+        }
+
+        .modal-lg {
+            max-width: 1080px;
+        }
+
+        .form-control {
+            padding: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 2px;
+        }
+
+        select.form-control:not([size]):not([multiple]) {
+            height: 30px;
+        }
+
+        .page-header {
+            margin: 0.1rem 0 0.1rem;
+        }
+
+        .card-header {
+            min-height: 0.1rem;
+        }
+</style>
+<!-- Select2 js -->
+<script src="~/plugins/select2/select2/js/select2.min.js"></script>
+@*<script src="~/js/select2.js"></script>*@
+<script type="text/javascript">
+    //$('select2').addClass('select2')
+    $('.select2').select2({
+        selectOnClose: true
+    });
+
+</script>
+<!-- Custom Js-->
+<div class="page-header">
+    <h4 class="page-title"><i class="fa fa-arrow-left" onclick="getBack()"></i> Packing List</h4>
+    <div class="pull-right">
+        <div id="buttons"></div>
+    </div>
+</div>
+<div class="card mb-3 ">
+    <div class="card-header">
+        <h4 class="card-title">Basic Details</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Export Invoice No</label>
+                    @Html.TextBox("txtEXINO", null, new { @class = "form-control", @id = "txtEXINO", name = "txtEXINO", autocomplete = "off", disabled = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Export Invoice Date</label>
+                    @Html.TextBox("txtEXIDate", null, new { @class = "form-control datePickerD", @id = "txtEXIDate", name = "txtEXIDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">PO No</label>
+                    @Html.TextBox("txtPONO", null, new { @class = "form-control SetUpperCase", @id = "txtPONO", name = "txtPONO", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">PO Date</label>
+                    @Html.TextBox("txtPODate", null, new { @class = "form-control datePickerD", @id = "txtPODate", name = "txtPODate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Letter Of Credit</label>
+                    @Html.TextBox("txtLCNO", null, new { @class = "form-control SetUpperCase", @id = "txtLCNO", name = "txtLCNO", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Letter Of Credit Date</label>
+                    @Html.TextBox("txtLCDate", null, new { @class = "form-control datePickerD", @id = "txtLCDate", name = "txtLCDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Customer Name</label>
+                    @Html.DropDownList("ddlCustomerDropdown", (IEnumerable<SelectListItem>)ViewBag.ddlCustomerDropdown, "--Select--", new { @class = "form-control", @id = "ddlCustomerDropdown", name = "ddlCustomerDropdown", autocomplete = "off", onChange = "SetCustomerData()" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Copy From</label>
+                    <select id="ddlCopyFrom" class="form-control" onchange="CopyFrom();">
+                        <option value="D" selected>Direct Invoice</option>
+                        <option value="I">PI</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <div class="form-group">
+                    <label style="visibility:hidden">Group</label>
+                    <div class="row gutters-xs">
+                        <div class="col">
+                            <span class="col-auto">
+                                <button id="btnPIList" class="btn btn-primary" style="font-size: 0.55rem;" href="#" onclick="searchOpenPIList()" title="Fill serial no"><i class="fa fa-list"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-1">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Currency</label>
+                    @Html.DropDownList("CurrencyDropdown", (IEnumerable<SelectListItem>)ViewBag.CurrencyDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlCurrencyDropdown", name = "CurrencyDropdown", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Exchange Rate</label>
+                    @Html.TextBox("ExchangeRate", null, new { @class = "form-control", @id = "exchangeRate", name = "exchangeRate", autocomplete = "off", @type = "number" })
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-2 col-lg-2" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">PI No</label>
+                    @Html.TextBox("PINo", null, new { @class = "form-control", @id = "PINo", name = "PINo", autocomplete = "off", @type = "text", disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row p-0">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-10 col-lg-10">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Billing Location</label>
+                            @Html.TextBox("BillToLocation", null, new { @class = "form-control", @id = "BillTo", name = "BillTo", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2">
+                        <div class="form-group">
+                            <span class="col-auto">
+                                <button class="btn btn-info text-center ml-2 mt-5" onclick="GetBillingAddress(1)"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Billing Address</label>
+                            @Html.TextArea("BillToAddress", null, new { @class = "form-control", @id = "BillToAddress", name = "BillToAddress", autocomplete = "off" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-10 col-lg-10">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Ship To Location</label>
+                            @Html.TextBox("ShipToLocation", null, new { @class = "form-control", @id = "ShipTo", name = "ShipTo", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2">
+                        <div class="form-group">
+                            <span class="col-auto">
+                                <button class="btn btn-info text-center ml-2 mt-5" onclick="GetShippingAddress(0)"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Ship To Address</label>
+                            @Html.TextArea("ShipToAddress", null, new { @class = "form-control Pretag", @id = "ShipToAddress", name = "ShipToAddress", autocomplete = "off" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="display:none">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">State</label>
+                            @Html.TextBox("BillToState", null, new { @class = "form-control", @id = "BillToState", name = "BillToState", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">GST No</label>
+                            @Html.TextBox("BillToGST", null, new { @class = "form-control", @id = "BillToGST", name = "BillToGST", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-2 col-lg-4">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">GST Percentage</label>
+                            @Html.DropDownList("GstDropdownlist", (IEnumerable<SelectListItem>)ViewBag.ddlGstDropdown, "--Select--", new { @class = "form-control", @id = "GstDropdownlist", name = "GstDropdownlist", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-1 col-lg-2">
+                        <div class="form-group">
+                            <label style="visibility:hidden">.</label>
+                            <div class="row gutters-xs">
+                                <div class="col">
+                                    <span class="col-auto">
+                                        <button class="btn btn-success" type="button" id="AddGSt" name="Add" onclick="GetApplyGSTData()">Apply</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Delivery Date</label>
+                            @Html.TextBox("DeliveryDate", null, new { @class = "form-control datePickerD", @id = "DeliveryDate", name = "DeliveryDate", @Value = DateTime.Now.AddDays(0).ToString("dd MMM yyyy") })
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6" style="display:none">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">State</label>
+                            @Html.TextBox("ShipToState", null, new { @class = "form-control", @id = "ShipToState", name = "ShipToState", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6" style="display:none">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">GST No</label>
+                            @Html.TextBox("ShipToGST", null, new { @class = "form-control", @id = "ShipToGST", name = "ShipToGST", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Pre-carriage by</label>
+                    @Html.TextBox("txtPCBy", null, new { @class = "form-control", @id = "txtPCBy", name = "txtPCBy", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Place of receipt by Pre Carrier</label>
+                    @Html.TextBox("txtPOR", null, new { @class = "form-control", @id = "txtPOR", name = "txtPOR", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Vessel/Flight No.</label>
+                    @Html.TextBox("txtVesselNo", null, new { @class = "form-control", @id = "txtVesselNo", name = "txtVesselNo", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Container No.</label>
+                    @Html.TextBox("txtContainerNo", null, new { @class = "form-control SetUpperCase", @id = "txtContainerNo", name = "txtContainerNo", autocomplete = "off", onchange = "SetContainerDropdown()" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Shipment</label>
+                    @Html.DropDownList("ddlModeList", (IEnumerable<SelectListItem>)ViewBag.ModeList, "--Select--", new { @class = "form-control", @id = "ddlModeList", name = "ddlModeList", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Shipment Terms</label>
+                    @Html.DropDownList("ddlTermList", (IEnumerable<SelectListItem>)ViewBag.TermList, "--Select--", new { @class = "form-control custom-select", @id = "ddlTermList", name = "ddlTermList", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Place Of Delivery</label>
+                    @Html.DropDownList("ddlPODList", (IEnumerable<SelectListItem>)ViewBag.PODList, "--Select--", new { @class = "form-control", @id = "ddlPODList", name = "ddlPODList", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">GST Status</label>
+                    @Html.DropDownList("ddlStatusList", (IEnumerable<SelectListItem>)ViewBag.StatusList, "--Select--", new { @class = "form-control custom-select", @id = "ddlStatusList", name = "ddlStatusList", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">License No</label>
+                    @Html.DropDownList("ddlLicenseList", (IEnumerable<SelectListItem>)ViewBag.LicenseList, "--Select--", new { @class = "form-control custom-select", @id = "ddlLicenseList", name = "ddlLicenseList", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Export Benefits</label>
+                    @Html.TextBox("txtExportBenefit", null, new { @class = "form-control", @id = "txtExportBenefit", name = "txtExportBenefit", autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600;">Others</label>
+                    @Html.TextBox("txtOthers", null, new { @class = "form-control", @id = "txtOthers", name = "txtOthers", autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mb-3 wow zoomIn" data-wow-duration="1s" data-wow-delay="0.2s">
+    <div class="custom_container_card">
+        <div class="card-header">
+            <h4 class="card-title">Item Details</h4>
+            <div class="card-options">
+
+                <button id="itemBtn" class="btn btn-sm btn-warning mr-2" onclick="addOrRemoveCOItem()"><i class="fa fa-plus"></i> Add Item</button>
+                <button class="btn btn-sm btn-primary" data-toggle="card-fullscreen"><i class="fa fa-expand"></i> Full Screen</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" id="divCODetails">
+                <div class="col-sm-12 col-md-lg col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  text-nowrap" id="tblPOItemData" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="all text-center"></th>
+                                    <th class="all text-center">#</th>
+                                    @*<th class="all text-center">Item Code</th>*@
+                                    <th class="all text-center">Item Name</th>
+                                    <th class="all text-center">Heading</th>
+                                    <th class="all text-center">Unit</th>
+                                    <th class="all text-center">HSNCode</th>
+                                    <th class="all text-center">Qty</th>
+                                    <th class="all text-center">SQM</th>
+                                    <th class="all text-center">SQFT</th>
+                                    <th class="all text-center">Rate</th>
+                                    <th class="all text-center">Amount</th>
+                                    @*<th class="all text-center">Container No</th>*@
+                                    @*<th class="all text-center">No Of Cases</th>*@
+                                    <th class="all text-center">Container No</th>
+                                    <th class="all text-center">Net Weight</th>
+                                    <th class="all text-center">Gross Weight</th>
+                                </tr>
+                            </thead>
+                            @*<tfoot>
+                                    <tr>
+                                        <th colspan="5" style="text-align:right">Total</th>
+                                        <th><label id="po_NTA"></label></th>
+                                        <th colspan="7" style="text-align:right"> Final Total</th>
+                                        <th><label id="po_FLA"></label></th>
+                                        <th colspan="4"></th>
+                                    </tr>
+                                </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2" id="divMainOtherchrgs">
+                <div class="col-sm-6">
+                    <div class="row gutters-xs">
+                        <div class="col-3">
+                            <input type='button' onclick="AddPaymentTerm()" class='btn btn-btn-fill btn-warning btn-wd m-0' value='Add Payment Term' />
+                        </div>
+                        <div class="col-2">
+                            <input type='button' onclick="AddPackingList()" class='btn btn-btn-fill btn-success btn-wd m-0' value='Packing List' />
+                        </div>
+                        <div class="col-2">
+                            <input type='button' onclick="GetChargeListForPO()" class='btn btn-btn-fill btn-primary btn-wd m-0' value='Add Freight' />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-0">
+                        <b>
+                            <label class="form-label" style="color:black;font-weight:600">
+                                TOTAL AMOUNT
+                            </label>
+                        </b>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-1">
+
+                        @Html.TextBox("TotalAmt", null, new { @class = "form-control", @id = "TotalAmt", name = "TotalAmt", autocomplete = "off", disabled = "disabled", @Value = "0" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-lg-8">
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-0">
+                        <b>
+                            <label class="form-label mb-0" style="color:black;font-weight:600">
+                                FREIGHT AMOUNT
+                            </label>
+                        </b>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-1">
+
+                        @Html.TextBox("lblChrgAmt", null, new { @class = "form-control", @id = "lblChrgAmt", name = "lblChrgAmt", autocomplete = "off", disabled = "disabled", @Value = "0" })
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display:none">
+                <div class="col-sm-8 col-md-8 col-lg-8">
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-0">
+                        <b>
+                            <label class="form-label" style="color:black;font-weight:600">
+                                GRAND TOTAL
+                            </label>
+                        </b>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-1">
+                        @Html.TextBox("lblGrandTotal", null, new { @class = "form-control", @id = "lblGrandTotal", name = "lblGrandTotal", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-lg-8">
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb-0">
+                        <b>
+                            <label class="form-label" style="color:black;font-weight:600">
+                                GRAND TOTAL
+                            </label>
+                        </b>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group mb">
+                        @Html.TextBox("AfterRoundGrandTotal", null, new { @class = "form-control", @id = "AfterRoundGrandTotal", name = "AfterRoundGrandTotal", disabled = "disabled", @Value = "0" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="card-header">
+            <h4 class="card-title">Terms & Condition</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="row no-gutters">
+                        <div class="col-11">
+                            <label class="form-label" style="font-weight: 600;">Conditions</label>
+                            @Html.TextBox("Conditions", null, new { @class = "form-control", @id = "Conditions", name = "Conditions", autocomplete = "off" })
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-info  mt-5" onclick="onAddNewCondition()">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered w-100" id="tblConditionForPO">
+                            <thead>
+                                <tr>
+                                    <th>Conditions</th>
+                                    <th style="width:20px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="row" style="margin-right:10px;margin-left:10px">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Remarks</label>
+                @Html.TextArea("Remarks", null, new { @class = "form-control", @id = "Remarks", name = "Remarks", autocomplete = "off" })
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="float-right">
+            <button class="btn btn-sm btn-success" id="Savebtn" onclick="ConfrimExchangeRate()"><i class="fa fa-save"></i> Save</button>
+        </div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+<div class="modal fade" id="HistoryModal" role="dialog">
+    <div class="modal-dialog modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="itemname" class="modal-title">Last Purchase History</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="HistoryTable">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered w-100 text-nowrap dataTable" style="width:100%;" id="tblItemHistory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Customer name</th>
+                                        <th>Qty</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                        <th>Discount (%)</th>
+                                        <th>Discount Amount</th>
+                                        <th>Amount (After Discount)</th>
+                                        <th>GST (%)</th>
+                                        <th>GST Amount</th>
+                                        <th>Final Amount</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="lastPurchaseModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Item Last Purchase</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="row ml-2">
+                <button type="button" class="btn btn-primary" onclick="TopTenLastDetails()">Top 10</button>
+                <button type="button" class="btn btn-azure ml-1" onclick="LastMonthDetails()">Last Month</button>
+                @*<label class="form-label ml-2" style="font-weight:bold;font-size:20px"><strong>Total Qty : <span id="lblTotalQty"></span> </strong></label>*@
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered w-100 text-wrap dataTable" style="width:100%;" id="tblLastPurchaseItem">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        @*<th>Part No</th>*@
+                                        <th>PO No</th>
+                                        <th>GRN No</th>
+                                        <th>GRN Date</th>
+                                        <th>Rate</th>
+                                        <th>Qty</th>
+                                        <th>Customer Name</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* FOR RM AND CO LIST *@
+<div class="modal fade" id="ModalForRMList" tabindex="-1" role="dialog" aria-labelledby="ModalForRMListTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ModalForRMListTitle">Search RM Items </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12 col-md-4">
+                    <div class="row no-gutters">
+                        <div class="col-2">
+                            <label class="form-label mt-1"><strong>Search</strong></label>
+                        </div>
+                        <div class="col-10 form-group">
+
+                            <div class="input-icon">
+                                <span class="input-icon-addon">
+                                    <i class="fe fe-search"></i>
+                                </span>
+                                <input type="text" id="searchText2" class="form-control" placeholder="Search Here...">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-12" id="divSearch">
+
+                            </div>
+
+
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="">
+                                    <table class="table table-bordered w-100" id="tblRMItemSearch">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:30px !important">SELECT</th>
+                                                <th>ITEM CODE</th>
+                                                <th>NAME</th>
+                                                <th>HEIGHT</th>
+                                                <th>WIDTH</th>
+                                                <th>IN STOCK</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col--sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Selected Item</h4>
+                            </div>
+                            <div class="card-body content scroll-1">
+                                <ul class="list-group" id="po_selected_item"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+@* FOR copy from PI *@
+<div class="modal fade" id="OpenPIList" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Open PI List</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="OpenPIListTable">
+                    <div class="col-12">
+                        <table class="table table-striped table-bordered th_Background" style="width:100%;" id="tblOpenPIListTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20px;"></th>
+                                    <th style="width: 80px;">PI No</th>
+                                    <th style="width: 160px;">PI Date</th>
+                                    <th>WO NO</th>
+                                    <th>Description</th>
+                                    <th>Bal QTY</th>
+                                    <th>Bal SQM</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="GetAllCheckedPIItemList()" style="background:#9f78ff;">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* FOR ADDRESS *@
+<div class="modal fade" id="billModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content  modal-lg">
+            <div class="modal-header" style="padding-top: 7px;padding-bottom: 7px;">
+                <h4 class="modal-title">Address Details</h4>
+                <div class="float-right" style="margin-left:58%">
+                    <div class="float-right" style="">
+                        <div class=""> </div>
+
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered th_Background" style="width:100%" id="BillinAddLoc">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* FOR Other Charges *@
+<div class="modal fade" id="OtherChargesList" role="dialog">
+    <div class="modal-dialog modal-lg" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Other Charges List</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="divtblOtherchrgs">
+                    <div class="col-12">
+                        <table class="table table-striped table-bordered th_Background" style="width:100%;" id="tblOtherchrgs2">
+                            <thead class="bg-primary">
+                                <tr>
+                                    @*//<th style="width: 38px;"></th>*@
+                                    <th class="text-white text-center">Sr No</th>
+                                    <th class="text-white text-center">Name</th>
+                                    <th class="text-white text-center" style="width: 20px;"> Amount</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="GetAllTotalChrgList()" style="background:#9f78ff;">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* FOR Packing List *@
+<div class="modal fade" id="PackingListModal" role="dialog">
+    <div class="modal-dialog modal-lg" style="width: 880px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Packing List</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Container No</label>
+                            @*@Html.TextBox("txtPackingContainer", null, new { @class = "form-control SetUpperCase", @id = "txtPackingContainer", name = "txtPackingContainer", autocomplete = "off" })*@
+
+                            @Html.DropDownList("txtPackingContainer", new List<SelectListItem>
+                                { new SelectListItem { Text = "--Select--", Value = ""}
+                                  }, new { @class = "form-control", autocomplete = "off", @id = "txtPackingContainer" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Marks and Nos</label>
+                            @Html.TextBox("txtMarks", null, new { @class = "form-control", @id = "txtMarks", name = "txtMarks", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Package Name</label>
+                            @Html.TextBox("txtPackageName", null, new { @class = "form-control", @id = "txtPackageName", name = "txtPackageName", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 600;">Package Name</label>
+                            <button class="btn btn-success" type="button" id="AddGSt" name="Add" onclick="AddPackingItem()"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="divtblPackingList">
+                    <div class="col-12">
+                        <table class="table table-striped table-bordered th_Background" style="width:100%;" id="tblPackingList">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th style="width: 38px;"></th>
+                                    <th class="text-white text-center">Sr No</th>
+                                    <th class="text-white text-center">Container No</th>
+                                    <th class="text-white text-center" style="width: 20px;"> Package Name</th>
+                                    <th class="text-white text-center" style="width: 20px;"> Marks and Nos</th>
+                                    <th class="text-white text-center">No Of Packages</th>
+                                    <th class="text-white text-center">Total Packages</th>
+                                    <th class="text-white text-center">Net Weight</th>
+                                    <th class="text-white text-center">Gross Weight</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="" style="background:#9f78ff;">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ApprovalUserListModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content  modal-lg">
+            <div class="modal-header" style="padding-top: 7px;padding-bottom: 7px;">
+                <h4 class="modal-title">User Details</h4>
+                <div class="float-right" style="margin-left:58%">
+                    <div class="float-right" style="">
+                        <div class=""> </div>
+
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered th_Background" style="width:100%" id="tblUserList">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-default" data-dismiss="modal" onclick="SaveApprovalUserList()">Update</button>*@
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CloseGetApprovalUserList()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@* For Mail Box *@
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-Modal3">Send Email</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">CC:</label>
+                            <input type="text" class="form-control" id="recipient-cc">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">BCC:</label>
+                            <input type="text" class="form-control" id="recipient-bcc">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">Subject:</label>
+                            <input type="text" class="form-control" id="recipient-Subject">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">Dear:</label>
+                            <input type="text" class="form-control" id="recipient-Dear">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12" style="display:none;">
+                        <div class="form-group">
+                            <label for="message-text" class="form-control-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="body-text" class="form-control-label">Body Text:</label>
+                            <textarea class="form-control" id="body-text"></textarea>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-2 col-md-2" style="display:none;">
+                        <div class="form-group">
+                            <label class="form-label">PI copy</label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-12 col-md-12" style="display:none;">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label"></label>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover tbl-cart text-nowrap" style="width:100%" id="LinkQuotationData">
+                                        <thead class="bg-joseph">
+                                            <tr>
+                                                <th>SR No</th>
+                                                <th>File Name</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="clearmail()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="GetEmailTableData2()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* For Mail Box *@
+@using (Html.BeginForm("DownLoadFile", "PI", FormMethod.Post))
+{
+    <input type="hidden" id="hfFileId" name="id" />
+    <input type="submit" id="btnDownload" value="Download" style="display:none" />
+}
+
+
+
+<div class="modal fade" id="ModalForPaymentTermList" tabindex="-1" role="dialog" aria-labelledby="ModalForPaymentTermListTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ModalForPaymentTermListTitle">Search Payment Terms </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row ">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="">
+                            <table class="table table-bordered w-100" id="tblPaymentTerm">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30px !important">SELECT</th>
+                                        <th>TERMS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalForTermsAndConditionList" aria-labelledby="ModalForTermsAndConditionListTitle" aria-hidden="true" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ModalForTermsAndConditionListTitle">Search Terms And Condition</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row mt-2">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="">
+                            <table class="table table-bordered w-100" id="tblTermsAndCondition">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30px !important">SELECT</th>
+                                        <th>TERMS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+@* Other Payement Term Remark Modal *@
+<div class="modal fade" id="OtherPTModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content  modal-lg">
+            <div class="modal-header" style="padding-top: 7px;padding-bottom: 7px;">
+                <h4 class="modal-title">Other Payment Term Remark For Purchase Order </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                        <label class="form-label">Other Payment Term Remark : </label>
+                        @Html.TextArea("OtherRemark", null, new { @class = "form-control", @id = "OtherRemark", name = "OtherRemark", autocomplete = "off" })
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="AddOtherPTRemark()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var isExchange = false;
+    var BillToStateID = 0;
+    var ShipToStateID = 0;
+    ///ALL INITALIZE
+    var PackingList = [];
+    var CustomerD = [];
+    var poItemM = [];
+    var PIItemList = [];
+    var PIItemListSearch = [];
+    var itemSearchM = [];
+    var SearchPaymentTermList = [];
+    var GSTlist = [];
+    var condition_counter = 0;
+    var toggleTableColumn = 0;
+    var SelectedPI = [];
+    var PISelectedItem = [];
+    var ChargeList = [];
+    var ContainerList = [];
+    var CustomerArr = [];
+    var EXINO = "0";
+    var isDraft = 0;
+    var GlobalStateCode = 0;
+    var BillingLocationID =0;
+    var ShippingLocationID = 0;
+    var ProjectList = [];
+    var BillingList = [];
+    var ShippingList = [];
+    var SubCategoryList = [];
+    var CategoryList = [];
+    var UserApprovalList = [];
+    var ReqDateList = [];
+    var MasterQuoPDFList = [];
+    var MasterAttachment = [];
+    var PaymentTermList = [];
+    var IsLastMonth = 0;
+    var OtherPTRemark = "";
+    var LastPurchaseItemID = 0;
+    var CopyFromPo = "";
+    var ExportHeadingList = [];
+
+    var tablePOItem = $('#tblPOItemData').DataTable({
+        "destroy": true,
+        "bLengthChange": false,
+        fixedHeader: true,
+        "bPaginate": false,
+        "bInfo": false,
+        "paging": false,
+        searching: false,
+        "ordering": false,
+        "aoColumnDefs": [
+
+
+        ]
+    });
+    var DIV_CARD = 'div.custom_container_card';
+    $('.datepicker')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+        })
+
+    $(".scroll-1").mCustomScrollbar({
+        theme: "dark"
+    });
+
+    $('[data-toggle="card-fullscreen"]').on('click', function (e) {
+        let $card = $(this).closest(DIV_CARD);
+
+        $card.toggleClass('card-fullscreen').removeClass('card-collapsed');
+
+        e.preventDefault();
+        return false;
+    });
+
+    $(document).ready(function () {
+        $("#divCODetails").show();
+        $("#SearchCriteria").hide();
+        $("#SearchFor").hide();
+        CustomerArr = [];
+        CustomerArr = @Html.Raw(Json.Encode(@ViewBag.CustomerArr));
+        CustomerArr = JSON.parse(CustomerArr);
+        ProjectList = @Html.Raw(Json.Encode(@ViewBag.ProjectListM));
+        ProjectList = JSON.parse(ProjectList);
+        GSTlist = @Html.Raw(Json.Encode(@ViewBag.GstDropdown));
+        GSTlist = JSON.parse(GSTlist);
+        ChargeList = @Html.Raw(Json.Encode(@ViewBag.ChrgesDropdown));
+        ChargeList = JSON.parse(ChargeList);
+        SubCategoryList = @Html.Raw(Json.Encode(@ViewBag.CategoryList2M));
+        SubCategoryList = JSON.parse(SubCategoryList);
+        CategoryList = @Html.Raw(Json.Encode(@ViewBag.CategoryListM));
+        CategoryList = JSON.parse(CategoryList);
+        ExportHeadingList = @Html.Raw(Json.Encode(@ViewBag.ExportHeadingList));
+        ExportHeadingList = JSON.parse(ExportHeadingList);
+
+        PaymentTermList = [];
+        PaymentTermList = @Html.Raw(Json.Encode(@ViewBag.POPaymentTermListArray));
+        PaymentTermList = JSON.parse(PaymentTermList);
+
+        debugger;
+        if ("@ViewBag.EXINO" != "0") {
+
+            EXINO = "@ViewBag.EXINO";
+            $("#ddlCustomerDropdown").val(@ViewBag.ddlCustomerID);
+            $("#ddlCopyFrom").val('@ViewBag.EXIType');
+            CopyFromPo = '@ViewBag.EXIType';
+
+            IsCopyPO = @ViewBag.IsCopy;
+            if (IsCopyPO == 1) {
+                EXINO = "0";
+            }
+
+            $("#RevisionNo").val('@ViewBag.RevisionNo');
+            $("#poDate").val('@ViewBag.PODisplayDate');
+            $("#ddlCurrencyDropdown").val('@ViewBag.ddlCurrencyDropdown');
+
+            $("#ddlCustomerDropdown").attr("disabled", true);
+            $("#ddlCopyFrom").attr("disabled", true);
+            $("#btnPIList").attr("disabled", false);
+            $("#txtEXINO").val('@ViewBag.EXINO');
+            $("#txtEXIDate").val('@ViewBag.EXIDate');
+            $("#txtPONO").val('@ViewBag.PONO');
+            $("#txtPODate").val('@ViewBag.PODate');
+            $("#txtLCNO").val('@ViewBag.LCNO');
+            $("#txtLCDate").val('@ViewBag.LCDate');
+            $("#txtContainerNo").val('@ViewBag.ContainerNo');
+            SetContainerDropdown();
+
+
+             @*if ('@ViewBag.StatusID' == '1') {
+                 $("#ddlCustomerDropdown").attr("disabled", false)
+             }
+             else {
+                 $("#ddlCustomerDropdown").attr("disabled", false)
+             }*@
+            poItemM = [];
+            poItemM = @Html.Raw(Json.Encode(@ViewBag.POD));
+            poItemM = JSON.parse(poItemM);
+            addCOItemToTable();
+
+            ChargeList = [];
+            ChargeList = @Html.Raw(Json.Encode(@ViewBag.POCharges));
+            ChargeList = JSON.parse(ChargeList);
+            addChargestoTable();
+
+            PackingList = [];
+            PackingList = @Html.Raw(Json.Encode(@ViewBag.POPacking));
+            PackingList = JSON.parse(PackingList);
+            AddPackingListTable();
+
+            SearchPaymentTermList = [];
+            SearchPaymentTermList = @Html.Raw(Json.Encode(@ViewBag.POPaymentTerm));
+            SearchPaymentTermList = JSON.parse(SearchPaymentTermList);
+            ShowPaymentTermList();
+
+            ShippingLocationID =@ViewBag.ShippingLocationID;
+            BillingLocationID =@ViewBag.BillingLocationID;
+
+            $("#txtPCBy").val('@ViewBag.PreCarriageBy');
+            $("#txtPOR").val('@ViewBag.PlaceOfReceipt');
+            $("#txtVesselNo").val('@ViewBag.VesselNo');
+            $("#ddlModeList").val(@ViewBag.ModeOfShipment);
+            $("#ddlTermList").val(@ViewBag.ShipmentTermID);
+            $("#ddlPODList").val(@ViewBag.PODID);
+            $("#ddlStatusList").val(@ViewBag.StatusID);
+            $("#ddlLicenseList").val(@ViewBag.LicenseID);
+            $("#txtOthers").val('@ViewBag.Others');
+            $("#txtExportBenefit").val('@ViewBag.ExportBenefit');
+
+
+            if ('@ViewBag.EXType' == 'D') {
+                $("#btnPIList").prop("disabled", true)
+                $("#ddlCopyFrom").prop("disabled", true)
+                $("#PINo").val('');
+            }
+            var Total = 0;
+            var K = ChargeList.findIndex(p => p.ChargeID == 99999);
+            Total = parseFloat(ChargeList[K].ChargeAmount);
+            Total = parseFloat(Total).toFixed(2);
+            $("#lblChrgAmt").val(parseFloat(Total).toFixed(2));
+        } else {
+            var currency = document.getElementById("ddlCurrencyDropdown");
+            currency.value = 9;
+            CopyFrom();
+            $("#exchangeRate").val(1);
+        }
+
+        ShipToStateID = 27;
+        //ShippingLocationID = 1;
+
+        getTotalOfPOItem();
+
+        //$("#ShipToAddress").val("L-15/1, MIDC Taloja Dist. RAIGAD- 410208, MAHARASHTRA, INDIA");
+        //$("#ShipTo").val("MUMBAI");
+        //$("#ShipToGST").val("27AAAFF2147F1ZT");
+        //$("#ShipToState").val("MAHARASHTRA");
+
+    });
+    //FOR Address
+    function GetBillingAddress(ID) {
+        //debugger;
+        IsBilling = ID;
+        var CustID = 0;
+        var CustID = $("#ddlCustomerDropdown").val();
+
+        if (CustID == null || CustID == undefined || CustID == "" || CustID == NaN) {
+            document.getElementById('ddlCustomerDropdown').style.borderColor = "red";
+            return false;
+        }
+        var data = { 'CustID': CustID }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ExportInvoice/GetBillingAddress',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (jsonResult) {
+
+
+                BillingList = [];
+                BillingList = jQuery.parseJSON(jsonResult);
+
+
+                if (BillingList.length > 0) {
+                    IsBilling = 1;
+                    $("#billModal").modal('show');
+                    $("#BillinAddLoc").empty();
+                    RepTableDataJson($("#BillinAddLoc"), jsonResult, "IssueReceive Dtails", "IssueReceive_List");
+                }
+                else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "No Data found",
+                        icon: 'error'
+                    });
+                    IsBilling = 1;
+                    $("#BillinAddLoc").empty();
+                    $("#billModal").modal('show');
+                }
+
+
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+    }
+
+    function setBillingAddress(AutoID, StateID) {
+
+        var z = BillingList.findIndex(p => p.No == AutoID);
+        var Loc = BillingList[z].Location;
+        var Address = BillingList[z].Address;
+        var GSTNo = BillingList[z].GSTNO;
+        var State = BillingList[z].State;
+        BillingLocationID = BillingList[z].No;
+        BillToStateID = StateID;
+        $("#BillToAddress").val(Address);
+        $("#BillTo").val(Loc);
+        $("#BillToGST").val(GSTNo);
+        $("#BillToState").val(State);
+
+        $("#billModal").modal('hide');
+
+        if (StateID == 21) {
+            $("#ddlTaxCodeDropdown").val(1)
+        }
+        else {
+            $("#ddlTaxCodeDropdown").val(2)
+        }
+    }
+
+    function GetShippingAddress(ID) {
+        //debugger;
+        var CustID = $("#ddlCustomerDropdown").val();
+        IsBilling = ID;
+        //var CustID = 0;
+        if (CustID == null || CustID == undefined || CustID == "" || CustID == NaN) {
+            document.getElementById('ddlCustomerDropdown').style.borderColor = "red";
+            return false;
+        }
+        var data = { 'CustID': CustID }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ExportInvoice/GetShippingAddress',
+            data: data,
+            // data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (jsonResult) {
+
+
+                ShippingList = [];
+                ShippingList = jQuery.parseJSON(jsonResult);
+
+
+                if (ShippingList.length > 0) {
+                    IsBilling = 0;
+                    $("#billModal").modal('show');
+                    $("#BillinAddLoc").empty();
+                    RepTableDataJson($("#BillinAddLoc"), jsonResult, "IssueReceive Dtails", "IssueReceive_List");
+                }
+                else {
+                    IsBilling = 0;
+                    Swal.fire({
+                        title: 'Error',
+                        text: "No Data found",
+                        icon: 'error'
+                    });
+                    IsBilling = 0;
+                    $("#BillinAddLoc").empty();
+                    $("#billModal").modal('show');
+                }
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+    function setShippingAddress(AutoID) {
+        //debugger
+        var z = ShippingList.findIndex(p => p.No == AutoID);
+        var Loc = ShippingList[z].Location;
+        var Address = ShippingList[z].Address;
+        var GSTNo = ShippingList[z].GSTNO;
+        var State = ShippingList[z].State;
+        ShippingLocationID = ShippingList[z].No;
+
+        ShipToStateID = 27;
+        $("#ShipToAddress").val(Address);
+        $("#ShipTo").val(Loc);
+        $("#ShipToGST").val(GSTNo);
+        $("#ShipToState").val(State);
+        $("#billModal").modal('hide');
+
+    }
+
+    function SetContainerDropdown() {
+
+        var ContainerNo = $("#txtContainerNo").val();
+        var ReqDateList2 = ContainerNo.split(',');
+        ContainerList = [];
+        for (var j = 0; j < ReqDateList2.length; j++) {
+            if (ReqDateList2[j] != "") {
+                var elementDate = {};
+                elementDate.ContainerNo = ReqDateList2[j];
+                elementDate.ContainerNo = elementDate.ContainerNo.toUpperCase();
+                ContainerList.push(elementDate);
+            }
+        }
+
+        if (poItemM.length > 0) {
+            addCOItemToTable();
+        }
+
+    }
+
+    function RepTableDataJson(tableName, data, title, fileName) {
+
+        try {
+            if (tableName == null) {
+                Swal.fire({ title: 'Error', text: " Table not exist.", icon: 'error' });
+            }
+
+            //Check Data Table has if already initialize then need to destroy first!
+            if ($.fn.DataTable.isDataTable(tableName)) {
+                tableName.DataTable().destroy();
+                tableName.empty();
+            }
+
+            var parseJSONResult = jQuery.parseJSON(data);
+
+            if (parseJSONResult != null && parseJSONResult.length > 0) {
+                //Get dynmmic column.
+                var dynamicColumns = [];
+                var i = 0;
+                $.each(parseJSONResult[0], function (key, value) {
+                    var obj = { sTitle: key };
+                    dynamicColumns[i] = obj;
+                    i++;
+                });
+                //fetch all records from JSON result and make row data set.
+                var rowDataSet = [];
+                var i = 0;
+                $.each(parseJSONResult, function (key, value) {
+                    var rowData = [];
+                    var j = 0;
+                    $.each(parseJSONResult[i], function (key, value) {
+                        rowData[j] = value;
+                        j++;
+                    });
+                    rowDataSet[i] = rowData;
+
+                    i++;
+                });
+                tableName.dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": rowDataSet,
+                    "bInfo": true,
+                    "bPaginate": true,
+                    "bFilter": true,
+                    "paging": true,
+                    //"order": [],
+                    "columns": dynamicColumns,
+                    "deferRender": true,
+                    "bSort": false,
+                    "dom": 'Bfrtip',
+
+                    "buttons": [
+
+                        {
+                            extend: 'excel',
+                            title: 'Job Card Summary',
+                            exportOptions: {
+                                columns: [3, 4, 5, 6, 7, 8, 9, 10]
+                            }
+                        }
+                    ]
+                    //"pagingType": "full_numbers"
+                });
+                $(".buttons-excel").addClass("btn btn-primary");
+                $(".buttons-excel>span").replaceWith('<i class="fa fa-file-excel-o" data-toggle="tooltip" data-placement="bottom" title="Export To Excel" data-original-title="Export To Excel"></i>');
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+
+
+        }
+        catch (ex) {
+            Swal.fire({ title: 'Error', text: "Something went wrong: " + ex.message, icon: 'error' });
+
+        }
+    }
+    //END FOR Address
+
+    function openItemSearchBox() {
+
+        setSelectedItem();
+
+    }
+    function UpdateDetailsInArray(SrNo) {
+        debugger;
+        var z = poItemM.findIndex(p => p.SrNo == SrNo);
+
+        var ItemDescription = $("#ItemDescription_" + SrNo).val();
+        poItemM[z].ItemDescription = ItemDescription;
+
+        var HeadingID = $("#HeadingID_" + SrNo).val();
+        poItemM[z].HeadingID = HeadingID;
+
+        var ContainerNo = $("#ContainerNo_" + SrNo).val();
+        poItemM[z].ContainerNo = ContainerNo.toUpperCase();
+
+        var NetWeight = $("#NetWeight_" + SrNo).val();
+        if (NetWeight == null || NetWeight == "" || NetWeight == undefined) {
+            NetWeight = 0;
+        }
+        poItemM[z].NetWeight = NetWeight;
+
+        var GrossWeight = $("#GrossWeight_" + SrNo).val();
+        if (GrossWeight == null || GrossWeight == "" || GrossWeight == undefined) {
+            GrossWeight = 0;
+        }
+        poItemM[z].GrossWeight = GrossWeight;
+
+        var Qty = $("#Qty_" + SrNo).val();
+        if (Qty != "") {
+            Qty = parseFloat(Qty).toFixed(2);
+            poItemM[z].Qty = Qty;
+        } else {
+            Qty = 0;
+        }
+
+        var SQM = $("#SQM_" + SrNo).val();
+        poItemM[z].SQM = SQM;
+
+        var SQFT = $("#SQFT_" + SrNo).val();
+        poItemM[z].SQFT = SQFT;
+
+        var Rate = $("#Rate_" + SrNo).val();
+        if (Rate != "") {
+            Rate = parseFloat(Rate).toFixed(4);
+            poItemM[z].Rate = Rate;
+        } else {
+            Rate = 0;
+        }
+
+        var HSNCode = $("#HSNCode_" + SrNo).val();
+        poItemM[z].HSNCode = HSNCode;
+
+        var NoOfCase = $("#NoOfCase_" + SrNo).val();
+        poItemM[z].NoOfCase = NoOfCase;
+
+        var NetTotal;
+
+        NetTotal = (Rate * poItemM[z].SQM);
+        NetTotal = parseFloat(NetTotal).toFixed(2);
+
+        $("#NetTotal_" + SrNo).val(NetTotal);
+
+        poItemM[z].NetTotal = NetTotal;
+
+        getTotalOfPOItem();
+        getTotalWeightForPackingList();
+    }
+    function getTotalOfPOItem() {
+        debugger;
+        var FinalTotal = 0;
+        var GrandTotal = 0;
+
+        for (var i = 0; i < poItemM.length; i++) {
+            FinalTotal = parseFloat(FinalTotal) + parseFloat(poItemM[i].NetTotal);
+        }
+
+        $("#po_NTA").html(FinalTotal.toFixed(2));
+
+        $("#TotalAmt").val(parseFloat(FinalTotal).toFixed(2));
+
+        var OthCharges = $("#lblChrgAmt").val();
+        if (OthCharges == null || OthCharges == undefined) {
+            OthCharges = 0;
+        }
+        OthCharges = parseFloat(OthCharges);
+
+        var GrandTotal = FinalTotal + OthCharges;
+
+        $("#lblGrandTotal").val(parseFloat(GrandTotal).toFixed(2));
+
+        var AfterRoundGrandTotal = parseFloat(GrandTotal).toFixed(2);
+        //AfterRoundGrandTotal = Math.round(GrandTotal, 2);
+        $("#AfterRoundGrandTotal").val(AfterRoundGrandTotal);
+
+    }
+
+    function addOrRemoveCOItem() {
+
+        var element = {};
+        element.ItemCode = "";
+        element.ItemDescription = "";
+        element.HeadingID = 0;
+        element.Unit = "SQM";
+        element.HSNCode = "";
+        element.ContainerNo = "";
+        element.Rate = 0;
+        element.Qty = 0;
+        element.NoOfCase = 0;
+        element.SQM = 0;
+        element.SQFT = 0;
+        element.NetTotal = 0;
+        element.NetWeight = 0;
+        element.GrossWeight = 0;
+        poItemM.push(element);
+
+
+        var SrNo = 0;
+        for (var i = 0; i < poItemM.length; i++) {
+            SrNo = parseInt(SrNo);
+            SrNo = SrNo + 1;
+            poItemM[i].SrNo = SrNo;
+            poItemM[i].index = SrNo;
+        }
+        setSelectedCOItem();
+
+    }
+    function setSelectedCOItem() {
+
+        addCOItemToTable();
+    }
+    function addCOItemToTable() {
+
+        $('#tblPOItemData').dataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": poItemM,
+            "bPaginate": false,
+            "bInfo": false,
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "fnRowCallback": function (row, data, iDisplayIndex, iDisplayIndexFull) {
+                $('td', row).css('font-weight', 'bold');
+            },
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deleteSelectedCORow(' + row.SrNo + ')" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                        return data;
+                    }
+
+                },
+                { "data": "SrNo" },
+                {
+                    "className":"ChkWidth", "data": "ItemDescription",
+                    "render": function (data, type, row, meta) {
+                        data = '<textarea type="text" rows="2" class="form-control noborder width" style="text-transform:uppercase;" id="ItemDescription_' + row.SrNo + '" step=".01" value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)"></textarea>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "HeadingID",
+                    "render": function (data, type, row, meta) {
+
+                        if (type === 'display') {
+                            var temp = "HeadingID_" + row.SrNo
+                            data = '<div class="form-group d-flex "> ';
+                            data += '<select class="form-control dispName " id=' + temp + ' style="width:200px" onChange="UpdateDetailsInArray(' + row.SrNo + ')" >'
+                            data += '<option value="0" selected> ---Select--- </option>'
+                            for (j = 0; j < ExportHeadingList.length; j++) {
+
+                                if (row.HeadingID == ExportHeadingList[j].HeadingID) {
+                                    data += '<option value="' + ExportHeadingList[j].HeadingID + '" selected> ' + ExportHeadingList[j].Heading + '</option>'
+                                }
+                                else {
+                                    data += '<option value="' + ExportHeadingList[j].HeadingID + '" > ' + ExportHeadingList[j].Heading + '</option>'
+                                }
+                            }
+                            data += '</select> </div>';
+                        }
+                        return data;
+                    }
+                },
+                //{ "data": "Unit" },
+                {
+                    "data": "Unit",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="text"  class="form-control noborder width" style="text-transform:uppercase;" id="Unit_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "HSNCode",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="text"  class="form-control noborder width" style="text-transform:uppercase;" id="HSNCode_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Qty",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="Qty_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "SQM",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="SQM_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "SQFT",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number"  class="form-control text-right width" id="SQFT_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "Rate",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" class="form-control text-right width" id="Rate_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "NetTotal",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="number" disabled class="form-control text-right width" id="NetTotal_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" >';
+                        return data;
+                    }
+                },
+                //{
+                //    "data": "ContainerNo",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="text"  class="form-control noborder width" id="ContainerNo_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                //        return data;
+                //    }
+                //},
+                //{
+                //    "data": "NoOfCase",
+                //    "render": function (data, type, row, meta) {
+                //        data = '<input type="number" class="form-control text-right width" id="NoOfCase_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" >';
+                //        return data;
+                //    }
+                //},
+                {
+                    "data": "ContainerNo",
+                    "render": function (data, type, row, meta) {
+
+                        if (type === 'display') {
+                            var temp = "ContainerNo_" + row.SrNo
+                            data = '<div class="form-group d-flex "> ';
+                            data += '<select class="form-control dispName " id=' + temp + ' style="width:150px" onChange="UpdateDetailsInArray(' + row.SrNo + ')" >'
+                            data += '<option value="0" selected> ---Select--- </option>'
+                            for (j = 0; j < ContainerList.length; j++) {
+
+                                if (ContainerList.length == 1) {
+                                    data += '<option value="' + ContainerList[j].ContainerNo + '" selected> ' + ContainerList[j].ContainerNo + '</option>'
+                                }
+                                else {
+                                    if (row.ContainerNo == ContainerList[j].ContainerNo) {
+                                        data += '<option value="' + ContainerList[j].ContainerNo + '" selected> ' + ContainerList[j].ContainerNo + '</option>'
+                                    }
+                                    else {
+                                        data += '<option value="' + ContainerList[j].ContainerNo + '" > ' + ContainerList[j].ContainerNo + '</option>'
+                                    }
+                                }
+
+                            }
+                            data += '</select> </div>';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "NetWeight",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="text"  class="form-control text-right noborder width" id="NetWeight_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+                {
+                    "data": "GrossWeight",
+                    "render": function (data, type, row, meta) {
+                        data = '<input type="text"  class="form-control text-right noborder width" id="GrossWeight_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdateDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)">';
+                        return data;
+                    }
+                },
+            ]
+        });
+
+        for (i = 0; i < poItemM.length; i++) {
+
+            var temp1 = "ItemDescription_" + poItemM[i].SrNo
+            document.getElementById(temp1).value = poItemM[i].ItemDescription;
+        }
+    }
+    function deleteSelectedCORow(data) {
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you wish to delete the same ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                var i = poItemM.findIndex(p => p.SrNo == data)
+                                  //$("#custom-switch-checkbox_co_" + data).prop('checked', false);
+
+                poItemM.splice(i, 1);
+                var SrNo = 0;
+                for (var i = 0; i < poItemM.length; i++) {
+                    SrNo = parseInt(SrNo);
+                    SrNo = SrNo + 1;
+                    poItemM[i].SrNo = SrNo;
+                    poItemM[i].index = SrNo;
+                }
+                setSelectedCOItem();
+                getTotalOfPOItem();
+            } else {
+
+            }
+        });
+
+
+    }
+
+    //END FOR CO
+
+    //FOR OTHER CHARGES
+    function GetChargeListForPO() {
+
+        $("#OtherChargesList").modal();
+        $("#OtherChargesList").show();
+
+        addChargestoTable();
+
+    }
+    function addChargestoTable() {
+        $('#tblOtherchrgs2').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": ChargeList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "aaSorting": [],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "columns": [
+
+                 { "data": "ChargeID" },
+                //{ "data": "ChargeName" },
+                {
+                    "data": "ChargeName",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="text" class="form-control noborder width" id="ChargeName_' + row.ChargeID + '" step=".01"  value="' + data + '">';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "ChargeAmount",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="number" class="form-control text-right noborder width" id="Charge_' + row.ChargeID + '" step=".01"  value="' + data + '" onChange="UpdateChargeDetailsInArray(' + row.ChargeID + ')" onClick="selectAllText(this)">';
+                        }
+                        return data;
+                    }
+                }
+            ]
+        });
+    }
+    function UpdateChargeDetailsInArray(ChargeID) {
+        debugger;
+        var i = ChargeList.findIndex(p => p.ChargeID == ChargeID);
+
+        var ChargeName = "#ChargeName_" + ChargeID;
+        ChargeName = $("#ChargeName_" + ChargeID).val();
+
+        if (ChargeName == "" || ChargeName == null || ChargeName == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter charge name",
+                icon: 'error'
+            }).then((result) => {
+
+                $("#ChargeName_" + ChargeID).focus();
+
+                return false;
+            });
+        }
+
+        var ChargeAmount = "#Charge_" + ChargeID;
+        ChargeAmount = $("#Charge_" + ChargeID).val();
+
+        if (ChargeAmount == "" || ChargeAmount == null || ChargeAmount == undefined) {
+            ChargeAmount = 0;
+        }
+
+        ChargeList[i].ChargeName = ChargeName;
+
+        ChargeList[i].ChargeAmount = ChargeAmount;
+
+        var Total = 0;
+        for (var k = 0; k < ChargeList.length; k++) {
+            if (ChargeList[k].ChargeID != 99999) {
+                Total = parseFloat(Total) + parseFloat(ChargeList[k].ChargeAmount)
+            }
+        }
+        Total = parseFloat(Total).toFixed(2);
+        var h = ChargeList.findIndex(p => p.ChargeID == 99999);
+        ChargeList[h].ChargeAmount = Total;
+
+        $("#Charge_" + 99999).val(Total);
+        $("#lblChrgAmt").val(parseFloat(Total).toFixed(2));
+        //getTotalOfPOItem();
+    }
+    function GetAllTotalChrgList() {
+        //debugger;
+
+        getTotalOfPOItem();
+    }
+    //END FOR OTHER CHARGES
+
+    //FOR PACKING DETAILS
+    function AddPackingList() {
+
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items!",
+                icon: 'error'
+            })
+
+            return false;
+        }
+
+        for (var i = 0; i < poItemM.length; i++) {
+
+            if (poItemM[i].Rate == "" || poItemM[i].Rate == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter rate for SrNo - " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#Rate_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+            if (poItemM[i].Rate == "" || poItemM[i].Rate == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter rate for SrNo - " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#Rate_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+            if (poItemM[i].Qty == "" || poItemM[i].Qty == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter QTY for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#Qty_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].NetWeight == "" || poItemM[i].NetWeight == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter Net Weight for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#NetWeight_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].GrossWeight == "" || poItemM[i].GrossWeight == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter Gross Weight for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#GrossWeight_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].NetTotal == "" || poItemM[i].NetTotal == 0) {
+                return false;
+            }
+        }
+
+
+        $("#PackingListModal").modal();
+        $("#PackingListModal").show();
+
+        var select = $("#txtPackingContainer");
+
+        select.empty();
+        select.append($('<option/>', {
+            value: "",
+            text: "--Select--"
+        }));
+
+        $.each(ContainerList, function (data, value) {
+
+            if (ContainerList.length == 1) {
+                select.append($("<option selected></option>").val(value.ContainerNo).html(value.ContainerNo));
+            }
+            else {
+                select.append($("<option></option>").val(value.ContainerNo).html(value.ContainerNo));
+            }
+
+        })
+
+
+        getTotalWeightForPackingList();
+        AddPackingListTable();
+    }
+
+    function AddPackingItem() {
+
+        var ContainerNo = $("#txtPackingContainer").val();
+        var PackingMarks = $("#txtMarks").val();
+        var PackageName = $("#txtPackageName").val();
+
+        if (ContainerNo == "" || ContainerNo == undefined || ContainerNo == null) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter Container No.!",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        if (PackingMarks == "" || PackingMarks == undefined || PackingMarks == null) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter Marks and Nos.!",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        if (PackageName == "" || PackageName == undefined || PackageName == null) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter Package Name.!",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        var element = {};
+        element.ContainerNo = ContainerNo;
+        element.PackingMarks = PackingMarks;
+        element.PackageName = PackageName;
+        element.NoOfPackages = "0";
+        element.TotalPackages = 0;
+        element.NetWeight = 0;
+        element.GrossWeight = 0;
+        PackingList.push(element);
+
+        var SrNo = 0;
+        for (var i = 0; i < PackingList.length; i++) {
+            SrNo = SrNo + 1;
+            PackingList[i].SrNo = SrNo;
+        }
+
+        AddPackingListTable();
+        getTotalWeightForPackingList();
+    }
+    function AddPackingListTable() {
+        debugger;
+
+        $('#tblPackingList').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": PackingList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "aaSorting": [],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+            "columns": [
+                {
+                    "data": "SrNo",
+                    "render": function (data, type, row, meta) {
+                        data = '<button type="button" class="btn btn-icon btn-primary btn-sm btn-danger removebutton" name="removebutton" style="height:35px;" onclick="deletePackingRow(' + row.SrNo + ')" ><i class="fa fa-trash" style="font-size: 16px;"></i></button>'
+
+                        return data;
+                    }
+
+                },
+                { "data": "SrNo" },
+                { "data": "ContainerNo" },
+                { "data": "PackageName" },
+                { "data": "PackingMarks" },
+                {
+                    "data": "NoOfPackages",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="text" class="form-control noborder width" id="NoOfPackages_' + row.SrNo + '" value="' + data + '" onChange="UpdatePackingDetailsInArray(' + row.SrNo + ')">';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "TotalPackages",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="number" class="form-control text-right noborder width" id="TotalPackages_' + row.SrNo + '" value="' + data + '" onChange="UpdatePackingDetailsInArray(' + row.SrNo + ')"  onClick="selectAllText(this)">';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "NetWeight",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="number" class="form-control text-right noborder width" id="NetWeightP_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdatePackingDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "GrossWeight",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<input type="number" class="form-control text-right noborder width" id="GrossWeightP_' + row.SrNo + '" step=".01"  value="' + data + '" onChange="UpdatePackingDetailsInArray(' + row.SrNo + ')" onClick="selectAllText(this)" >';
+                        }
+                        return data;
+                    }
+                }
+            ]
+        });
+
+    }
+    function UpdatePackingDetailsInArray(SrNo) {
+        debugger;
+        var i = PackingList.findIndex(p => p.SrNo == SrNo);
+        var NoOfPackages = $("#NoOfPackages_" + SrNo).val();
+        var TotalPackages = $("#TotalPackages_" + SrNo).val();
+        var NetWeight = $("#NetWeightP_" + SrNo).val();
+        var GrossWeight = $("#GrossWeightP_" + SrNo).val();
+
+        if (NoOfPackages == "" || NoOfPackages == undefined || NoOfPackages == null) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter Package Name.!",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        if (TotalPackages == "" || TotalPackages == undefined || TotalPackages == null) {
+            TotalPackages = 0;
+        }
+
+        if (NetWeight == "" || NetWeight == undefined || NetWeight == null) {
+            NetWeight = 0;
+        }
+
+        if (GrossWeight == "" || GrossWeight == undefined || GrossWeight == null) {
+            GrossWeight = 0;
+        }
+
+        var TotalNetWeight = 0;
+        var TotalGrossWeight = 0;
+        var NetWeightTotal = 0;
+        var GrossWeightTotal = 0;
+        var ContainerNo = "";
+        var count = 0;
+        for (var i = 0; i < PackingList.length; i++) {
+            TotalNetWeight = 0;
+            TotalGrossWeight = 0;
+            count = 0;
+            ContainerNo = PackingList[i].ContainerNo;
+            for (var j = 0; j < PackingList.length; j++) {
+                NetWeightTotal = NetWeightTotal + parseFloat($("#NetWeightP_" + PackingList[j].SrNo).val());
+                GrossWeightTotal = GrossWeightTotal + parseFloat($("#GrossWeightP_" + PackingList[j].SrNo).val());
+            }
+
+            for (var k = 0; k < poItemM.length; k++) {
+                if (ContainerNo = poItemM[k].ContainerNo) {
+                    TotalNetWeight = TotalNetWeight + parseFloat(poItemM[k].NetWeight);
+                    TotalGrossWeight = TotalGrossWeight + parseFloat(poItemM[k].GrossWeight);
+                }
+            }
+
+            if (NetWeightTotal != TotalNetWeight) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Total Net Weight Cannot be Greater or Less than Item Net Weight!",
+                    icon: 'error'
+                });
+
+                return false;
+            }
+
+            if (GrossWeightTotal != TotalGrossWeight) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Total Gross Weight Cannot be Greater or Less than Item Gross Weight!",
+                    icon: 'error'
+                });
+
+                return false;
+            }
+
+            PackingList[i].NoOfPackages = NoOfPackages;
+            PackingList[i].TotalPackages = TotalPackages;
+            PackingList[i].NetWeight = NetWeight;
+            PackingList[i].GrossWeight = GrossWeight;
+        }
+
+
+    }
+
+    function getTotalWeightForPackingList() {
+        debugger;
+        var TotalNetWeight = 0;
+        var TotalGrossWeight = 0;
+        var ContainerNo = "";
+        var count = 0;
+        for (var i = 0; i < PackingList.length; i++) {
+            TotalNetWeight = 0;
+            TotalGrossWeight = 0;
+            count = 0;
+            ContainerNo = PackingList[i].ContainerNo;
+            for (var j = 0; j < PackingList.length; j++) {
+                if (ContainerNo = PackingList[j].ContainerNo) {
+                    count++;
+                }
+            }
+
+            for (var k = 0; k < poItemM.length; k++) {
+                if (ContainerNo = poItemM[k].ContainerNo) {
+                    TotalNetWeight = TotalNetWeight + parseFloat(poItemM[k].NetWeight);
+                    TotalGrossWeight = TotalGrossWeight + parseFloat(poItemM[k].GrossWeight);
+                }
+            }
+
+            PackingList[i].NetWeight = (TotalNetWeight / count).toFixed(2);
+            PackingList[i].GrossWeight = (TotalGrossWeight / count).toFixed(2);
+            $("#NetWeightP_" + PackingList[i].SrNo).val((TotalNetWeight / count).toFixed(2));
+            $("#GrossWeightP_" + PackingList[i].SrNo).val((TotalGrossWeight / count).toFixed(2));
+
+        }
+
+    }
+
+    function deletePackingRow(data) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you wish to delete the same ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                var i = PackingList.findIndex(p => p.SrNo == data)
+                //$("#custom-switch-checkbox_co_" + data).prop('checked', false);
+
+                PackingList.splice(i, 1);
+                var SrNo = 0;
+                for (var i = 0; i < PackingList.length; i++) {
+                    SrNo = parseInt(SrNo);
+                    SrNo = SrNo + 1;
+                    PackingList[i].SrNo = SrNo;
+                    PackingList[i].index = SrNo;
+                }
+                AddPackingListTable();
+            } else {
+
+            }
+        });
+
+
+    }
+
+    //END FOR PACKING DETAILS
+
+    function ConfrimExchangeRate() {
+
+        var currency = $("#ddlCurrencyDropdown").val();
+        if (currency != 1) {
+            isExchange = true;
+            if (isExchange == false) {
+
+                Swal.fire({
+                    title: '',
+                    text: "Please Update Exchange Rate",
+                    icon: 'info',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    //cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.value) {
+                        debugger;
+                        isExchange = true;
+
+                        document.getElementById("exchangeRate").focus();
+                        document.getElementById("exchangeRate").select();
+                        //window.scrollTo(0, 0);
+
+                        window.scroll({
+                            top: 0,
+                            left: 0,
+                            behavior: 'smooth'
+                        });
+
+                    } else {
+                        onSavePODetail();
+                    }
+
+                });
+
+            } else {
+                onSavePODetail();
+            }
+
+        }
+        else {
+            onSavePODetail();
+        }
+
+    }
+    function onSavePODetail() {
+        debugger;
+
+        var basicElement = {};
+        basicElement.EXINO = EXINO;
+        basicElement.EXID = 0;
+        basicElement.EXIDate = $("#txtEXIDate").val();
+        basicElement.PONO = $("#txtPONO").val().toUpperCase();
+        basicElement.PODate = $("#txtPODate").val();
+        basicElement.LCNO = $("#txtLCNO").val().toUpperCase();
+        basicElement.LCDate = $("#txtLCDate").val();
+        basicElement.CustomerID = $("#ddlCustomerDropdown").val();
+        //basicElement.NetTotal = $("#TotalAmt").html();
+        basicElement.FinalTotal = $("#TotalAmt").val();
+        basicElement.TotChrgAmt = $("#lblChrgAmt").val();
+        basicElement.GrandTotal = $("#lblGrandTotal").val();
+        basicElement.ExchangeRate = $("#exchangeRate").val();
+        basicElement.CurrencyID = $("#ddlCurrencyDropdown").val();
+        basicElement.EXIType = $("#ddlCopyFrom").val();
+        basicElement.PINo = $("#PINo").val();
+        basicElement.BillingLocationID = BillingLocationID;
+        basicElement.BillToAddress = $("#BillToAddress").val();
+        basicElement.ShippingLocationID = ShippingLocationID;
+        basicElement.ShipToAddress = $("#ShipToAddress").val();
+        basicElement.Remarks = $("#Remarks").val();
+        basicElement.PreCarriageBy = $("#txtPCBy").val();
+        basicElement.PlaceOfReceipt = $("#txtPOR").val();
+        basicElement.VesselNo = $("#txtVesselNo").val();
+        basicElement.ContainerNo = $("#txtContainerNo").val().toUpperCase();
+        basicElement.ModeOfShipment = $("#ddlModeList").val();
+        basicElement.ShipmentTermID = $("#ddlTermList").val();
+        basicElement.PODID = $("#ddlPODList").val();
+        basicElement.StatusID = $("#ddlStatusList").val();
+        basicElement.LicenseID = $("#ddlLicenseList").val();
+        basicElement.ExportBenefit = $("#txtExportBenefit").val();
+        basicElement.Others = $("#txtOthers").val();
+        if (basicElement.PINo == "" || basicElement.PINo == null || basicElement.PINo == undefined) {
+            basicElement.PINo = "-";
+        }
+        if (basicElement.EXIType == "" || basicElement.EXIType == null || basicElement.EXIType == undefined) {
+            basicElement.EXIType = "D";
+        }
+        if (basicElement.ExportBenefit == "" || basicElement.ExportBenefit == null || basicElement.ExportBenefit == undefined) {
+            basicElement.EXIType = "";
+        }
+        if (basicElement.LicenseID == "" || basicElement.LicenseID == null || basicElement.LicenseID == undefined) {
+            basicElement.LicenseID = 1;
+        }
+
+        if (basicElement.EXIDate == "" || basicElement.EXIDate == null || basicElement.EXIDate == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Invoice Date",
+                icon: 'error'
+            });
+
+            $("#txtEXIDate").focus();
+            return false;
+        }
+        if (basicElement.PONO == "" || basicElement.PONO == null || basicElement.PONO == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter PO No.!",
+                icon: 'error'
+            });
+
+            $("#txtPONO").focus();
+            return false;
+        }
+        if (basicElement.PODate == "" || basicElement.PODate == null || basicElement.PODate == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select PO Date",
+                icon: 'error'
+            });
+
+            $("#txtPODate").focus();
+            return false;
+        }
+        if (basicElement.LCNO == "" || basicElement.LCNO == null || basicElement.LCNO == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Letter Of Credit No!",
+                icon: 'error'
+            });
+
+            $("#txtLCNO").focus();
+            return false;
+        }
+        if (basicElement.LCDate == "" || basicElement.LCDate == null || basicElement.LCDate == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Letter Of Credit Date!",
+                icon: 'error'
+            });
+
+            $("#txtLCDate").focus();
+            return false;
+        }
+        if (basicElement.CustomerID == "" || basicElement.CustomerID == null || basicElement.CustomerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Customer",
+                icon: 'error'
+            });
+
+            $("#ddlCustomerDropdown").focus();
+            return false;
+        }
+        if (basicElement.ExchangeRate == "" || basicElement.ExchangeRate == null || basicElement.ExchangeRate == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please enter exchange rate",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (basicElement.BillingLocationID == "" || basicElement.BillingLocationID == null || basicElement.BillingLocationID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Billing Location",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (basicElement.BillToAddress == "" || basicElement.BillToAddress == null || basicElement.BillToAddress == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Billing Address",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (basicElement.ShippingLocationID == "" || basicElement.ShippingLocationID == null || basicElement.ShippingLocationID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Shipping Location",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (basicElement.ShipToAddress == "" || basicElement.ShipToAddress == null || basicElement.ShipToAddress == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Shipping Address",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (basicElement.CurrencyID == "" || basicElement.CurrencyID == null || basicElement.CurrencyID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select currency",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (poItemM.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please add Items!",
+                icon: 'error'
+            })
+
+            return false;
+        }
+        if (PackingList.length == 0) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please Enter Packing Details!",
+                icon: 'error'
+            })
+
+            return false;
+        }
+
+        for (var i = 0; i < poItemM.length; i++) {
+
+            if (poItemM[i].Rate == "" || poItemM[i].Rate == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter rate for SrNo - " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#Rate_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+            if (poItemM[i].Qty == "" || poItemM[i].Qty == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter QTY for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#Qty_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].NetWeight == "" || poItemM[i].NetWeight == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter Net Weight for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#NetWeight_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].GrossWeight == "" || poItemM[i].GrossWeight == 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please enter Gross Weight for " + poItemM[i].SrNo,
+                    icon: 'error'
+                });
+
+                $("#GrossWeight_" + poItemM[i].SrNo).focus();
+                return false;
+            }
+
+            if (poItemM[i].NetTotal == "" || poItemM[i].NetTotal == 0) {
+                return false;
+            }
+        }
+
+
+        if (SearchPaymentTermList.length == 0) {
+
+            Swal.fire({
+                title: 'Error!',
+                text: "Please select Payment Terms",
+                icon: 'error'
+            });
+            return false;
+        }
+
+        $("#global-loader").fadeIn("slow");
+
+        var data = {
+            'POM': basicElement, 'POD': poItemM, 'PaymentTermList': SearchPaymentTermList, 'ChargeList': ChargeList, 'PackingList': PackingList
+        };
+        data = JSON.stringify(data);
+        $.ajax({
+            type: 'post',
+            url: '/ExportInvoice/AjaxAddOrEditPackingList',
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                $("#Savebtn").prop("disabled", true);
+
+                $("#global-loader").fadeOut("slow");
+                if (response.Status != 0) {
+
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+
+                        //ForPrintPreview(response.EXINO, response.RevisionNo, response.UserName);
+
+                        document.location = '@Url.Action("ExportInvoiceSummary", "ExportInvoice")';
+
+                });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                    $("#Savebtn").prop("disabled", false);
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+    }
+
+    function ForPrintPreview(PINo, RevisionNo, UserName) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you wish to print the same ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                //debugger;
+                $("#global-loader").fadeIn("slow");
+                var url = '/PurchaseOrder/PurchaseOrderPdf?EXINO=' + PINo;
+                window.open(url, '_blank');
+                $("#global-loader").fadeOut("slow");
+                GetAlertForApproval(PINo, RevisionNo, UserName);
+            } else {
+                GetAlertForApproval(PINo, RevisionNo, UserName);
+            }
+        });
+    }
+
+
+    var PIM = 0;
+    var RevNoM = 0;
+    var strUserName = 0;
+    var strPIN = "";
+
+     function CloseGetApprovalUserList() {
+                                $("#Savebtn").prop("disabled", true);
+                             document.location = '@Url.Action("Summary", "PurchaseOrder")';
+
+    }
+
+    function GetAlertForApproval(PINo, RevNo, UserName) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to send " + PINo + " Purchase Order for Approval ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                GetApprovalUserList(PINo, RevNo, UserName);
+            }
+            else {
+                document.location = '@Url.Action("Summary", "PurchaseOrder")';
+            }
+        });
+    }
+
+    function DirectApprovePO(PINo) {
+
+        var data = { 'PONo': PINo  }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/PurchaseOrder/DirectApprovePO',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (response) {
+
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+
+                       document.location = '@Url.Action("Summary", "PurchaseOrder")';
+                });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                }
+
+
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+
+
+
+    function GetApprovalUserList(PINo, RevNo, UserName) {
+        var strDocName = "PO"
+        var data = { 'strDocName': strDocName }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ExportInvoice/GetApprovalUserList',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (jsonResult) {
+                PIM = PINo;
+                RevNoM = RevNo;
+                strUserName = UserName;
+                UserApprovalList = [];
+                UserApprovalList = jQuery.parseJSON(jsonResult);
+                if (UserApprovalList.length > 0) {
+                    $("#ApprovalUserListModal").modal('show');
+                    $("#tblUserList").empty();
+                    RepTableDataJson($("#tblUserList"), jsonResult, "User Details", "ApprovalUser_List");
+                }
+                else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "No Data found",
+                        icon: 'error'
+                    });
+                    $("#tblUserList").empty();
+                    $("#ApprovalUserListModal").modal('show');
+                }
+
+
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+
+
+    }
+    function GetSelectedUser(UserID) {
+        //debugger;
+        $("#global-loader").fadeIn("slow");
+        var UserApprovalList1 = UserApprovalList;
+        UserApprovalList = [];
+        for (i = 0; i < UserApprovalList1.length; i++) {
+            var element = {};
+            element.IsSelected = 0;
+            element.UserID = UserApprovalList1[i].UserID;
+            element.USERS = UserApprovalList1[i].USERS;
+            element.EmailID = UserApprovalList1[i].EmailID;
+            UserApprovalList.push(element);
+        }
+        var z = UserApprovalList.findIndex(p => p.UserID == UserID);
+        var ToUserMailID = UserApprovalList[z].EmailID;
+        var ToUSERS = UserApprovalList[z].USERS;
+        UserApprovalList[z].IsSelected = 1;
+
+        var CcEmailList = "";
+        for (i = 0; i < UserApprovalList.length; i++) {
+            if (UserApprovalList[i].IsSelected != 1) {
+                CcEmailList = CcEmailList + UserApprovalList[i].EmailID + ";";
+            }
+        }
+
+        $("#ApprovalUserListModal").modal('hide');
+        var data = { 'PINo': PIM }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/PurchaseOrder/GetApprovalMailDetails',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (response) {
+                var strCustomerName = $("#ddlCustomerDropdown option:selected").text();
+                var strBodyText = "";
+                var strBodyMsg = document.getElementById('body-text').value;
+                strPIN = "";
+                // strPIN = Trim(Val(Format(Now, "HH")) + 10) + (Val(Format(Now, "mm")) + 10) + Trim(Val(Format(Now, "ss")) + 10);
+                var today = new Date();
+                strPIN = (parseInt(today.getHours()) + 10) + "" + (parseInt(today.getMinutes()) + 10) + "" + parseInt((today.getSeconds()) + 10);
+                var strText = "";
+                strText = "Attached here with copy of Purchase Order [" + PIM + "/" + RevNoM + "] of " + strCustomerName + "."
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Dear Sir, " + " </font> <br> <br>"
+
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText + " </font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Use this PIN No <B>" + strPIN + "</B> to approve Purchase Order. </font> <br> <br> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strBodyMsg + ". </font> <br> <br> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Best Regards, " + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "[" + strUserName + "]" + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=4><B>" + "FG GLASS INDUSTRIES PVT. LTD. " + "</B></font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Plot No. L-15/1, MIDC Taloja, Dist. Raigad - 410 208 (Maharashtra) " + "</font> <br>"
+                strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "T: (91 22) 2741 1391 / (91 22) 2740 2880 " + "| E: factory@fgglass.com | W: www.fgglass.com " + "</font> <br>"
+
+
+                document.getElementById('recipient-name').value = ToUserMailID;
+                document.getElementById('recipient-Subject').value = "Purchase Order No.: [" + PIM + "/" + RevNoM + "] ";
+                document.getElementById('message-text').value = strBodyText;
+                document.getElementById('recipient-Dear').value = ToUserMailID;
+                document.getElementById('recipient-cc').value = CcEmailList;
+                document.getElementById('recipient-bcc').value = "";
+
+                MasterQuoPDFList = JSON.parse(response.QuotationPDFList);
+                MasterAttachment = JSON.parse(response.QuotationPDFList);
+                $('#LinkQuotationData').dataTable({
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bPaginate": false,
+                    "bFilter": false,
+                    "paging": false,
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": MasterQuoPDFList,
+                    "columns": [
+                        { "data": "SrNo" },
+                        { "data": "DocFileName" }
+
+                    ]
+                });
+
+                $("#global-loader").fadeOut("slow");
+                $('#exampleModal3').modal('show');
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+
+
+    }
+
+    function GetEmailTableData2() {
+        debugger;
+
+        var data = { 'PONo': PIM };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/PurchaseOrder/POItemsDetails",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                itemDetails = response;
+                console.log(response);
+                console.log(itemDetails);
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        }).done(function () { //use this
+
+            //alert("DONE!");
+            SendEmailToClient();
+        });
+    }
+
+    function SendEmailToClient() {
+        $("#global-loader").fadeIn("slow");
+
+        var strCustomerName = $("#ddlCustomerDropdown option:selected").text();
+        var strBodyText = "";
+        var strBodyMsg = document.getElementById('body-text').value;
+        strPIN = "";
+        var today = new Date();
+        strPIN = (parseInt(today.getHours()) + 10) + "" + (parseInt(today.getMinutes()) + 10) + "" + parseInt((today.getSeconds()) + 10);
+        var strText = "";
+        strText = "Attached here with copy of Purchase Order [" + PIM + "/" + RevNoM + "] of " + strCustomerName + "."
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Dear Sir, " + " </font> <br> <br>"
+
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strText + " </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Use this PIN No <B>" + strPIN + "</B> to approve Purchase Order. </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Already Purchase Amount from  <B>" + itemDetails[0].CustomerName + "</B> is <B>₹" + itemDetails[0].GrandTotal + "</B> </font> <br>"
+        //strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + strBodyMsg + ". </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3><B>[ " + strBodyMsg + " ]</B></font><br><br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> " + "<b>Please find below Amount against Item </b> </font> <br><br>"
+        strBodyText = strBodyText + "<table border=\"1\" width=\"100%\" style=\"text-wrap:normal;\">"
+        strBodyText = strBodyText + "<tr bgcolor='#4da6ff'>"
+        strBodyText = strBodyText + "<th>Sr. No.</th><th>Item Code</th><th>Item Description</th><th>Qty</th><th>Already Purchase Amount</th></tr>"
+
+        for (i = 0; i < itemDetails.length; i++) {
+            strBodyText = strBodyText + "<tr>"
+            strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"5%\"> " + itemDetails[i].SrNo + " </td>"
+            strBodyText = strBodyText + "<td style=\"text-align:left;\" width=\"18%\"> " + itemDetails[i].ItemCode + " </td>"
+            strBodyText = strBodyText + "<td style=\"text-align:left\" width=\"60%\"> " + itemDetails[i].ItemDesc + " </td>"
+            strBodyText = strBodyText + "<td style=\"text-align:center\" width=\"5%\"> " + itemDetails[i].ItemQty + " </td>"
+            strBodyText = strBodyText + "<td style=\"text-align:right;\" width=\"12%\">₹ " + itemDetails[i].NetAmount + " </td>"
+            strBodyText = strBodyText + "</tr>"
+        }
+
+        strBodyText = strBodyText + "</table><br/>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3> Best Regards,  </font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "[" + str_UserName + "]" + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=4><B>" + "FG GLASS INDUSTRIES PVT. LTD. " + "</B></font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "Plot No. L-15/1, MIDC Taloja, Dist. Raigad - 410 208 (Maharashtra) " + "</font> <br>"
+        strBodyText = strBodyText + "<font face='Calibri' color='black' size=3>  " + "T: (91 22) 2741 1391 / (91 22) 2740 2880 " + "| E: factory@fgglass.com | W: www.fgglass.com " + "</font> <br>"
+
+        document.getElementById('message-text').value = strBodyText;
+
+        var to = document.getElementById('recipient-name').value;
+        var from = 'FG';
+        var cc = document.getElementById('recipient-cc').value;
+        var bcc = document.getElementById('recipient-bcc').value;
+        var subject = document.getElementById('recipient-Subject').value;
+        var To = document.getElementById('recipient-Dear').value;
+        var message = document.getElementById('message-text').value;
+
+        var data = {
+            'To': to, 'From': from, 'CC': cc, 'BCC': bcc, 'Subject': subject, 'Body': message,
+            'RecordNo': PIM, 'RevisionNo': RevNoM, 'PINNo': strPIN,
+            'Dear': To, 'MasterAttachment': MasterAttachment
+        };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: "/Print/SendPurchaseOrderEmail",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //debugger;
+                MasterAttachment = [];
+                $("#LinkQuotationData").empty();
+                $("#global-loader").fadeOut("slow");
+                $('#exampleModal3').modal('hide');
+
+                if (response.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("Summary", "PurchaseOrder")';
+                });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.Message,
+                        icon: 'error'
+                    })
+                }
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+    }
+    function clearmail() {
+         $("#Savebtn").prop("disabled", true);
+        document.getElementById('recipient-cc').value = "";
+        document.getElementById('recipient-bcc').value = "";
+        MasterAttachment = [];
+        $("#LinkQuotationData").empty();
+                                        document.location = '@Url.Action("Summary", "PurchaseOrder")';
+
+    }
+    function RepTableDataJson(tableName, data, title, fileName) {
+
+        try {
+            if (tableName == null) {
+                Swal.fire({ title: 'Error', text: " Table not exist.", icon: 'error' });
+            }
+
+            //Check Data Table has if already initialize then need to destroy first!
+            if ($.fn.DataTable.isDataTable(tableName)) {
+                tableName.DataTable().destroy();
+                tableName.empty();
+            }
+
+            var parseJSONResult = jQuery.parseJSON(data);
+
+            if (parseJSONResult != null && parseJSONResult.length > 0) {
+                //Get dynmmic column.
+                var dynamicColumns = [];
+                var i = 0;
+                $.each(parseJSONResult[0], function (key, value) {
+                    var obj = { sTitle: key };
+                    dynamicColumns[i] = obj;
+                    i++;
+                });
+                //fetch all records from JSON result and make row data set.
+                var rowDataSet = [];
+                var i = 0;
+                $.each(parseJSONResult, function (key, value) {
+                    var rowData = [];
+                    var j = 0;
+                    $.each(parseJSONResult[i], function (key, value) {
+                        rowData[j] = value;
+                        j++;
+                    });
+                    rowDataSet[i] = rowData;
+
+                    i++;
+                });
+                tableName.dataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": rowDataSet,
+                    "bInfo": true,
+                    "bPaginate": true,
+                    "bFilter": true,
+                    "paging": true,
+                    //"order": [],
+                    "columns": dynamicColumns,
+                    "deferRender": true,
+                    "bSort": false,
+                    //"dom": 'Bfrtip',
+
+                    //"buttons": [
+
+                    //    {
+                    //        extend: 'excel',
+                    //        title: 'Job Card Summary',
+                    //        exportOptions: {
+                    //            columns: [3, 4, 5, 6, 7, 8, 9, 10]
+                    //        }
+                    //    }
+                    //]
+                });
+                $(".buttons-excel").addClass("btn btn-primary");
+                $(".buttons-excel>span").replaceWith('<i class="fa fa-file-excel-o" data-toggle="tooltip" data-placement="bottom" title="Export To Excel" data-original-title="Export To Excel"></i>');
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+
+
+        }
+        catch (ex) {
+            Swal.fire({ title: 'Error', text: "Something went wrong: " + ex.message, icon: 'error' });
+
+        }
+    }
+    //END FOR Mail
+</script>
+<script>
+    function CopyFrom() {
+        poItemM = [];
+        var POType = $('#ddlCopyFrom').val();
+        CopyFromPo = POType;
+
+        $("#po_NTA").html(0);
+        $('#tblPOItemData').DataTable({
+            "destroy": true,
+            "aaData": poItemM,
+            "bLengthChange": false,
+            fixedHeader: true,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            searching: false,
+            "ordering": false,
+            "aoColumnDefs": [
+
+
+            ]
+        });
+
+        if (POType == 'D') {
+            $("#btnPIList").prop("disabled", true)
+            //$("#itemBtn").prop("disabled", false)
+            $("#PINo").val("");
+
+        }
+        if (POType == 'I') {
+            $("#btnPIList").prop("disabled", false)
+            //$("#itemBtn").prop("disabled", true)
+        }
+    }
+    function searchOpenPIList() {
+        var CustomerID = $("#ddlCustomerDropdown").val();
+        if (CustomerID == 0 || CustomerID == undefined) {
+            Swal.fire({
+                title: 'Error',
+                text: "Please select Customer.",
+                icon: 'error'
+            });
+            return false;
+        }
+        var data = { 'CustomerID': CustomerID };
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/ExportInvoice/GetPIListAgainstCustomer",
+            data: data,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#OpenPIList").modal();
+                $("#OpenPIList").show();
+                PIItemList = response;
+                $('#tblOpenPIListTable').DataTable({
+                    "destroy": true,
+                    "bLengthChange": false,
+                    "aaData": response,
+                    "bPaginate": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "autoWidth": false,
+                    "aaSorting": [],
+                    "columnDefs": [{
+                        "targets": 0,
+                        "orderable": false,
+                    }],
+                    "columns": [
+
+                        {
+                            "data": "SrNo",
+                            "orderable": false,
+                            "render": function (data, type, row, meta) {
+                                return '<input type="checkbox" id="_' + row.SrNo + '" name="check_id" class=\"ids \" value="' + data + '" />';
+                            }
+
+                        },
+                        { "data": "PINO" },
+                        { "data": "PIDate" },
+                        { "data": "WONO" },
+                        { "data": "Description" },
+                        { "data": "BalQty" },
+                        { "data": "BalSQM" },
+                        //{ "data": "ProjectName" },
+                        //{ "data": "CustName" }
+                    ]
+                });
+
+            },
+
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $("#global-loader").fadeOut("slow");
+
+            }
+        });
+
+
+    }
+    function GetAllCheckedPIItemList() {
+        debugger;
+        var checkboxarray = [];
+        poItemM = [];
+        SelectedPI = [];
+        PISelectedItem = [];
+
+        var rowNum = 1;
+
+        $('.ids:checked').each(function (i, e) {
+            checkboxarray.push($(this).val());
+        });
+        for (var k = 0; k < checkboxarray.length; k++) {
+
+
+            var SrNo = checkboxarray[k];
+
+            for (var m = 0; m < PIItemList.length; m++) {
+
+                if (PIItemList[m].SrNo == checkboxarray[k]) {
+                    var element = {};
+                    element.PINO = PIItemList[m].PINO;
+                    element.WONO = PIItemList[m].WONO;
+                    element.SpecID = PIItemList[m].SpecID;
+                    PIItemListSearch.push(element);
+                }
+            }
+
+            //if (SelectedPI.length == 0) {
+            //    SelectedPI.push(SrNo);
+            //}
+            //else {
+            //    for (var j = 0; j < SelectedPI.length; j++) {
+
+            //        if (SelectedPI[j] != checkboxarray[k]) {
+            //            SelectedPI.push(SrNo);
+            //        }
+            //    }
+            //}
+
+        }
+
+
+        var GlobalcheckboxarrayString = SelectedPI.toString();
+        $('#PINo').val(GlobalcheckboxarrayString);
+
+        GetItemListAgainstPI(GlobalcheckboxarrayString);
+
+        for (i = 0; i < PISelectedItem.length; i++) {
+            //debugger;
+            var element = {};
+
+            element.SrNo = PISelectedItem[i].SrNo;
+            element.index = PISelectedItem[i].SrNo;
+            element.ItemCode = PISelectedItem[i].ItemCode;
+            element.HeadingID = PISelectedItem[i].HeadingID;
+            element.ItemDescription = PISelectedItem[i].ItemDescription;
+            element.Unit = PISelectedItem[i].Unit;
+            element.HSNCode = PISelectedItem[i].HSNCode;
+            element.ContainerNo = "";
+            element.Rate = PISelectedItem[i].Rate;
+            element.SQM = PISelectedItem[i].SQM;
+            element.Qty = PISelectedItem[i].Qty;
+            element.NetTotal = PISelectedItem[i].NetTotal;
+            element.NetWeight = PISelectedItem[i].NetWeight;
+            element.GrossWeight = PISelectedItem[i].GrossWeight;
+            element.PINO = PISelectedItem[i].PINO;
+            element.WONO = PISelectedItem[i].WONO;
+            element.SpecID = PISelectedItem[i].SpecID;
+            poItemM.push(element);
+            rowNum = 1
+
+        }
+
+        addCOItemToTable();
+        debugger;
+
+        for (i = 0; i < poItemM.length; i++) {
+
+            var temp1 = "ItemDescription_" + poItemM[i].SrNo
+            document.getElementById(temp1).value = poItemM[i].ItemDescription;
+        }
+
+        getTotalOfPOItem();
+
+        $("#po_NTA").html(0);
+        $("#po_FLA").html(0);
+        $("#po_NTA2").html(0);
+        $("#po_FLA2").html(0);
+        if (poItemM.length == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function GetItemListAgainstPI(PINo) {
+
+        var data = { 'PIItemListSearch': PIItemListSearch }
+        data = JSON.stringify(data);
+        console.log(0);
+        $.ajax({
+            type: "POST",
+            url: "/ExportInvoice/GetItemListAgainstWONO",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                console.log(1, response);
+                $.each(response, function (i) {
+                    PISelectedItem.push(response[i]);
+                });
+            },
+            error: function (response) {
+                console.log(response);
+
+            }
+        });
+
+    }
+
+    //function GetItemListAgainstPI(PINo) {
+    //    PISelectedItem = [];
+    //    var element = {};
+    //    element.PINo = PINo;
+    //    var data = { 'data': element }
+    //    data = JSON.stringify(element);
+    //    console.log(0);
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/ExportInvoice/GetItemListAgainstPINo",
+    //        data: data,
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        async: false,
+    //        success: function (response) {
+    //            console.log(1, response);
+    //            $.each(response, function (i) {
+    //                PISelectedItem.push(response[i]);
+    //            });
+    //        },
+    //        error: function (response) {
+    //            console.log(response);
+
+    //        }
+    //    });
+
+    //}
+
+</script>
+
+
+
+<script>
+
+    function AddPaymentTerm() {
+
+        setTimeout(function () { ShowPaymentTermList(); }, 1000);
+        $('#ModalForPaymentTermList').modal('show');
+    }
+
+    function ShowPaymentTermList() {
+        //debugger;
+        $('#tblPaymentTerm').dataTable({
+
+            "destroy": true,
+            "bLengthChange": false,
+            "aaData": PaymentTermList,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": true,
+            "aaSorting": [],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false,
+            }],
+
+            "columns": [
+
+                {
+                    "data": "PaymentTermID",
+                    "orderable": false,
+                    "render": function (data, type, row, meta) {
+                        var Default = row.IsDefault;
+
+                        if (Default == true) {
+                            IsPmChecked = 'checked';
+                        } else {
+                            IsPmChecked = '';
+                        }
+
+                        if (type === 'display') {
+                            data = "<div class=\"form-group\"><label class=\"custom-switch\"><input type=\"checkbox\" name=\"custom-switch-checkboxPm_" + data + "\" id=\"custom-switch-checkboxPm_" + data + "\" onclick=\"addOrRemovePaymentTerm(" + data + ")\" class=\"custom-switch-input _po_check_data payment\" " + IsPmChecked + " ><span class=\"custom-switch-indicator\" ></span></label></div>";
+                        }
+                        return data;
+
+                    }
+
+
+                },
+                { "data": "PaymentTerm" }
+
+            ]
+        });
+
+        for (var j = 0; j < SearchPaymentTermList.length; j++) {
+            if ($("#custom-switch-checkboxPm_" + SearchPaymentTermList[j].PaymentTermID).length == 0) {
+                //it doesn't exist
+            } else {
+                document.getElementById("custom-switch-checkboxPm_" + SearchPaymentTermList[j].PaymentTermID).checked = true;
+            }
+        }
+
+
+
+    }
+
+    function addOrRemovePaymentTerm(data) {
+        //debugger;
+        var chPk1 = document.getElementById("custom-switch-checkboxPm_" + data);
+        if (chPk1.checked) {
+
+            var i = PaymentTermList.findIndex(p => p.PaymentTermID == data);
+            var element = {};
+
+            element.PaymentTermID = PaymentTermList[i].PaymentTermID;
+            SearchPaymentTermList.push(element);
+            if (data == 9) {
+                $("#OtherPTModal").modal('show');
+                $("#OtherRemark").focus();
+            }
+        }
+        else {
+            var i = SearchPaymentTermList.findIndex(p => p.PaymentTermID == data);
+            SearchPaymentTermList.splice(i, 1);
+        }
+        console.log(SearchPaymentTermList);
+    }
+
+    function AddOtherPTRemark() {
+        OtherPTRemark = $("#OtherRemark").val();
+        $("#OtherPTModal").modal('hide');
+    }
+
+    function validOnlyNumber(elem) {
+        var RegExp = /^[0-9()]*$/;
+        if (RegExp.test(elem.value)) {
+            val = elem.value;
+        } else {
+            elem.value = 0;
+        }
+    }
+</script>
+
+<script>
+
+    function SetCustomerData() {
+        var CustomerID = $("#ddlCustomerDropdown").val();
+
+        if (CustomerID == null || CustomerID == undefined || CustomerID == "" || CustomerID == NaN) {
+            document.getElementById('ddlCustomerDropdown').style.borderColor = "red";
+            return false;
+        }
+        var data = { 'CustomerID': CustomerID }
+        data = JSON.stringify(data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ExportInvoice/SetCustomerData',
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                console.log("jsonResult");
+                console.log(data);
+
+                var CurrencyID = data.CurrencyID;
+                var ExchangeRate = data.ExchangeRate;
+                debugger;
+                $("#ddlCurrencyDropdown").val(CurrencyID);
+
+                $("#exchangeRate").val(ExchangeRate);
+
+                BillingList = [];
+                BillingList = data.POBilling;
+
+                ShippingList = [];
+                ShippingList = data.POShipping;
+
+                PaymentTermList = [];
+                PaymentTermList = data.POPaymentTerm;
+
+                console.log("PaymentTermList");
+                console.log(PaymentTermList);
+
+                for (var g = 0; g < PaymentTermList.length; g++) {
+                    var isdefaultpm = PaymentTermList[g].IsDefault;
+                    if (isdefaultpm == true) {
+                        var element = {};
+                        element.PaymentTermID = PaymentTermList[g].PaymentTermID;
+                        SearchPaymentTermList.push(element);
+                    }
+                }
+
+                console.log("SearchPaymentTermList 2 ");
+                console.log(SearchPaymentTermList);
+
+                if (BillingList.length == 1) {
+
+                    setBillingAddress(BillingList[0].No, BillingList[0].State_ID);
+                }
+
+                if (ShippingList.length == 1) {
+
+                    setShippingAddress(ShippingList[0].No);
+                }
+
+            },
+            error: function (error) {
+                console.log(error)
+                $("#global-loader").fadeOut("slow");
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({ title: 'Error', text: "Something went wrong: " + str, icon: 'error' });
+
+            }
+        });
+
+
+    }
+
+</script>
+
+
+<script>
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('.datePickerD')
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd M yyyy',
+            language: "tr",
+            changeMonth: true,
+            changeYear: true,
+
+        });
+    //jQuery('.txtInput').click(function() { selectAllText(jQuery(this)) });
+
+</script>

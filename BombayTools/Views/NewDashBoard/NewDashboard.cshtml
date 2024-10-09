@@ -1,0 +1,1790 @@
+﻿
+@{
+    ViewBag.Title = "NewDashboard";
+    Layout = "~/Views/Shared/_LayoutOnlyTable.cshtml";
+}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="~/js/randomColor.js"></script>
+<script src="~/js/sweet-alert.min.js"></script>
+
+<style>
+    /*.ellipsis{
+        font-weight:900;
+    }*/
+    .list-group-horizontal {
+        flex-direction: row;
+    }
+
+    .bg-box-c {
+        background-color: #F9F7FF;
+        margin: 2px;
+    }
+
+    .btn_excel {
+        color: #7bd235 !important;
+        background-color: #ffF !important;
+        border-color: #7bd235 !important;
+        margin-bottom: 5px;
+    }
+
+    span.btn_excel {
+        font-weight: 600;
+    }
+
+    .dyn_link {
+        color: white;
+    }
+
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            /*margin: 20px 0;
+            padding-left: 20px;*/
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #9F79FF;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+</style>
+<!-- Slect2 css -->
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+
+<div id="summary_">
+    <div class="row mt-2" id="NewReportData">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">New Report</h4>
+                    <div class="card-options">
+                        <button class="btn btn-success btn-sm" onclick="toggleQueryBuilder()"><i class="fe fe-filter"></i></button>
+                    </div>
+                </div>
+                <div class="card-body" id="newQuery_Maker">
+                    @*<div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">*@
+                    <div class="row">
+                        <div class="col-md-1 col-lg-1  justify-content-center">
+                            <div class="form-group mt-5">
+                                <select class="form-control select2 custom-select" id="setOperator" data-placeholder="Choose one">
+                                    <option value="AND">All</option>
+                                    <option value="OR">Any</option>
+                                    <option value="AND NOT">None</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-lg-9">
+                            <ul class="timeline" id="querySet"></ul>
+                        </div>
+                        <div class="col-md-12 col-lg-12 offset-md-1 offset-lg-1 mt-3">
+                            <button type="button" id="addRow" class="btn btn-primary"><i class="fa fa-plus mr-2"></i>Add New Set</button>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-9 col-lg-9 offset-md-1 offset-lg-1">
+                            <ul class="timeline" id="sortSet"></ul>
+                        </div>
+                        <div class="col-md-12 col-lg-12 offset-md-1 offset-lg-1 mt-3">
+                            <button type="button" id="addSort" class="btn btn-primary"><i class="fa fa-plus mr-2"></i>Add New Sort Condition</button>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-10 col-lg-10 offset-md-1 offset-lg-1">
+                            <ul class="list-group">
+                                <li class=" ">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-lg-3">
+                                            <div class="form-group">
+                                                <div id="columnGroup">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 col-lg-3" id="hasGroupddl">
+                                            <div class="form-group">
+                                                @Html.DropDownList("ddlGroupBy", (IEnumerable<SelectListItem>)ViewBag.ddlGroupBy, "Select Range", new { @class = "form-control ", @id = "ddlGroupBy", name = "ddlGroupBy", autocomplete = "off" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    @*</div>
+                        </div>*@
+                </div>
+                <div class="card-footer" id="newQueryFooter">
+                    <button class="btn btn-indigo" id="Apply" onclick="ApplyFilter()">
+                        Apply
+                    </button>
+                    <button class="btn btn-success" id="Save" data-toggle="modal" data-target="#exampleModal3">Save</button>
+                    <button class="btn btn-secondary" onclick="toggleQueryBuilder()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="card" id="dynamicBar">
+                <div class="card-header">
+                    <div class="card-options">
+                        <button class="btn btn-danger" onclick="toggleGraph()"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="dynamicChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-sm-12 col-md-12 col-lg-12     overflow-auto">
+                        <div id="group_list">
+
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered card-table text-nowrap" id="tblReport">
+                            <thead id="_headerSection_"></thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="detail_"></div>
+<!-- Message Modal -->
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-Modal3">Save Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="report-name" class="form-control-label">Report Name:</label>
+                        <input type="text" class="form-control" id="report-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="form-control-label">Remark:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveQuery()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var _whereCondition = [];
+    var _sortCondition = [];
+    var _groupbyConditionValue = 0;
+    var _groupbyConditionDataSet = 0;
+    var _queryID = @ViewBag.ID;
+
+    var MasterTemplateList = [];
+
+    ///////
+    var queryMaster = [];
+    var sortMaster = [];
+    var SelectedSortMaster = [];
+    var columnMaster = [];
+    var operatorMaster = [];
+    var tempOperator = [];
+    var counter = 0;
+    var groupCounter = 1;
+    var sortCounter = 0;
+    var groupArray = [];
+    var groupMaster = [];
+    var columnOption = '<option label="Choose one"></option >';
+    var groupMasterOption = 0;
+    var sortOption = '<option label="Choose one"></option >';
+    var string = '<li class=" " id="masterSet_' + counter + '"> <div class="ml-7 p-2 bg-box-c" id="subSet_' + counter + '"> <div class="row"> <div class="col-md-1 col-lg-1"> <button class="btn btn-success" id="dynamic_' + counter + '"><i class="fa fa-plus"></i></button> </div> <div class="col-md-3 col-lg-3"> <div class="form-group"> <select class="form-control select2 custom-select" data-placeholder="Choose one">' + columnOption+' </select> </div> </div> <div class="col-md-3 col-lg-3"> <div id="queryOpeartor_' + counter + '"> </div> </div> <div class="col-md-3 col-lg-4"> <div id="queryOpeartorValue_' + counter + '"> </div> </div> <div class="col-md-2 col-lg-2"> <i id="cancelSet_' + counter + '" class="fa fa-times fa-2x" onclick="RemoveSelectedSet(' + counter + ')"></i> </div> </div> </div></li>';
+    var sortString = "";
+    var graphName = "";
+
+    $(document).ready(function () {
+        ApplyFilter();
+        //$('#NewReportData').hide();
+        $("#hasGroupddl").hide();
+        columnMaster = @Html.Raw(Json.Encode(ViewBag.ColumnMaster));
+        columnMaster = JSON.parse(columnMaster);
+        operatorMaster = @Html.Raw(Json.Encode(ViewBag.OperatorMaster));
+        operatorMaster = JSON.parse(operatorMaster);
+        sortMaster = @Html.Raw(Json.Encode(ViewBag.SortMaster));
+        sortMaster = JSON.parse(sortMaster);
+        groupMaster = @Html.Raw(Json.Encode(ViewBag.GroupByMaster));
+        groupMaster = JSON.parse(groupMaster);
+        for (var a = 0; a < columnMaster.length;a++) {
+            columnOption = columnOption + "<option value='" + columnMaster[a].AutoID + "'>" + columnMaster[a].ColumnDisplayName + "</option>"
+        }
+        for (var b = 0; b < sortMaster.length; b++) {
+            sortOption = sortOption + "<option value='" + sortMaster[b].SortID + "'>" + sortMaster[b].SortName + "</option>"
+        }
+        toggleGraph();
+        string = '<li class=" " id="masterSet_' + counter + '"> <div class="ml-7 p-2 bg-box-c" id="subSet_' + counter + '"> <div class="row"> <div class="col-md-1 col-lg-1" hidden> <button class="btn btn-success" id="dynamic_' + counter + '"><i class="fa fa-plus"></i></button> </div> <div class="col-md-3 col-lg-3"> <div class="form-group"> <select class="form-control select2 custom-select" id="column_' + counter + '" data-placeholder="Choose one" onchange="GetOperatorforSelectedColumns(' + counter + ')">' + columnOption + ' </select> </div> </div> <div class="col-md-3 col-lg-3"> <div id="queryOpeartor_' + counter + '"> </div> </div> <div class="col-md-4 col-lg-4"> <div id="queryOpeartorValue_' + counter + '"> </div> </div> <div class="col-md-1 col-lg-1"> <i id="cancelSet_' + counter + '" class="fa fa-times fa-2x" onclick="RemoveSelectedSet(' + counter + ')"></i> </div> </div> </div></li>';
+
+
+        sortString = '<li class=" " id="masterSort_' + sortCounter + '"> <div  class="ml-7 p-2 bg-box-c" > <div class="row"><div class="col-md-3 col-lg-3">  <div class="form-group"> <select class="form-control select2 custom-select" id="columnSort_' + sortCounter + '" data-placeholder="Choose one" onchange="GetSortforSelectedColumns(' + sortCounter + ')">' + columnOption + ' </select> </div></div> <div class="col-md-3 col-lg-3"> <div id="sortByValue_' + sortCounter + '"></div> </div><div class="pull-right"> <i id="cancelSort_' + sortCounter + '" class="fa fa-times fa-2x" onclick="RemoveSelectedSort(' + sortCounter + ')"></i></div> </div> </div></li>';
+
+        var groupString = '<select class="form-control select2 custom-select" id="groupByColumn" onchange="SetGroupByType()" data-placeholder="Choose one">' + columnOption + ' </select>'
+        var element = {};
+        element.ID = counter;
+        element.IsActive = 1;
+        queryMaster.push(element);
+
+        var sortElement = {};
+        sortElement.ID = sortCounter;
+        sortElement.IsActive = 1;
+        SelectedSortMaster.push(sortElement);
+
+        $("#querySet").append(string);
+        $("#sortSet").append(sortString);
+        $("#columnGroup").append(groupString);
+
+        if (_queryID !=0) {
+            setReportParameter();
+        }
+
+    });
+
+    $("#addSort").click(function () {
+        sortCounter++;
+        var element = {};
+        element.ID = sortCounter;
+        element.IsActive = 1;
+        SelectedSortMaster.push(element);
+        string = '<li class=" " id="masterSort_' + sortCounter + '"> <div  class="ml-7 p-2 bg-box-c" > <div class="row"> <div class="col-md-3 col-lg-3">  <div class="form-group"> <select class="form-control select2 custom-select" id="columnSort_' + sortCounter + '" data-placeholder="Choose one" onchange="GetSortforSelectedColumns(' + sortCounter + ')">' + columnOption + ' </select> </div></div> <div class="col-md-3 col-lg-3"> <div id="sortByValue_' + sortCounter + '"></div> </div><div class="pull-right"> <i id="cancelSort_' + sortCounter + '" class="fa fa-times fa-2x" onclick="RemoveSelectedSort(' + sortCounter + ')"></i></div> </div> </div></li>';
+        $("#sortSet").append(string);
+        $("#columnSort_" + sortCounter).val("Desc");
+    });
+
+    $("#addRow").click(function () {
+        counter++;
+        var element = {};
+        element.ID = counter;
+        element.IsActive = 1;
+        queryMaster.push(element);
+        string = '<li class=" " id="masterSet_' + counter + '"> <div class="ml-7 p-2 bg-box-c" id="subSet_' + counter + '"> <div class="row"> <div class="col-md-1 col-lg-1" hidden> <button class="btn btn-success" id="dynamic_' + counter + '"><i class="fa fa-plus"></i></button> </div> <div class="col-md-3 col-lg-3"> <div class="form-group"> <select class="form-control select2 custom-select" id="column_' + counter + '" data-placeholder="Choose one" onchange="GetOperatorforSelectedColumns(' + counter + ')">' + columnOption + ' </select> </div> </div> <div class="col-md-3 col-lg-3"> <div id="queryOpeartor_' + counter + '"> </div> </div> <div class="col-md-3 col-lg-4"> <div id="queryOpeartorValue_' + counter + '"> </div> </div> <div class="col-md-2 col-lg-2"> <i id="cancelSet_' + counter + '" class="fa fa-times fa-2x" onclick="RemoveSelectedSet(' + counter + ')"></i> </div> </div> </div></li>';
+        $("#querySet").append(string);
+    });
+
+
+    function RemoveSelectedSort(ID) {
+        if (SelectedSortMaster.length != 1 && SelectedSortMaster.length != 0) {
+            for (i = 0; i < SelectedSortMaster.length; i++) {
+                if (SelectedSortMaster[i].ID == ID) {
+                    SelectedSortMaster[i].IsActive = 0;
+                    SelectedSortMaster.splice(i, 1);
+                    $("#masterSort_" + ID).empty();
+                    break;
+                }
+            }
+        }
+
+    }
+
+    function RemoveSelectedSet(ID) {
+        if (queryMaster.length != 1 && queryMaster.length != 0) {
+            for (i = 0; i < queryMaster.length; i++) {
+                if (queryMaster[i].ID == ID) {
+                    queryMaster[i].IsActive = 0;
+                    queryMaster.splice(i, 1);
+                    $("#subSet_" + ID).empty();
+                    $("#masterSet_" + ID).empty();
+                    break;
+                }
+            }
+        }
+
+    }
+
+    function GetSortforSelectedColumns(ID) {
+        sortOp = '<option label="Choose one"></option >';
+        var columnID = $("#columnSort_" + ID).val();
+        for (var i = 0; i < columnMaster.length; i++) {
+            if (columnMaster[i].AutoID == columnID) {
+                var opData = columnMaster[i].SortID;
+                var sortArray = [];
+                sortArray = opData.split(',');
+                for (var j = 0; j < sortArray.length; j++) {
+                    for (var k = 0; k < sortMaster.length; k++) {
+                        var x = parseInt(sortArray[j]);
+                        var y = sortMaster[k].SortID;
+                        if (x == y) {
+                            sortOp = sortOp + "<option value='" + sortMaster[k].Value + "'>" + sortMaster[k].SortName + "</option>"
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        var selectOperatorOption = '<div class="form-group"> <select class="form-control select2 custom-select" id="sortValue_' + ID + '" data-placeholder="Choose one">' + sortOp + ' </select> </div>'
+        $("#sortByValue_" + ID).empty();
+        $("#sortByValue_" + ID).append(selectOperatorOption);
+    }
+
+    function GetOperatorforSelectedColumns(ID) {
+        var opString = '<option label="Choose one"></option >';
+
+        var columnID = $("#column_" + ID).val();
+        for (var i = 0; i < columnMaster.length; i++) {
+            if (columnMaster[i].AutoID == columnID) {
+                var opData = columnMaster[i].OperatorID;
+                operatorForColumn = [];
+                operatorForColumn = opData.split(',');
+                for (var j = 0; j < operatorForColumn.length; j++) {
+                    for (var k = 0; k < operatorMaster.length; k++) {
+                        var x = parseInt(operatorForColumn[j]);
+                        var y = operatorMaster[k].OperatorID;
+                        if (x == y) {
+                            opString = opString+ "<option value='" + operatorMaster[k].OperatorID + "'>" + operatorMaster[k].OperatorName + "</option>"
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        var selectOperatorOption = '<div class="form-group"> <select class="form-control select2 custom-select" id="operator_' + ID + '" data-placeholder="Choose one" onchange="GetValueforSelectedOperator(' + ID + ')">' + opString + ' </select> </div>'
+        $("#queryOpeartor_" + ID).empty();
+        $("#queryOpeartor_" + ID).append(selectOperatorOption);
+    }
+
+
+    function GetValueforSelectedOperator(ID) {
+        var operatorSelectedID = $("#operator_" + ID).val();
+        var columnID = $("#column_" + ID).val();
+        for (i = 0; i < operatorMaster.length; i++) {
+            if (operatorMaster[i].OperatorID == operatorSelectedID) {
+                var temp = operatorMaster[i].Value;
+                if (operatorSelectedID == 7) {
+                    $("#queryOpeartorValue_" + ID).empty();
+                    $("#queryOpeartorValue_" + ID).append(temp);
+                    document.getElementById('columnValue1').id = 'columnValueFrom_' + ID;
+                    document.getElementById('columnValue2').id = 'columnValueTo_' + ID;
+                } else if (operatorSelectedID == 3 || operatorSelectedID == 4) {
+                    var ddlOption = '<option label="Choose one"></option >'
+                    var data = { 'ID': columnID };
+                    data = JSON.stringify(data);
+                    $.ajax({
+                        type: 'post',
+                        url: '/DynamicReport/AjaxGetResultDropDown',
+                        data: data,
+                        async: false,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            response = JSON.parse(response);
+                            for (var s = 0; s < response.length; s++) {
+                                ddlOption = ddlOption + "<option value='" + response[s].ddlID + "' data-badge=''>" + response[s].ddlName + "</option>"
+
+                            }
+                            var temp1 = ' <div class="form-group"> <select class="form-control select2 js-select2" multiple id="columnValue_' + counter + '" data-placeholder="Choose one" size=1>' + ddlOption + ' </select> </div> '
+                            $("#queryOpeartorValue_" + ID).empty();
+                            $("#queryOpeartorValue_" + ID).append(temp1);
+
+                            $(".js-select2").select2({
+                                closeOnSelect: false,
+                                placeholder: "Placeholder",
+                                allowHtml: true,
+                                allowClear: true,
+                                tags: true // создает новые опции на лету
+                            });
+                        },
+                        error: function (err) {
+                        console.log(err)
+                        }
+                    });
+
+                }
+                else
+                {
+                    $("#queryOpeartorValue_" + ID).empty();
+                    $("#queryOpeartorValue_" + ID).append(temp);
+                    document.getElementById('columnValue').id = 'columnValue_' + ID;
+
+                }
+                $('.datePickerD')
+                    .datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd M yyyy',
+                        language: "tr",
+                        changeMonth: true,
+                        changeYear: true,
+
+                    });
+                break;
+
+            }
+        }
+    }
+
+
+    function ApplyFilter() {
+        try {
+            _whereCondition = [];
+            _sortCondition = [];
+            var isGroupByDateSet = $("#ddlGroupBy").val();
+            if (isGroupByDateSet == "") {
+                isGroupByDateSet = 0;
+            }
+            _groupbyConditionDataSet = 0;
+            var sortFlag = 0;
+            var orderFlag = 0;
+            var totalCount = 0;
+            var collength = 0;
+            var setOperator = $("#setOperator").val()
+            var MasterString = "";
+            for (var i = 0; i < queryMaster.length; i++) {
+                var element_Query = {};
+                if (queryMaster[i].IsActive == 1) {
+                    var ID = queryMaster[i].ID;
+                    var columnID = $("#column_" + ID).val();
+                    var operatorID = $("#operator_" + ID).val();
+                    var value = ""
+                    var From = ""
+                    var To = ""
+                    if (operatorID == 7) {
+                        From = $("#columnValueFrom_" + ID).val();
+                        To = $("#columnValueTo_" + ID).val();
+                        value = "NA";
+                        element_Query.ID = ID;
+                        element_Query.columnID = columnID;
+                        element_Query.operatorID = operatorID;
+                        element_Query.value = value;
+                        element_Query.From = From;
+                        element_Query.To = To;
+                    } else if (operatorID == 3 || operatorID == 4) {
+                        value = $("#columnValue_" + ID).select2("data");
+                        var list = "";
+                        var list_value = "";
+                        for (x = 0; x < value.length; x++) {
+                            if (value[x].text != undefined) {
+                                list = list + ",'" + value[x].text.trim() + "' ";
+                                list_value = list_value + ",'" + value[x].id + "'";
+                            }
+                        }
+                        value = list.substring(1, list.length);
+                        From = "NA";
+                        To = "NA";
+                        element_Query.ID = ID;
+                        element_Query.columnID = columnID;
+                        element_Query.operatorID = operatorID;
+                        element_Query.value = list_value;
+                        element_Query.From = From;
+                        element_Query.To = To;
+                    }
+                    else {
+                        value = $("#columnValue_" + ID).val();
+                        From = "NA";
+                        To = "NA";
+                        element_Query.ID = ID;
+                        element_Query.columnID = columnID;
+                        element_Query.operatorID = operatorID;
+                        element_Query.value = value;
+                        element_Query.From = From;
+                        element_Query.To = To;
+                    }
+                    if (columnID == "" || operatorID == "" || value == "" || From == "" || To == "") {
+                        return false;
+                    }
+                    _whereCondition.push(element_Query);
+                    MasterString = MasterString + setOperator + " ("
+                    for (var j = 0; j < columnMaster.length; j++) {
+                        if (columnMaster[j].AutoID == columnID) {
+                            if (columnMaster[j].operatorID == 5 || columnMaster[j].operatorID == 6 || columnMaster[j].operatorID == 7) {
+                                MasterString = MasterString + " CAST(" + columnMaster[j].QueryName + " AS DATE) ";
+                            } else {
+                                MasterString = MasterString + " " + columnMaster[j].QueryName + " ";
+                            }
+                            break;
+                        }
+                    }
+                    for (var k = 0; k < operatorMaster.length; k++) {
+                        if (operatorMaster[k].OperatorID == operatorID) {
+
+                            MasterString = MasterString + " " + operatorMaster[k].Symbol + " ";
+                            break;
+                        }
+                    }
+                    if (operatorID == 1 || operatorID == 2) {
+                        MasterString = MasterString + " '%" + value + "%' ";
+
+                    } else if (operatorID == 7) {
+                        MasterString = MasterString + " CAST('" + From + "' AS DATE) AND CAST('" + To + "' AS DATE) ";
+                    }
+                    else if (operatorID == 3 || operatorID == 4) {
+                        MasterString = MasterString + " (" + value + ") ";
+                    }
+                    else {
+                        MasterString = MasterString + " Cast('" + value + "' AS DATE) ";
+                    }
+                    MasterString = MasterString + " ) "
+                }
+            }
+
+            var isOrderByValid = $("#groupByColumn option:selected").val();
+            var validatorForOrder = 0;
+            groupArray = [];
+            groupCounter = 0;
+            for (var t = 0; t < SelectedSortMaster.length; t++) {
+                var tempID = SelectedSortMaster[t].ID;
+                var columnToSort = $("#columnSort_" + tempID).val();
+                var sortValue = $("#sortValue_" + tempID).val();
+                var columnValue = "";
+                for (var j = 0; j < columnMaster.length; j++) {
+                    if (columnMaster[j].AutoID == columnToSort) {
+                        if (columnToSort == isOrderByValid) {
+                            validatorForOrder = 1;
+                        }
+                        columnValue = columnMaster[j].QueryName;
+                        break;
+                    }
+                }
+                var element_Sort = {};
+                element_Sort.ID = tempID;
+                element_Sort.ColumnToSort = columnToSort;
+                element_Sort.SortValue = sortValue;
+                element_Sort.columnValue = columnValue;
+                _sortCondition.push(element_Sort);
+                if (sortValue != "" && columnToSort != "") {
+                    if (sortFlag == 0) {
+                        if (columnToSort == 19 || columnToSort == 20 || columnToSort == 28) {
+                            MasterString = MasterString + "  ORDER BY CAST(" + columnValue + "as DATE) " + sortValue;
+                        } else {
+                            MasterString = MasterString + "  ORDER BY " + columnValue + " " + sortValue;
+                        }
+                        sortFlag = 1;
+                        orderFlag = 1;
+                    } else {
+                        if (columnToSort == 19 || columnToSort == 20 || columnToSort == 28) {
+                            MasterString = MasterString + " , CAST(" + columnValue + "as DATE) " + sortValue;
+                        } else {
+                            MasterString = MasterString + " , " + columnValue + " " + sortValue;
+                        }
+                        orderFlag = 1;
+                    }
+
+
+                }
+            }
+            var groupByValue = $("#groupByColumn option:selected").text();
+            _groupbyConditionValue = $("#groupByColumn option:selected").val();
+            if (groupByValue != "" && validatorForOrder == 0) {
+                if (orderFlag == 0) {
+                    if (groupByValue == "Added On" || groupByValue == "Close Date" || groupByValue == "Next Follow Up") {
+                        MasterString = MasterString + "  ORDER BY CAST([" + groupByValue + "] as DATE) ASC";
+                    } else {
+                        MasterString = MasterString + "  ORDER BY [" + groupByValue + "] ASC";
+                    }
+                    orderFlag = 1;
+                } else {
+                    if (groupByValue == "Added On" || groupByValue == "Close Date" || groupByValue == "Next Follow Up") {
+                        MasterString = MasterString + " , CAST([" + groupByValue + "] as DATE) " + sortValue;
+                    } else {
+                        MasterString = MasterString + " , [" + groupByValue + "] " + sortValue;
+                    }
+                }
+            }
+            ////
+            if (groupByValue == "Added On") {
+                if (isGroupByDateSet == 2) {
+                    groupByValue = "MONTHNAME_ADDEDON";//Month
+                } else if (isGroupByDateSet == 3) {
+                    groupByValue = "QUATERNAME_ADDEDON";//Quater
+                } else if (isGroupByDateSet == 4) {
+                    groupByValue = "YEAR_ADDEDON";//Year
+                } else {
+                    groupByValue = "WK_ADDEDON";//Year
+                }
+            } else if (groupByValue == "Close Date") {
+                if (isGroupByDateSet == 2) {
+                    groupByValue = "MONTHNAME_CloseDate";//Month
+                } else if (isGroupByDateSet == 3) {
+                    groupByValue = "QUATERNAME_CloseDate";//Quater
+                } else if (isGroupByDateSet == 4) {
+                    groupByValue = "YEAR_CloseDate";//Year
+                } else {
+                    groupByValue = "WK_CloseDate";//Year
+                }
+            } else if (groupByValue == "Next Follow Up") {
+                if (isGroupByDateSet == 2) {
+                    groupByValue = "MONTHNAME_NextFollowUp";//Month
+                } else if (isGroupByDateSet == 3) {
+                    groupByValue = "QUATERNAME_NextFollowUp";//Quater
+                } else if (isGroupByDateSet == 4) {
+                    groupByValue = "YEAR_NextFollowUp";//Year
+                } else {
+                    groupByValue = "WK_NextFollowUp";//Year
+                }
+            }
+
+
+            //console.log(MasterString);
+            //console.log(_whereCondition, _sortCondition, _groupbyConditionDataSet, _groupbyConditionValue)
+
+            $("#global-loader").fadeIn();
+            var data = { 'ReportFor': 2, 'MasterString': MasterString };
+            data = JSON.stringify(data);
+            $.ajax({
+                type: 'post',
+                url: '/DynamicReport/AjaxGetResultForSelectedQuery',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    try {
+                        toggleQueryBuilder();
+                        var parseJSONResult = jQuery.parseJSON(response);
+                        if (parseJSONResult != null && parseJSONResult.length > 0) {
+                            //Get dynmmic column.
+                            var dynamicColumns = [];
+                            var i = 0;
+                            $.each(parseJSONResult[0], function (key, value) {
+                                var obj = { sTitle: key };
+                                dynamicColumns[i] = obj;
+                                i++;
+                            });
+                            for (var h = 0; h < dynamicColumns.length; h++) {
+                                if (dynamicColumns[h].sTitle.toLowerCase() == groupByValue.toLowerCase()) {
+                                    graphName = groupByValue;
+                                    groupByValue = h;
+                                    break;
+                                }
+                            }
+                            var _dateCondition = $("#groupByColumn option:selected").text();
+                            for (var h = 0; h < dynamicColumns.length; h++) {
+                                if (dynamicColumns[h].sTitle.toLowerCase() == _dateCondition.toLowerCase()) {
+
+                                    _dateCondition = h;
+                                    break;
+                                }
+                            }
+                            for (var h = 0; h < dynamicColumns.length; h++) {
+                                if (dynamicColumns[h].sTitle == "DealSize") {
+                                    totalCount = h;
+                                    break;
+                                }
+                            }
+                            collength = dynamicColumns.length;
+
+                            //fetch all records from JSON result and make row data set.
+                            var rowDataSet = [];
+                            var i = 0;
+                            $.each(parseJSONResult, function (key, value) {
+                                var rowData = [];
+                                var j = 0;
+                                $.each(parseJSONResult[i], function (key, value) {
+                                    rowData[j] = value;
+                                    j++;
+                                });
+                                rowDataSet[i] = rowData;
+
+                                i++;
+                            });
+
+                            ////set header
+                            var headString = "<tr>";
+                            for (var i = 0; i < dynamicColumns.length; i++) {
+                                headString = headString + "<th>" + dynamicColumns[i].sTitle +"</th>"
+                            }
+                            headString = headString + "</tr>"
+                            $("#_headerSection_").empty();
+                            $("#_headerSection_").append(headString);
+
+                            MasterTemplateList = [];
+                            MasterTemplateList = rowDataSet;
+                            if (groupByValue != "" && groupMasterOption == 0) {
+                                $("#tblReport").dataTable({
+                                    "destroy": true,
+                                    "columns": dynamicColumns,
+                                    "bLengthChange": false,
+                                    "bInfo": false,
+                                    "bPaginate": false,
+                                    "bAutoWidth": true,
+                                    "paging": false,
+                                    "order": [],
+                                    "aaData": rowDataSet,
+                                    columns: [
+                                        {
+                                            "data": 0,
+                                            "orderable": false,
+                                            "render": function (data, type, row, meta) {
+                                                if (type === 'display') {
+                                                    data = row[0];
+
+
+                                                }
+                                                return data;
+                                            }
+                                        },
+                                        { data: 1, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 2, render: $.fn.dataTable.render.ellipsis(25, false) },
+                                        { data: 3, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 4, render: $.fn.dataTable.render.ellipsis(15, false) },
+                                        { data: 5, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 6, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 7, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 8, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 9, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 10, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 11, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 12, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 13, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 14, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 15, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 16, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 17, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 18, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 19, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 20, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 21, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 22, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 23, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 24, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 25, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 26, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 27, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 28, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 29, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 30, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 31, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 32, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 33, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 34, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                    ],
+                                    orderFixed: [groupByValue, 'asc'],
+                                    "aoColumnDefs": [
+                                        { 'width': 150, aTargets: 1 },
+                                        { 'width': 150, aTargets: 2 },
+                                        { 'width': 150, aTargets: 3 },
+                                        { 'width': 150, aTargets: 4 },
+                                        { 'width': 150, aTargets: 5 },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [12]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [13]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [20]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [22]
+                                        }
+                                    ],
+
+                                    rowGroup: {
+                                        //startRender: null,
+                                        startRender: function (rows, group) {
+                                            var salaryAvg = rows
+                                                .data()
+                                                .pluck(totalCount)
+                                                .reduce(function (a, b) {
+                                                    return parseInt(a) + parseInt(b);
+                                                }, 0);
+
+                                            salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '₹').display(salaryAvg);
+                                            var tempElement = {};
+                                            tempElement.Name = group;
+                                            tempElement.Value = salaryAvg;
+                                            tempElement.ID = groupCounter;
+                                            groupCounter++;
+                                            groupArray.push(tempElement);
+                                            return $('<tr/>')
+                                                .append('<td colspan="' + collength + '" id="groupDynamic_' + groupCounter + '">' + group + '   <span class="p-9"> ' + salaryAvg + '</span></td>');
+
+                                        },
+                                        dataSrc: groupByValue
+                                    },
+                                    keys: {
+                                        blurable: false
+                                    },
+                                    "sScrollY": "55vh",
+                                    "sScrollX": "100%",
+                                    "sScrollXInner": "200%",
+                                    "bScrollCollapse": true,
+                                    dom: 'Bfrtip',
+                                    buttons: [
+                                        {
+                                            extend: 'colvis',
+                                            className: 'btn btn_excel'
+                                        },
+                                        {
+                                            text: 'Graph',
+                                            className: 'btn btn_excel',
+                                            action: function (e, dt, node, config) {
+                                                toggleGraph();
+                                            }
+                                        },
+                                        {
+                                            extend: 'excelHtml5',
+                                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                                            titleAttr: 'Excel',
+                                            className: 'btn btn_excel'
+                                        }
+                                    ],
+                                    "aoColumnDefs": [
+                                        { 'width': 150, aTargets: 1, visible: false },
+                                        { 'width': 150, aTargets: 2, visible: false },
+                                        { 'width': 150, aTargets: 5, visible: false },
+                                        { 'width': 150, aTargets: 6, visible: false },
+                                        { 'width': 150, aTargets: 7, visible: false },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [12]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [13]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [20]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [22]
+                                        },
+                                        { aTargets: 23, visible: false },
+                                        { aTargets: 24, visible: false },
+                                        { aTargets: 25, visible: false },
+                                        { aTargets: 26, visible: false },
+                                        { aTargets: 27, visible: false },
+                                        { aTargets: 28, visible: false },
+                                        { aTargets: 29, visible: false },
+                                        { aTargets: 30, visible: false },
+                                        { aTargets: 31, visible: false },
+                                        { aTargets: 32, visible: false },
+                                        { aTargets: 33, visible: false },
+                                        { aTargets: 34, visible: false },
+                                    ],
+                                    //"aoColumnDefs": [
+                                    //    {
+                                    //        "targets": [6],
+                                    //        "visible": false,
+                                    //    },
+                                    //    {
+                                    //        "targets": [7],
+                                    //        "visible": false,
+                                    //    },
+                                    //    {
+                                    //        "targets": [8],
+                                    //        "visible": false,
+                                    //    },
+                                    //    {
+                                    //        "targets": [9],
+                                    //        "visible": false,
+                                    //    },
+                                    //    {
+                                    //        "targets": [10],
+                                    //        "visible": false,
+                                    //    }
+
+                                    //]
+
+
+                                });
+
+                                var categories = []; //creating array for storing browser type in array.
+                                for (var i = 0; i < rowDataSet.length; i++) {
+                                    categories.push(rowDataSet[i][groupByValue])
+                                }
+                                var count = {}; //creating object for getting categories with count
+                                categories.forEach(function (i) {
+                                    count[i] = (count[i] || 0) + 1;
+                                });
+                                var series_data = []; //creating empty array for highcharts series data
+                                var categores = [];//creating empty array for highcharts categories
+                                Object.keys(count).map(function (item, key) {
+                                    series_data.push(count[item]);
+                                    categores.push(item)
+                                });
+
+                                //setGroupHeader(groupArray);
+                                plotChart(series_data, categores)
+                            }
+                            else if (groupByValue != "" && groupMasterOption != 0) {
+
+                                $("#tblReport").dataTable({
+                                    "destroy": true,
+                                    //"columns": dynamicColumns,
+                                    "bLengthChange": false,
+                                    "bInfo": false,
+                                    "bPaginate": false,
+                                    "bAutoWidth": true,
+                                    "paging": false,
+                                    "order": [],
+                                    "aaData": rowDataSet,
+                                    columns: [
+                                        {
+                                            "data": 0,
+                                            "orderable": false,
+                                            "render": function (data, type, row, meta) {
+                                                if (type === 'display') {
+                                                    data = row[0];
+
+
+                                                }
+                                                return data;
+                                            }
+                                        },
+                                        { data: 1, render: $.fn.dataTable.render.ellipsis(15, true)},
+                                        { data: 2, render: $.fn.dataTable.render.ellipsis(15, false) },
+                                        { data: 3, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 4, render: $.fn.dataTable.render.ellipsis(15, false) },
+                                        { data: 5, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 6, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 7, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 8, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 9, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 10, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 11, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 12, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 13, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 14, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 15, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 16, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 17, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 18, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 19, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 20, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 21, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 22, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 23, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 24, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 25, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 26, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 27, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 28, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 29, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 30, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 31, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 32, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 33, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 34, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                    ],
+                                    orderFixed: [_dateCondition, 'asc'],
+                                    "aoColumnDefs": [
+                                        { 'width': 150, aTargets: 1 ,visible:false},
+                                        { 'width': 150, aTargets: 2, visible: false },
+                                        { 'width': 150, aTargets: 5, visible: false },
+                                        { 'width': 150, aTargets: 6, visible: false },
+                                        { 'width': 150, aTargets: 7, visible: false },
+                                        { 'width': 100, aTargets: 10 },
+                                        { 'width': 100, aTargets: 11 },
+                                        { 'width': 100, aTargets: 14 },
+                                        { 'width': 100, aTargets: 15 },
+                                        {
+                                            'type': 'date',
+                                            'width': 100,
+                                            'aTargets': [12]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'width': 100,
+                                            'aTargets': [13]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [20]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [22]
+                                        },
+                                        { aTargets: 23, visible: false },
+                                        { aTargets: 24, visible: false },
+                                        { aTargets: 25, visible: false },
+                                        { aTargets: 26, visible: false },
+                                        { aTargets: 27, visible: false },
+                                        { aTargets: 28, visible: false },
+                                        { aTargets: 29, visible: false },
+                                        { aTargets: 30, visible: false },
+                                        { aTargets: 31, visible: false },
+                                        { aTargets: 32, visible: false },
+                                        { aTargets: 33, visible: false },
+                                        { aTargets: 34, visible: false },
+                                    ],
+
+                                    rowGroup: {
+                                        //startRender: null,
+                                        startRender: function (rows, group) {
+                                            var salaryAvg = rows
+                                                .data()
+                                                .pluck(totalCount)
+                                                .reduce(function (a, b) {
+                                                    return a + b;
+                                                }, 0);
+
+                                            salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '₹').display(salaryAvg);
+                                            var tempElement = {};
+                                            tempElement.Name = group;
+                                            tempElement.Value = salaryAvg;
+                                            tempElement.ID = groupCounter;
+                                            groupCounter++;
+                                            groupArray.push(tempElement);
+                                            return $('<tr/>')
+                                                .append('<td colspan="' + collength + '" id="groupDynamic_' + groupCounter + '">' + group + '   <span class="p-9"> ' + salaryAvg + '</span></td>');
+
+                                        },
+                                        dataSrc: groupByValue
+                                    },
+                                    //keys: {
+                                    //    blurable: false
+                                    //},
+                                    "sScrollY": "55vh",
+                                    "sScrollX": "100%",
+                                    "sScrollXInner": "200%",
+                                    "bScrollCollapse": true,
+                                    dom: 'Bfrtip',
+                                    buttons: [
+                                        {
+                                            extend: 'colvis',
+                                            className: 'btn btn_excel'
+                                        },
+                                        {
+                                            text: 'Graph',
+                                            className: 'btn btn_excel',
+                                            action: function (e, dt, node, config) {
+                                                toggleGraph();
+                                            }
+                                        },
+                                        {
+                                            extend: 'excelHtml5',
+                                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                                            titleAttr: 'Excel',
+                                            className: 'btn btn_excel'
+                                        }
+                                    ]
+
+
+                                });
+
+                                var categories = []; //creating array for storing browser type in array.
+                                for (var i = 0; i < rowDataSet.length; i++) {
+                                    categories.push(rowDataSet[i][groupByValue])
+                                }
+                                var count = {}; //creating object for getting categories with count
+                                categories.forEach(function (i) {
+                                    count[i] = (count[i] || 0) + 1;
+                                });
+                                var series_data = []; //creating empty array for highcharts series data
+                                var categores = [];//creating empty array for highcharts categories
+                                Object.keys(count).map(function (item, key) {
+                                    series_data.push(count[item]);
+                                    categores.push(item)
+                                });
+
+                                //setGroupHeader(groupArray);
+                                plotChart(series_data, categores)
+
+
+                            }
+
+                            else {
+                                //setGroupHeader(groupArray);
+                                $("#tblReport").dataTable({
+                                    "destroy": true,
+                                    "columns": dynamicColumns,
+                                    "bLengthChange": false,
+                                    "bInfo": false,
+                                    "bPaginate": false,
+                                    "bAutoWidth": true,
+                                    "paging": false,
+                                    "order": [],
+                                    "aaData": rowDataSet,
+                                    columns: [
+                                        {
+                                            "data": 0,
+                                            "orderable": false,
+                                            "render": function (data, type, row, meta) {
+                                                if (type === 'display') {
+                                                    data = row[0];
+
+
+                                                }
+                                                return data;
+                                            }
+                                        },
+                                        { data: 1, render: $.fn.dataTable.render.ellipsis(15, true)},
+                                        { data: 2, render: $.fn.dataTable.render.ellipsis(15, false) },
+                                        { data: 3, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 4, render: $.fn.dataTable.render.ellipsis(15, false) },
+                                        { data: 5, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 6, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 7, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 8, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 9, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 10, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 11, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 12, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 13, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 14, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 15, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 16, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 17, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 18, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 19, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 20, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 21, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 22, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 23, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 24, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 25, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 26, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 27, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 28, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 29, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 30, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 31, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 32, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 33, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                        { data: 34, render: $.fn.dataTable.render.ellipsis(15, true) },
+                                    ],
+                                    "sScrollY": "55vh",
+                                    "sScrollX": "100%",
+                                    "sScrollXInner": "200%",
+                                    "bScrollCollapse": true,
+                                    dom: 'Bfrtip',
+                                    "aoColumnDefs": [
+                                        { 'width': 150, aTargets: 1, visible: false  },
+                                        { 'width': 150, aTargets: 2, visible: false },
+                                        { 'width': 150, aTargets: 5, visible: false },
+                                        { 'width': 150, aTargets: 6, visible: false },
+                                        { 'width': 150, aTargets: 7, visible: false },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [12]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [13]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [20]
+                                        },
+                                        {
+                                            'type': 'date',
+                                            'aTargets': [22]
+                                        },
+                                        { aTargets: 23, visible: false },
+                                        { aTargets: 24, visible: false },
+                                        { aTargets: 25, visible: false },
+                                        { aTargets: 26, visible: false },
+                                        { aTargets: 27, visible: false },
+                                        { aTargets: 28, visible: false },
+                                        { aTargets: 29, visible: false },
+                                        { aTargets: 30, visible: false },
+                                        { aTargets: 31, visible: false },
+                                        { aTargets: 32, visible: false },
+                                        { aTargets: 33, visible: false },
+                                        { aTargets: 34, visible: false },
+                                    ],
+                                    buttons: [
+                                        {
+                                            extend: 'colvis',
+                                            className: 'btn btn_excel'
+                                        },
+                                        {
+                                            extend: 'excelHtml5',
+                                            text: '<i class="fa fa-sign-out mr-2"></i> Excel',
+                                            titleAttr: 'Excel',
+                                            className: 'btn btn_excel'
+                                        }
+                                    ]
+                                });
+                            }
+
+
+                        }
+                        $("#global-loader").fadeOut();
+                        var tempMaster_ = [];
+                        tempMaster_ = MasterTemplateList;
+                        MasterTemplateList = [];
+                        for (var i = 0; i < tempMaster_.length; i++) {
+                            s = tempMaster_[i][0];
+                            var element = {};
+                            element.AutoID = s.substring(64, s.indexOf(')'));
+                            MasterTemplateList.push(element);
+                        }
+                        //console.log(MasterTemplateList)
+                        test();
+                    }
+                    catch (err) {
+                        console.log(err);
+                        $("#global-loader").fadeOut();
+                    }
+                    console.log(rowDataSet)
+                },
+                error: function (errormessage) {
+                    $("#global-loader").fadeOut();
+                    alert(errormessage.responseText);
+                }
+            });
+
+
+        }
+        catch (error){
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            })
+        }
+
+    }
+
+    function SetTableValueWithoutDate() {
+
+}
+
+    function SetGroupByType() {
+        var selectedGroup = $("#groupByColumn").val();
+        for (var i = 0; i < columnMaster.length; i++) {
+            if (columnMaster[i].AutoID == selectedGroup) {
+                if (columnMaster[i].GroupID != 0) {
+                    $("#hasGroupddl").show();
+                    groupMasterOption = 1;
+                    break;
+                } else {
+                    $("#hasGroupddl").hide();
+                    groupMasterOption = 0;
+                }
+            }
+        }
+    }
+
+    function toggleQueryBuilder() {
+        $("#newQuery_Maker").toggle();
+        $("#newQueryFooter").toggle();
+    }
+</script>
+
+<script>
+    function toggleGraph() {
+        $("#dynamicBar").toggle();
+    }
+
+    function plotChart(series_data, categores) {
+        Highcharts.chart('dynamicChart', {
+            chart: {
+                type: 'column'
+            },
+            xAxis: {
+                categories: categores
+            },
+            yAxis: {
+
+                title: {
+                    text: 'Count'
+                }
+            },
+            title: {
+                text: ''
+            },
+            series: [{
+                name: graphName,
+                data: series_data
+            }]
+
+        });
+    }
+
+    function setGroupHeader(groupData) {
+        var btn = "";
+        for (var i = 0; i < groupData.length; i++) {
+            const sam = randomColor();
+            //let backgroundColor = "#" + sam;
+            var tempID = parseInt(groupData[i].ID) + 1;
+            btn = btn + '<li class="  flex-fill " style="min-width:fit-content;background-color:' + sam + '"><a class="dyn_link p-1" href="#groupDynamic_' + tempID + '"><strong>' + groupData[i].Name + '</strong><br/> <span class="pull-right">' + groupData[i].Value + '</span></a></li>';
+            $("#groupDynamic_" + tempID).css("background-color", sam);
+            $("#groupDynamic_" + tempID).css("color", "white");
+        }
+        var tempstring = "";
+        var tempstring = '<div style="overflow:auto"><ul class="list-group list-group-horizontal mb-5 overflow-auto">' + btn + '</ul></div>';
+        $("#group_list").empty();
+        $("#group_list").append(tempstring);
+    }
+
+    function SaveQuery() {
+        var ReportName = $("#report-name").val();
+        var ReportRemark = $("#message-text").val();
+        if (ReportRemark == "") {
+            ReportRemark = "NA";
+        }
+        _whereCondition = [];
+        _sortCondition = [];
+        var isGroupByDateSet = $("#ddlGroupBy").val();
+        if (isGroupByDateSet == "") {
+            isGroupByDateSet = 0;
+        }
+        _groupbyConditionDataSet = isGroupByDateSet;
+        var sortFlag = 0;
+        var orderFlag = 0;
+        var totalCount = 0;
+        var collength = 0;
+        var setOperator = $("#setOperator").val()
+        var MasterString = "";
+        for (var i = 0; i < queryMaster.length; i++) {
+            var element_Query = {};
+            if (queryMaster[i].IsActive == 1) {
+                var ID = queryMaster[i].ID;
+                var columnID = $("#column_" + ID).val();
+                var operatorID = $("#operator_" + ID).val();
+                var value = ""
+                var From = ""
+                var To = ""
+                if (operatorID == 7) {
+                    From = $("#columnValueFrom_" + ID).val();
+                    To = $("#columnValueTo_" + ID).val();
+                    value = "NA";
+                    element_Query.ID = ID;
+                    element_Query.columnID = columnID;
+                    element_Query.operatorID = operatorID;
+                    element_Query.value = value;
+                    element_Query.From = From;
+                    element_Query.To = To;
+                } else if (operatorID == 3 || operatorID == 4) {
+                    value = $("#columnValue_" + ID).select2("data");
+                    var list = "";
+                    var list_value = "";
+                    for (x = 0; x < value.length; x++) {
+                        if (value[x].text != undefined) {
+                            list = list + ",'" + value[x].text.trim() + "' ";
+                            list_value = list_value + ",'" + value[x].id + "'";
+                        }
+                    }
+                    value = list.substring(1, list.length);
+                    From = "NA";
+                    To = "NA";
+                    element_Query.ID = ID;
+                    element_Query.columnID = columnID;
+                    element_Query.operatorID = operatorID;
+                    element_Query.value = list_value;
+                    element_Query.From = From;
+                    element_Query.To = To;
+                }
+                else {
+                    value = $("#columnValue_" + ID).val();
+                    From = "NA";
+                    To = "NA";
+                    element_Query.ID = ID;
+                    element_Query.columnID = columnID;
+                    element_Query.operatorID = operatorID;
+                    element_Query.value = value;
+                    element_Query.From = From;
+                    element_Query.To = To;
+                }
+                if (columnID == "" || operatorID == "" || value == "" || From == "" || To == "") {
+                    return false;
+                }
+                _whereCondition.push(element_Query);
+                MasterString = MasterString + setOperator + " ("
+                for (var j = 0; j < columnMaster.length; j++) {
+                    if (columnMaster[j].AutoID == columnID) {
+                        if (columnMaster[j].operatorID == 5 || columnMaster[j].operatorID == 6 || columnMaster[j].operatorID == 7) {
+                            MasterString = MasterString + " CAST(" + columnMaster[j].QueryName + " AS DATE) ";
+                        } else {
+                            MasterString = MasterString + " " + columnMaster[j].QueryName + " ";
+                        }
+                        break;
+                    }
+                }
+                for (var k = 0; k < operatorMaster.length; k++) {
+                    if (operatorMaster[k].OperatorID == operatorID) {
+
+                        MasterString = MasterString + " " + operatorMaster[k].Symbol + " ";
+                        break;
+                    }
+                }
+                if (operatorID == 1 || operatorID == 2) {
+                    MasterString = MasterString + " '%" + value + "%' ";
+
+                } else if (operatorID == 7) {
+                    MasterString = MasterString + " CAST('" + From + "' AS DATE) AND CAST('" + To + "' AS DATE) ";
+                }
+                else if (operatorID == 3 || operatorID == 4) {
+                    MasterString = MasterString + " (" + value + ") ";
+                }
+                else {
+                    MasterString = MasterString + " Cast('" + value + "' AS DATE) ";
+                }
+                MasterString = MasterString + " ) "
+            }
+        }
+
+        var isOrderByValid = $("#groupByColumn option:selected").val();
+        var validatorForOrder = 0;
+        groupArray = [];
+        groupCounter = 0;
+        for (var t = 0; t < SelectedSortMaster.length; t++) {
+            var tempID = SelectedSortMaster[t].ID;
+            var columnToSort = $("#columnSort_" + tempID).val();
+            var sortValue = $("#sortValue_" + tempID).val();
+            var columnValue = "";
+            for (var j = 0; j < columnMaster.length; j++) {
+                if (columnMaster[j].AutoID == columnToSort) {
+                    if (columnToSort == isOrderByValid) {
+                        validatorForOrder = 1;
+                    }
+                    columnValue = columnMaster[j].QueryName;
+                    break;
+                }
+            }
+            var element_Sort = {};
+            element_Sort.ID = tempID;
+            element_Sort.columnToSort = columnToSort;
+            element_Sort.sortValue = sortValue;
+            element_Sort.columnValue = columnValue;
+            _sortCondition.push(element_Sort);
+            if (sortValue != "" && columnToSort != "") {
+                if (sortFlag == 0) {
+                    if (columnToSort == 19 || columnToSort == 20 || columnToSort == 28) {
+                        MasterString = MasterString + "  ORDER BY CAST(" + columnValue + "as DATE) " + sortValue;
+                    } else {
+                        MasterString = MasterString + "  ORDER BY " + columnValue + " " + sortValue;
+                    }
+                    sortFlag = 1;
+                    orderFlag = 1;
+                } else {
+                    if (columnToSort == 19 || columnToSort == 20 || columnToSort == 28) {
+                        MasterString = MasterString + " , CAST(" + columnValue + "as DATE) " + sortValue;
+                    } else {
+                        MasterString = MasterString + " , " + columnValue + " " + sortValue;
+                    }
+                    orderFlag = 1;
+                }
+
+
+            }
+        }
+        var groupByValue = $("#groupByColumn option:selected").text();
+        _groupbyConditionValue = $("#groupByColumn option:selected").val();
+        if (groupByValue != "" && validatorForOrder == 0) {
+            if (orderFlag == 0) {
+                if (groupByValue == "Added On" || groupByValue == "Close Date" || groupByValue == "Next Follow Up") {
+                    MasterString = MasterString + "  ORDER BY CAST([" + groupByValue + "] as DATE) ASC";
+                } else {
+                    MasterString = MasterString + "  ORDER BY [" + groupByValue + "] ASC";
+                }
+                orderFlag = 1;
+            } else {
+                if (groupByValue == "Added On" || groupByValue == "Close Date" || groupByValue == "Next Follow Up") {
+                    MasterString = MasterString + " , CAST([" + groupByValue + "] as DATE) " + sortValue;
+                } else {
+                    MasterString = MasterString + " , [" + groupByValue + "] " + sortValue;
+                }
+            }
+        }
+        ////
+        if (groupByValue == "Added On") {
+            if (isGroupByDateSet == 2) {
+                groupByValue = "MONTHNAME_ADDEDON";//Month
+            } else if (isGroupByDateSet == 3) {
+                groupByValue = "QUATERNAME_ADDEDON";//Quater
+            } else if (isGroupByDateSet == 4) {
+                groupByValue = "YEAR_ADDEDON";//Year
+            } else {
+                groupByValue = "WK_ADDEDON";//Year
+            }
+        } else if (groupByValue == "Close Date") {
+            if (isGroupByDateSet == 2) {
+                groupByValue = "MONTHNAME_CloseDate";//Month
+            } else if (isGroupByDateSet == 3) {
+                groupByValue = "QUATERNAME_CloseDate";//Quater
+            } else if (isGroupByDateSet == 4) {
+                groupByValue = "YEAR_CloseDate";//Year
+            } else {
+                groupByValue = "WK_CloseDate";//Year
+            }
+        } else if (groupByValue == "Next Follow Up") {
+            if (isGroupByDateSet == 2) {
+                groupByValue = "MONTHNAME_NextFollowUp";//Month
+            } else if (isGroupByDateSet == 3) {
+                groupByValue = "QUATERNAME_NextFollowUp";//Quater
+            } else if (isGroupByDateSet == 4) {
+                groupByValue = "YEAR_NextFollowUp";//Year
+            } else {
+                groupByValue = "WK_NextFollowUp";//Year
+            }
+        }
+
+
+        //console.log(MasterString);
+        //console.log(_whereCondition, _sortCondition, _groupbyConditionDataSet, _groupbyConditionValue);
+
+        var _master = {};
+        _master.ReportFor = 2;
+        _master.MasterString = MasterString;
+        _master.ReportName = ReportName;
+        _master.Remark = ReportRemark;
+        _master.groupByValue = groupByValue;
+        _master.groupMasterOption = groupMasterOption;
+        _master.isGroupByDateSet = isGroupByDateSet;
+        _master._groupbyConditionDataSet = _groupbyConditionDataSet;
+        _master._groupbyConditionValue = _groupbyConditionValue;
+        _master.ConditonList = _whereCondition;
+        _master.SortByList = _sortCondition;
+        var data= { 'result': _master }
+        //var data = { 'ReportFor': 2, 'MasterString': MasterString, 'ReportName': ReportName, 'Remark': ReportRemark, 'groupByValue': groupByValue, 'groupMasterOption': groupMasterOption, 'isGroupByDateSet': isGroupByDateSet };
+
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/DynamicReport/AjaxAddNewDynamicReport",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                $("#global-loader").fadeOut();
+                if (result.Status != 0) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: result.Message,
+                        icon: 'success'
+                    }).then((result) => {
+                        document.location = '@Url.Action("Summary", "DynamicReport")';
+                    })
+                        @*alert(result);
+                        document.location = '@Url.Action("QuotationSummary", "Quotation")';*@
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.Message,
+                        icon: 'error'
+                    })
+                        @*alert("Record Updated Successfully!");
+                        document.location = '@Url.Action("QuotationSummary", "Quotation")';*@
+                }
+
+
+            },
+            error: function (error) {
+                let str = error.responseText;
+                var a = str.indexOf("<title>") + 7;
+                var b = str.indexOf("</title>");
+                str = str.substring(a, b);
+                Swal.fire({
+                    title: 'Error!',
+                    text: str,
+                    icon: 'error'
+                });
+            }
+        });
+
+    }
+</script>
+<script>var isfromDR = 1;
+    var k = 0;
+    var NextFollowUp_ = 0;
+    var PreviousFollowUp_ = 0;
+
+    function LoadNextFollowUp(_ID) {
+        ViewBoxTimeLine(MasterTemplateList[_ID].AutoID);
+
+        //for (var i = 1; i < MasterTemplateList.length+1; i++) {
+        //    if (i == _ID) {
+        //        console.log("in",i,_ID)
+        //        ViewBoxTimeLine(MasterTemplateList[i-1].AutoID);
+        //        break;
+        //    }
+        //}
+    }
+
+    function ViewBoxTimeLine(_ID) {
+        for (var i = 0; i < MasterTemplateList.length; i++) {
+            if (MasterTemplateList[i].AutoID == _ID) {
+                k = i;
+                if (k == MasterTemplateList.length-1) {
+                    console.log("from 1", k, MasterTemplateList.length)
+                    NextFollowUp_ = 0;
+                    PreviousFollowUp_ = k - 1;
+                } else if (k == 0) {
+                    NextFollowUp_ = k + 1;
+                    PreviousFollowUp_ = MasterTemplateList.length-1;
+                    console.log("from 2")
+                } else {
+                    NextFollowUp_ = k+1;
+                    PreviousFollowUp_ = k - 1;
+                    console.log("from 3")
+                }
+                break;
+            }
+        }
+        console.log(NextFollowUp_, PreviousFollowUp_)
+        $("#global-loader").fadeIn("slow");
+        var data = { 'ID': _ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Requirement/RequirementFollowUp",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#detail_').html(response);
+                $('#detail_').show();
+                $('#summary_').hide();
+                //$('#_navigation_bar').hide();
+                $("#global-loader").fadeOut("slow");
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut("slow");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GetBackToRequirement() {
+        $('#detail_').hide();
+        $('#summary_').show();
+        onBackAdjustHeight();
+    }</script>
+<script>
+    function setReportParameter() {
+        $("#global-loader").fadeIn();
+        toggleQueryBuilder();
+        _whereCondition = @Html.Raw(Json.Encode(ViewBag.ColumnList));
+        _whereCondition = JSON.parse(_whereCondition);
+        _sortCondition = @Html.Raw(Json.Encode(ViewBag.SortByList));
+        _sortCondition = JSON.parse(_sortCondition);
+        _groupbyConditionDataSet = @ViewBag._groupbyConditionDataSet;
+        _groupbyConditionValue = @ViewBag._groupbyConditionValue;
+
+        for (var i = 0; i < _whereCondition.length; i++) {
+            var temp_operatorID = _whereCondition[i].operatorID;
+            if (i == 0) {
+                $("#column_" + counter).val(_whereCondition[i].columnID);
+                GetOperatorforSelectedColumns(counter);
+                $("#operator_" + counter).val(_whereCondition[i].operatorID);
+                GetValueforSelectedOperator(counter);
+            } else {
+                document.getElementById("addRow").click();
+                $("#column_" + counter).val(_whereCondition[i].columnID);
+                GetOperatorforSelectedColumns(counter);
+                $("#operator_" + counter).val(_whereCondition[i].operatorID);
+                GetValueforSelectedOperator(counter);
+            }
+            if (temp_operatorID == 7) {
+                $("#columnValueFrom_" + counter).val(_whereCondition[i].From);
+                $("#columnValueTo_" + counter).val(_whereCondition[i].To);
+            } else if (temp_operatorID == 3 || temp_operatorID == 4) {
+                var temp_value_ = _whereCondition[i].value;
+                temp_value_ = temp_value_.split(",'");
+                var temp_array = [];
+                for (var k = 0; k < temp_value_.length; k++) {
+                    temp_array[k] = parseInt(temp_value_[k]);
+                }
+                $("#columnValue_" + counter).val(temp_array);
+            } else {
+                $("#columnValue_" + counter).val(_whereCondition[i].value);
+            }
+        }
+
+        for (var i = 0; i < _sortCondition.length; i++) {
+            if (i == 0) {
+                $("#columnSort_" + sortCounter).val(_sortCondition[i].columnToSort);
+                GetSortforSelectedColumns(sortCounter);
+                $("#sortValue_" + sortCounter).val(_sortCondition[i].sortValue);
+            } else {
+                document.getElementById("addSort").click();
+                $("#columnSort_" + sortCounter).val(_sortCondition[i].columnToSort);
+                GetSortforSelectedColumns(sortCounter);
+                $("#sortValue_" + sortCounter).val(_sortCondition[i].sortValue);
+            }
+        }
+
+        $("#groupByColumn").val(_groupbyConditionValue);
+        SetGroupByType();
+        if (_groupbyConditionDataSet !=0) {
+            $("#ddlGroupBy").val(_groupbyConditionDataSet);
+        }
+        toggleQueryBuilder();
+        ApplyFilter();
+        $("#global-loader").fadeOut();
+        toggleQueryBuilder();
+    }
+</script>
+
+<script>var _tempList = [];
+
+    function test() {
+        var x = $('#tblReport tr');
+        for (var i = 0; i < x.length; i++) {
+            let sample = x[i].className;
+            let sample1 = x[i].innerHTML;
+            if (sample != "") {
+                sample = sample.indexOf("dtrg-group");
+
+                if (sample == -1) {
+                    var a = sample1.indexOf("ViewBoxTimeLine(");
+                    var b = sample1.indexOf(")");
+                    console.log(a,b)
+                    sample = sample1.substring(a + 16, b);
+                    var element = {};
+                    element.AutoID = sample;
+                    _tempList.push(element);
+
+                }
+            }
+
+        }
+        MasterTemplateList = _tempList;
+        console.log(_tempList);
+        //var table = $('#tblReport').DataTable();
+        //table.columns([25,26,27,28,29,30,31,32,33,34]).visible(false, false);
+        //table.columns.adjust().draw(false);
+    }
+
+    </script>
+

@@ -1,0 +1,367 @@
+﻿
+@{
+    ViewBag.Title = "NewEnquiry";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<div class=" content-area overflow-hidden">
+    <div class="page-header">
+        <h4 class="page-title">Add New Enquiry</h4>
+        <ol class="breadcrumb" id="ShowSummary">
+            <li class="breadcrumb-item">
+                <div class="badge badge-danger ml-2" onclick="OpenSelectedSummary()">
+                    <div class="d-flex  align-items-center">
+                        <p class="m-0 pt-2 pb-2">Pending: <label class="m-0">@ViewBag.Total</label></p>
+                    </div>
+                </div>
+                <div class="badge badge-info" onclick="OpenTodaysSummary()">
+                    <div class="d-flex  align-items-center">
+                        <p class="m-0 pt-2 pb-2">Generated Today: <label class="m-0">@ViewBag.Todays</label></p>
+                    </div>
+                </div>
+            </li>
+            
+        </ol>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-control-label">Search By Email or Contact Number</label>
+                            <div class="row gutters-xs">
+                                <div class="col-md-5 col-sm-12">
+                                    @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "SearchText", name = "SearchText", autocomplete = "off" })
+                                </div>
+                                <span class="col-auto">
+                                    <button class="btn btn-primary" type="button" onclick="LoadSearchResult()"><i class="fe fe-search"></i></button>
+                                </span>
+                            </div>
+                            <div class="float-right" style="margin-top: -42px;" id="PendingCustomer" onclick="opneCustomerEnquiry()">
+                                <div class="badge badge-primary">
+                                    <div class="d-flex  align-items-center">
+                                        <p class="m-0 pt-2 pb-2">Customer Pending: <label class="m-0" id="PendingCustomerData"></label></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="company">Company</label>
+                                    @Html.TextBox("CompanyName", null, new { @class = "form-control", @id = "CompanyName", name = "CompanyName", autocomplete = "off", disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="location">Location</label>
+                                    @Html.TextBox("Address", null, new { @class = "form-control", @id = "Address", name = "Address", autocomplete = "off", disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="Contact Person">Contact Person</label>
+                                    @Html.TextBox("ContactPersonName", null, new { @class = "form-control", @id = "ContactPersonName", name = "ContactPersonName", autocomplete = "off", disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    @Html.TextBox("EmailID", null, new { @class = "form-control", @id = "EmailID", name = "EmailID", autocomplete = "off", disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="Contact Number">Contact Number</label>
+                                    @Html.TextBox("ContactNo", null, new { @class = "form-control", @id = "ContactNo", name = "ContactNo", autocomplete = "off", disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="Enquiry Type">Enquiry reference</label>
+                                    @Html.TextBox("Refernce", null, new { @class = "form-control", @id = "Refernce", name = "Refernce", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="Sales person"> Sales Person</label>
+                                    @Html.DropDownList("ddlSalesPersonDropdown", (IEnumerable<SelectListItem>)ViewBag.SalesPersonList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesPersonDropdown", name = "ddlSalesPersonDropdown", autocomplete = "off" })
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="Sales person"> Sales Co-Ordinator</label>
+                                    @Html.DropDownList("ddlSalesCoordinatorList", (IEnumerable<SelectListItem>)ViewBag.SalesCoordinatorList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesCoordinatorList", name = "ddlSalesCoordinatorList", autocomplete = "off" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2" id="FromEmail">
+                            <div class="col-12">
+                                <p class="m-0"><strong>Email Body</strong></p>
+                                <p class="m-0" id="EmailBody"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Enquiry Description</label>
+                            <div class="row gutters-xs">
+                                <div class="col">
+                                    @Html.TextArea("Desc", new { @class = "form-control", @id = "Desc", name = "Desc", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group float-right">
+                                    <button type="button" class="btn btn-success" onclick="genertateEnquiry()" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Save"><i class="fa fa-save"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var ContactPersonID;
+
+    $(document).ready(function () {
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+
+        }
+        ////height = $(".page-main").height();
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+
+        var s = document.getElementById("ddlSalesPersonDropdown");
+       s.value =1;
+        $("#PendingCustomer").hide();
+        $("#FromEmail").hide();
+        if (document.getElementById('SearchText').value != "") {
+            ContactPersonID = @ViewBag.ContactPersonID;
+            document.getElementById('Refernce').value = "Email"
+            var emailB = "";
+            emailB = "@ViewBag.EmailBody";
+            var tempCount = emailB.length;
+            emailB = emailB.replace(/&amp;/);
+            if (tempCount != 0) {
+                $("#FromEmail").show();
+                document.getElementById('EmailBody').innerHTML = "@ViewBag.EmailBody";
+            }
+            getSelectedCustomerCount(ContactPersonID);
+        }
+    });
+
+    function LoadSearchResult() {
+        var SearchText = document.getElementById('SearchText').value;
+        var st = SearchText.trim();
+        if (st === "") {
+            resetForm();
+            alert("Input field empty");
+            return;
+        }
+        $.ajax({
+            url: "/Enquiry/GetCompanyList",
+            data: '{SearchText: ' + JSON.stringify(st) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                if (value.length == 0) {
+                    alert("No search result found");
+                    return;
+                }
+                for (i = 0; value.length; i++) {
+                    var contact = value[i].ContactNo;
+                    var mobile = value[i].MobileNo;
+                    var email = value[i].EmailID;
+                    email = email.toLowerCase();
+                    if (st === contact || st === mobile || st === email) {
+                        document.getElementById("CompanyName").value = value[i].CompanyName;
+                        document.getElementById("Address").value = value[i].Location;
+                        document.getElementById("ContactPersonName").value = value[i].ContactPersonName;
+                        document.getElementById("EmailID").value = value[i].EmailID;
+                        document.getElementById("ContactNo").value = value[i].ContactNo;
+                        ContactPersonID = value[i].ContactPersonID;
+                        getSelectedCustomerCount(ContactPersonID);
+                        break;
+                    }
+                }
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function getSelectedCustomerCount(Id) {
+        $.ajax({
+            url: "/Enquiry/CurrentCustomerEnquiryCount",
+            data: '{ID: ' + JSON.stringify(Id) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                $("#PendingCustomer").show();
+                document.getElementById("PendingCustomerData").innerHTML = value;
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function genertateEnquiry() {
+        var res = validateForm();
+        if (res == false) {
+            return false;
+        }
+        var today = new Date();
+        var element = {};
+        element.Reference = document.getElementById("Refernce").value;
+        element.Desc = document.getElementById("Desc").value;
+        var s = document.getElementById("ddlSalesPersonDropdown");
+        element.SalesPersonID = s.options[s.selectedIndex].value;
+        var sc = document.getElementById("ddlSalesCoordinatorList");
+        element.SalesCoordinatorID = sc.options[sc.selectedIndex].value;
+        element.StatusID = 1;
+        element.ContactPersonID = ContactPersonID;
+        element.EnquiryNO = 0;
+        element.RevisionNo = 0;
+        element.AddedBY = 1;
+        element.AddedON = today;
+        element.EnqDate = today;
+        element.ModifiedBY = 1;
+        element.ModifiedON = today;
+        element.IsDeleted = false;
+        data = JSON.stringify(element)
+        $.ajax({
+            url: "/Enquiry/AddNewEnquiry",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                resetForm();
+                var r = confirm(value + ", " + "Continue adding enquiry?");
+                if (r == true) {
+                    resetForm();
+                } else {
+                    document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+                }
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function validateForm() {
+        var isValid = Boolean;
+        isValid = true;
+        var Description = document.getElementById("Desc").value;
+        var Refernce = document.getElementById("Refernce").value;
+        var CompanyName = document.getElementById("CompanyName").value;
+        var sc = document.getElementById("ddlSalesCoordinatorList");
+        scID = sc.options[sc.selectedIndex].value;
+        if (scID == null || Description == undefined) {
+            document.getElementById('ddlSalesCoordinatorList').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('ddlSalesCoordinatorList').style.borderColor = "Gainsboro";
+        }
+        if (Description == "" || Description == undefined) {
+            document.getElementById('Desc').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Desc').style.borderColor = "Gainsboro";
+        }
+        if (Refernce == "" || Refernce == undefined) {
+            document.getElementById('Refernce').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('Refernce').style.borderColor = "Gainsboro";
+        }
+        if (CompanyName == "" || CompanyName == undefined) {
+            //document.getElementById('CompanyName').style.borderColor = "red";
+            isValid = false;
+        } else {
+            document.getElementById('CompanyName').style.borderColor = "Gainsboro";
+        }
+        if (isValid == false) { alert('Please fill the required fields!'); }
+        return isValid;
+    }
+
+    function resetForm() {
+        document.getElementById('SearchText').value = "";
+        document.getElementById("CompanyName").value = "";
+        document.getElementById("Address").value = "";
+        document.getElementById("ContactPersonName").value = "";
+        document.getElementById("EmailID").value = "";
+        document.getElementById("ContactNo").value = "";
+        document.getElementById("Desc").value = "";
+        document.getElementById("Refernce").value = "";
+        $("#PendingCustomer").hide();
+        document.getElementById('ddlSalesCoordinatorList').style.borderColor = "Gainsboro";
+        var sp = document.getElementById("ddlSalesPersonDropdown");
+        sp.value = 1;
+        var sc = document.getElementById("ddlSalesCoordinatorList");
+        sc.value = 0;
+    }
+
+    function OpenTodaysSummary() {
+        var k = 2;
+        $.ajax({
+            url: "/Enquiry/OpenTodaysSummary",
+            data: '{k: ' + JSON.stringify(k) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                    document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function opneCustomerEnquiry() {
+        $.ajax({
+            url: "/Enquiry/OpenCustomerSummary",
+            data: '{ContactPersonID: ' + JSON.stringify(ContactPersonID) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                    document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function OpenSelectedSummary() {
+        document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+    }
+</script>

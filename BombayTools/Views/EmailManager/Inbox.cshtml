@@ -1,0 +1,1017 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.Recieved_Emails>
+
+@{
+    ViewBag.Title = "Inbox";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<style>
+    .table-inbox tr td {
+    padding: 4px!important
+    }
+
+    .ui-menu-item {
+        font-family: 'Quicksand', sans-serif;
+    }
+</style>
+<div id="cute-loader"></div>
+<div id="topRow"></div>
+<div class=" content-area" id="Dashboard">
+    <div class="page-header">
+        <h4 class="page-title">Inbox</h4>
+        <div class="breadcrumb">
+            <button id="backButton" class="btn btn-primary" onclick="getBackParent()"><i class="fa fa-arrow-left"></i></button>
+            <button id="RefreshBtn" class="btn btn-success" onclick="RefreshMailList()"><i class="fa fa-refresh"></i></button>
+        </div>
+    </div>
+    <div class="row gutters-xs">
+        <div class="col">
+            @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "SearchText", name = "SearchText", autocomplete = "off" })
+        </div>
+        <span class="col-auto">
+            <button class="btn btn-primary" type="button" onclick="LoadSearchResult()" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Search" ><i class="fe fe-search"></i></button>
+        </span>
+    </div>
+    <div id="SearchList"></div>
+
+    <div class="row" id="Inbox">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-inbox table-hover">
+
+                    <tbody>
+                        @foreach (var d in Model)
+                        {
+                            <tr>
+                                <td class="view-message dont-show" style="width:150px;padding-left:10px !important">@Html.DisplayFor(m => d.FromName)</td>
+                                <td class="view-message" onclick="ShowBodyTag('@d.ID','@d.ThreadID')" >@Html.DisplayFor(m => d.Subject)</td>
+                                <td class="view-message text-right" style="width:250px;">@Html.DisplayFor(m => d.Display)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="AddContact" class="card">
+        <div class="card-header">
+            <h4 class="card-title">
+                Add Contact
+            </h4>
+            <div class="card-options"><button class="btn btn-danger float-right" onclick="CancelAddCustomer()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="form-group">
+                        <small class="text-danger" id="Duplicate">Company already exist</small>
+                        <label class="form-label">Company Name</label>
+                        @Html.TextBox("CompanyN", null, new { @class = "form-control", @id = "CompanyN", name = "CompanyN", autocomplete = "on", @maxlength = 100 })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        @Html.TextBox("LocationN", null, new { @class = "form-control", @id = "LocationN", name = "LocationN", autocomplete = "off", @maxlength = 100 })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label class="form-label">State</label>
+                        @Html.DropDownList("ddlStateDropdown", (IEnumerable<SelectListItem>)ViewBag.StateDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlStateDropdown", name = "ddlStateDropdown", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label class="form-label">Country</label>
+                        @Html.DropDownList("ddlCountryDropdown", (IEnumerable<SelectListItem>)ViewBag.CountryDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlCountryDropdown", name = "ddlCountryDropdown", autocomplete = "off" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label class="form-label">Contact Person</label>
+                        @Html.TextBox("CPName", null, new { @class = "form-control", @id = "CPName", name = "CPName", autocomplete = "off", @maxlength = 100 })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        @Html.TextBox("CPEmail", null, new { @class = "form-control", @id = "CPEmail", name = "CPEmail", autocomplete = "off", @maxlength = 100 })
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label class="form-label">Mobile No.</label>
+                        @Html.TextBox("CPContact", null, new { @class = "form-control", @id = "CPContact", name = "CPContact", autocomplete = "off", @maxlength = 100 })
+                    </div>
+                </div>
+            </div>
+            <di v class="row" id="CompanyParameter">
+                <div class="col-md-4">
+                    <div class="form-group label-floating">
+                        <label class="form-label">Principal</label>
+                        @Html.DropDownList("ddlPrincipalDropdown", (IEnumerable<SelectListItem>)ViewBag.PrincipalDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlPrincipalDropdown", name = "ddlPrincipalDropdown", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group label-floating">
+                        <label class="form-label">Sector</label>
+                        @Html.DropDownList("ddlSectorDropdown", (IEnumerable<SelectListItem>)ViewBag.SectorDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlSectorDropdown", name = "ddlSectorDropdown", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group label-floating">
+                        <label class="form-label">Industry</label>
+                        @Html.DropDownList("ddlIndustryDropdown", (IEnumerable<SelectListItem>)ViewBag.IndustryDropdown, "--Select--", new { @class = "form-control custom-select", @id = "ddlIndustryDropdown", name = "ddlIndustryDropdown", autocomplete = "off" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 float-right">
+                    <button onclick="SaveContactDetail()" id="saveCustomer" class="btn btn-success float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Save" >
+                        <i class="fa fa-save"></i>
+                    </button>    
+                    <button onclick="UpdateContactDetail()" id="UpdateCustomer" class="btn btn-warning float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Update" >
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" id="MessageBody">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header m-0">
+                    <div id="MailOptions">
+                        <button class="btn btn-success" onclick="AddNewContact()">Add Contact</button>
+                        <button class="btn btn-danger" onclick="CreateNewEnquiry()">Mark Enquiry</button>
+                        <button class="btn btn-primary" onclick="LinkMailToQuotation()">Link To Quotation</button>
+                    </div>
+                    <div class="card-options" id="MailNavigation">
+                        <label id="MailCount" class="mt-3 mr-1"></label>
+                        <button class="btn btn-primary float-left m-1" onclick="LastMessage()">
+                            <i class="fa fa-angle-left" style="font-size:20px;"></i>
+                        </button>
+                        <button class="btn btn-primary float-right m-1" onclick="NextMessage()">
+                            <i class="fa fa-angle-right" style="font-size:20px;"></i>
+                        </button>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="row" id="AddEnquiry">
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label for="Sales person"> Sales Person</label>
+                                @Html.DropDownList("ddlSalesPersonDropdown", (IEnumerable<SelectListItem>)ViewBag.SalesPersonList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesPersonDropdown", name = "ddlSalesPersonDropdown", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label for="Sales person"> Sales Co-Ordinator</label>
+                                @Html.DropDownList("ddlSalesCoordinatorList", (IEnumerable<SelectListItem>)ViewBag.SalesCoordinatorList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesCoordinatorList", name = "ddlSalesCoordinatorList", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="EnquiryDescription"> Description</label>
+                                @Html.TextArea("Description", new { @class = "form-control", @id = "Description", name = "Description", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-12  m-1" >
+                            <button class="btn btn-success float-right" onclick="GenerateEnquiry()"><i class="fa fa-save"></i></button>
+                        </div>
+
+                    </div>
+                    <div class="row" id="LinkQuot">
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label for="Quotation"> Search For Quotation</label>
+                                @Html.TextBox("QuotationID", null, new { @class = "form-control", @id = "QuotationID", name = "QuotationID", autocomplete = "on", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-3" style="margin-top: 1.75rem !important;">
+                            <button class="btn btn-success" onclick="LinkSelectedQuot()"><i class="fa fa-save"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6 class="m-0"><strong>From: </strong><label id="MailFrom"></label></h6>
+                            <h6 class="m-0"><strong>Subject: </strong><label id="MailSubject"></label></h6>
+                            <hr class="m-0" />
+                        </div>
+                        <div class="col-sm-12">
+                            <iframe id="MailText" style="height:600px;border:none;width:900px;"></iframe>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+@*</div>*@
+<script>
+    var mode = 0;
+    var emailMaster = [];
+    var MessageIDList = [];
+
+    $(document).ready(function () {
+
+        emailMaster = @Html.Raw(Json.Encode(@ViewBag.MailDetails));
+        emailMaster = JSON.parse(emailMaster);
+        $("#AddContact").hide();
+        $("#LinkQuot").hide();
+        $("#backButton").hide();
+        $("#MessageBody").hide();
+        $("#goBackButton").hide();
+        $("#UpdateCustomer").hide();
+        $("#AddEnquiry").hide();
+        $("#cute-loader").fadeOut("slow");
+        $('#Duplicate').hide();
+        $('#CompanyParameter').hide();
+
+        getMessageID(emailMaster);
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+    });
+
+    function getMessageID(emailMaster) {
+        for (i = 0; i < emailMaster.length; i++) {
+            var element = {};
+            element.Index = i;
+            element.MessageID = emailMaster[i].ID;
+            element.ThreadID = emailMaster[i].ThreadID;
+            MessageIDList.push(element);
+        }
+    }
+
+    var MessageID;
+    var ThreadID;
+    var BodyText, PlainText, ContactPersonID, Desc, CompanyName, ContactNo;
+    var SubjectText,EmailAddress,EmailName;
+    var currentID, NextID, LastID;
+    var currentTID, NextTID, LastTID;
+
+    function ShowBodyTag(messageID, threadID) {
+        resetCompanyInfo();
+        MessageID = messageID;
+        ThreadID = threadID;
+        setMessageID(messageID, threadID);
+        $("#Inbox").hide();
+        $("#MessageBody").show();
+        $("#AddEnquiry").hide();
+        var data = { 'ID': messageID, 'ThreadID': threadID };
+        data = JSON.stringify(data);
+        $("#backButton").show();
+        $("#RefreshBtn").hide();
+
+        $('html, body').animate({
+            scrollTop: $("#topRow").offset().top
+        }, 2000);
+
+        //height adjust
+
+        var elmnt = document.getElementById("page-main");
+        var height = 0;
+        if (elmnt.scrollHeight) {
+            height = elmnt.scrollHeight;
+        }
+        else {
+            height = $("#page-main").height();
+        }
+        height = height - 62;
+        $("#sidebar").height(height + "px");
+        //height adjust
+
+        $.ajax({
+            url: "/EmailManager/GetEMailBody",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#Inbox').hide();
+
+                $("#MessageBody").show();
+                var ifrm = $('#MailText')[0].contentWindow.document;
+                $('body', ifrm).html(response.Body);
+                $('#TextFormat').text(response.PlainText);
+                $('#MailFrom').text(response.FromName);
+                $('#MailSubject').text(response.Subject);
+                $('#MailText').show();
+                BodyText = response.PlainText;
+                SubjectText = response.Subject;
+                getValueFromEmail(BodyText, SubjectText, response.FromName);
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+
+    function getValueFromEmail(PlainText, SubjectText, FromAdd) {
+        var FromAddress = FromAdd;
+        var i = FromAddress.indexOf('<');
+        var j = FromAddress.indexOf('>');
+        if (i != -1 && j != -1) {
+            FromAddress = FromAddress.substring(i + 1, j);
+            EmailAddress = FromAddress;
+        } else {
+            EmailAddress = FromAddress;
+        }
+        var NameOnEmail = FromAdd;
+        //i = FromAddress.indexOf('<');
+        j = NameOnEmail.indexOf('<');
+        EmailName = NameOnEmail.substring(0, j);
+        i = EmailName.indexOf('"');
+        if (i == 0) {
+            //EmailName = EmailName.substring(1);
+            EmailName = EmailName.slice(1);
+            j = EmailName.indexOf('"');
+            if (j > 0) {
+                EmailName = EmailName.substring(0, j);
+            }
+        }
+        if (FromAddress == "buyershelp+enq@indiamart.com") {
+            IndiaMartEmailExtract(PlainText, SubjectText, FromAdd);
+            return;
+        }
+        if (EmailName.includes('|')) {
+            CompanyName = EmailName.split('|')[1];
+            CompanyName = CompanyName.trim();
+        } else {
+            CompanyName = '';
+        }
+        Desc = PlainText;
+
+        document.getElementById("CPEmail").value = EmailAddress;
+        document.getElementById("CPName").value = EmailName;
+        document.getElementById("CompanyN").value = CompanyName;
+        document.getElementById("CPContact").value = ContactNo;
+    }
+
+    function IndiaMartEmailExtract(PlainText, SubjectText, FromAd) {
+        var text1 = PlainText;
+        var i = PlainText.indexOf('Buyer Details');
+        i = i + 13;
+        var j = PlainText.indexOf('Note:');
+        text1 = text1.substring(i, j);
+        text1 = text1.trim();
+        var text2 = text1.trim();
+        i = text1.indexOf('Email:');
+        if (i != -1 && text1.includes('@@')) {
+            j = text1.length;
+            text1 = text1.substring(i, j);
+            i = text1.indexOf('Email:');
+            j = text1.length;
+            if (i < j) {
+                FromAddress = text1.substring(i + 6, j);
+                FromAddress = FromAddress.trim();
+                j = FromAddress.indexOf('Mobile:');
+                if (j != -1) {
+                    FromAddress = FromAddress.substring(0, j);
+                    FromAddress = FromAddress.trim();
+                }
+            } else if (i > j) {
+                j = text1.indexOf('Mobile:');
+                FromAddress = text1.substring(i + 8, j);
+                FromAddress = FromAddress.trim();
+            }
+            EmailAddress = FromAddress;
+        } else {
+            EmailAddress = "";
+        }
+
+        // For Mobile
+        
+        var k = text2.indexOf('Mobile:');
+        var l = text2.length;
+        if (k != -1) {
+            ContactNo = text2.substring(k + 7, l);
+            ContactNo = ContactNo.trim();
+        }
+        if (ContactNo.includes("Email")) {
+            k = ContactNo.indexOf('Email');
+            ContactNo = ContactNo.substring(0, k);
+            ContactNo = ContactNo.trim();
+        }
+        var e = PlainText.indexOf('Requirement Details');
+        var f = PlainText.indexOf('Reply Now');
+        Desc = PlainText.substring(e, f);
+        Desc = Desc.trim();
+
+        var d = SubjectText.indexOf('from');
+        d = d + 4;
+        var e = SubjectText.indexOf('to');
+        var ContactPersonName = SubjectText.substring(d, e);
+        EmailName = ContactPersonName.trim();
+
+        document.getElementById("CPEmail").value = EmailAddress;
+        document.getElementById("CPName").value = EmailName;
+        document.getElementById("CompanyN").value = CompanyName;
+        document.getElementById("CPContact").value = ContactNo;
+    }
+
+    function setMessageID(messageID, threadID) {
+        currentID = messageID;
+        currentTID = threadID;
+        for (i = 0; i < MessageIDList.length; i++) {
+            if (i == 0) {
+                document.getElementById("MailCount").innerHTML = "1 of " + MessageIDList.length;
+            } else {
+                var index = i + 1;
+                document.getElementById("MailCount").innerHTML = index+" of " + MessageIDList.length;
+            }
+            if (MessageIDList[i].MessageID == currentID) {
+                if (i == 0) {
+                    LastID = currentID;
+                    LastTID = currentTID;
+                } else {
+                    LastID = MessageIDList[i - 1].MessageID;
+                    LastTID = MessageIDList[i - 1].ThreadID;
+                }
+                var k = i + 1;
+                if (k == MessageIDList.length) {
+                    NextID = MessageIDList[0].MessageID;
+                    NextTID = MessageIDList[0].ThreadID;
+                } else {
+                    NextID = MessageIDList[k].MessageID;
+                    NextTID = MessageIDList[k].ThreadID;
+                }
+                break;
+            }
+            
+        }
+    }
+    function NextMessage() {
+        ShowBodyTag(NextID, NextTID);
+        $("#AddEnquiry").hide();
+        $('#MailFrom').text("");
+        $('#MailSubject').text("");
+        $("#LinkQuot").hide();
+        $('#CompanyParameter').hide();
+        $("#AddContact").hide();
+        $("#MailOptions").show();
+
+
+    }
+
+    function LastMessage() {
+        ShowBodyTag(LastID, LastTID);
+        $("#AddEnquiry").hide();
+        $('#MailFrom').text("");
+        $('#MailSubject').text("");
+        $("#LinkQuot").hide();
+        $('#CompanyParameter').hide();
+        $("#AddContact").hide();
+        $("#MailOptions").show();
+
+    }
+
+    function getBackParent() {
+        $("#UpdateCustomer").hide();
+        $("#saveCustomer").show();
+        if (mode == 4) {
+            $("#MessageBody").hide();
+            $("#SearchList ").show();
+            mode = 2;
+            return;
+        }
+
+        if (mode == 2) {
+            $('#Inbox').show();
+            $('#SearchList').hide();
+            mode = 0;
+            return;
+        }
+        //if (mode == 1) {
+        //    $("#MessageBody").show();
+        //    $("#AddContact").hide();
+        //    mode = 0;
+        //    return;
+        //}
+        if (mode == 0) {
+            $("#backButton").hide();
+            $("#RefreshBtn").show();
+            $("#AddContact").hide();
+            $("#Inbox").show();
+            $("#MessageBody").hide();
+            var ifrm = $('#MailText')[0].contentWindow.document;
+            $('body', ifrm).html('<br/>');
+            $("#AddEnquiry").hide();
+            $("#MailOptions").show();
+            $('#text').empty();
+        }
+
+    } 
+
+    function CancelAddCustomer() {
+        $("#AddContact").hide();
+        $("#MailOptions").show();
+
+    }
+
+    function LoadSearchResult() {
+        var searchText = document.getElementById("SearchText").value;
+        if (searchText != "" || searchText != undefined) {
+            var data = { 'searchText': searchText };
+            data = JSON.stringify(data);
+            $("#cute-loader").fadeIn("slow");
+            $.ajax({
+                url: "/EmailManager/SearchEmailList",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //  dataType: "json",
+                success: function (response) {
+                    $('#Inbox').hide();
+                    $('#MessageBody').hide();
+                    mode = 2;
+
+                    $('#SearchList').html(response);
+                    $('#SearchList').show();
+                    $("#cute-loader").fadeOut("slow");
+
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
+    function CreateNewEnquiry() {
+        var st;
+        if (EmailAddress != "" ) {
+            st = EmailAddress;
+        } else if (ContactNo != "" ) {
+            st = ContactNo;
+        } else {
+            alert("No Email address or Contact detail found");
+            return false;
+        }
+        $.ajax({
+            url: "/Enquiry/GetCompanyList",
+            data: '{SearchText: ' + JSON.stringify(st) + '}',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (value) {
+                if (value.length == 0) {
+                    alert("Customer doesn't exist!");
+                    return;
+                } else {
+                    var data1 = { 'MessageID': MessageID, 'ThreadID': ThreadID }
+                    data1 = JSON.stringify(data1);
+                    $.ajax({
+                        url: "/Enquiry/CheckEnquiryForMail",
+                        data: data1,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (resource) {
+                            if (resource != 0) {
+                                alert("Enquiry already created for selected email")
+                            } else {
+                                $("#AddEnquiry").show();
+                                for (i = 0; value.length; i++) {
+                                    if (st == value[i].EmailID) {
+                                        ContactPersonID = value[i].ContactPersonID;
+                                        break;
+                                    }
+                                }
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert("error");
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GenerateEnquiry() {
+        var Description = document.getElementById('Description').value;
+        if (Description == "" || Description == undefined) {
+            alert("Enquiry Description Can not be empty");
+        } else {
+            var element = {};
+            var today = new Date();
+            var element = {};
+            element.Reference = "Email";
+            element.Desc = Description;
+            var s = document.getElementById("ddlSalesPersonDropdown");
+            element.SalesPersonID = s.options[s.selectedIndex].value;
+            var sc = document.getElementById("ddlSalesCoordinatorList");
+            element.SalesCoordinatorID = sc.options[sc.selectedIndex].value;
+            element.StatusID = 1;
+            element.ContactPersonID = ContactPersonID;
+            if (element.ContactPersonID == 0) {
+                alert("Something went wrong please try again later");
+                return false;
+            }
+            element.EnquiryNO = 0;
+            element.RevisionNo = 0;
+            element.AddedBY = 1;
+            element.AddedON = today;
+            element.EnqDate = today;
+            element.ModifiedBY = 1;
+            element.ModifiedON = today;
+            element.IsDeleted = false;
+            element.MessageID = MessageID;
+            element.ThreadID = ThreadID;
+            data = JSON.stringify(element)
+            $.ajax({
+                url: "/Enquiry/AddNewEnquiry",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (value) {
+                    alert("Enquiry Generated");
+                    $("#AddEnquiry").hide();
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+    }
+
+    function AddNewContact() {
+        var country = document.getElementById("ddlCountryDropdown");
+        country.value = 1;
+        $("#MessageBody").show();
+        $("#AddContact").show();
+        $("#MailOptions").hide();
+
+        //mode = 1;
+
+    }
+    function SaveContactDetail(){
+
+        var element = {};
+        element.Company = document.getElementById("CompanyN").value;
+        element.Location = document.getElementById("LocationN").value;
+        element.ContactPersonName = document.getElementById("CPName").value;
+        element.ContactNo = document.getElementById("CPContact").value;
+        if (element.ContactNo == "" || element.ContactNo == undefined) {
+            element.ContactNo = 0;
+        }
+        element.ContactEmail = document.getElementById("CPEmail").value;
+        var e = document.getElementById("ddlStateDropdown");
+        element.StateID = e.options[e.selectedIndex].value;
+        var c = document.getElementById("ddlCountryDropdown");
+        element.CountryID = c.options[c.selectedIndex].value;
+        var PrincipalID = document.getElementById("ddlPrincipalDropdown");
+        element.PrincipalID = PrincipalID.options[PrincipalID.selectedIndex].value;
+        var SectorID = document.getElementById("ddlSectorDropdown");
+        element.SectorID = SectorID.options[SectorID.selectedIndex].value;
+        var IndustryID = document.getElementById("ddlIndustryDropdown");
+        element.IndustryID = IndustryID.options[IndustryID.selectedIndex].value;
+        element.AddedOn = new Date();
+        if (element.Company == "" || element.Location == "" || element.ContactPersonName == "" || element.StateID == 0) {
+            alert("Please fill all require document");
+            return false;
+        }
+        var data = element;
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/ManageContact/QuickAddCustomer",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != 0) {
+                    ContactPersonID = response;
+                    $("#MessageBody").show();
+                    $("#AddContact").hide();
+                    mode = 0;
+                    $("#AddEnquiry").show();
+                } else {
+                    alert("Record Saved Successfully!");
+                    $("#MessageBody").show();
+                    $("#AddContact").hide();
+                    mode = 0;
+                }
+
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function resetCompanyInfo() {
+        var country = document.getElementById("ddlCountryDropdown");
+        country.value = 1;
+        document.getElementById("CompanyN").value="";
+        document.getElementById("LocationN").value = "";
+        document.getElementById("CPName").value = "";
+        document.getElementById("CPContact").value = "";
+        document.getElementById("CPEmail").value = "";
+        EmailAddress = '';
+        EmailName = '';
+        CompanyName = '';
+        ContactNo = '';
+    }
+
+    function LinkMailToQuotation() {
+        $("#LinkQuot").show();
+    }
+    var itemData = [];
+    //$("#CompanyN").focusout(function () {
+    //    var company = document.getElementById('CompanyN').value;
+    //    if (company == "" || company == undefined) {
+    //        return;
+    //    } else {
+    //        var data = { 'name': company };
+    //        data = JSON.stringify(data);
+    //        $.ajax({
+    //            url: "/ManageContact/ValidateCompanyName",
+    //            data: data,
+    //            type: "POST",
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            success: function (result) {
+    //                console.log("check")
+    //                var name = result.CompanyName;
+    //                if (name != null) {
+    //                    if (company.toLowerCase() == name.toLowerCase()) {
+    //                        $("#saveCustomer").attr('disabled', true);
+    //                        $('#Duplicate').show();
+    //                    }
+    //                } else {
+    //                    $("#saveCustomer").attr('disabled', false);
+    //                    $('#Duplicate').hide();
+    //                }
+
+    //            },
+    //            error: function (error) {
+    //                alert(error.responseText);
+    //            }
+    //        });
+    //    }
+
+    //});
+
+
+    function LinkSelectedQuot() {
+        var text = document.getElementById('QuotationID').value;
+        if (text != "" || text != undefined) {
+            for (i = 0; i < itemData.length; i++) {
+                if (text == itemData[i].QuotID) {
+                    var element = {};
+                    element.QuotID = itemData[i].QTNNO;
+                    element.MessageID = MessageID;
+                    element.ThreadID = ThreadID;
+                    var data = element
+                    data = JSON.stringify(data);
+
+                    $.ajax({
+                        url: "/EmailManager/SaveEMailAganistQuotation",
+                        data: data,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        //  dataType: "json",
+                        success: function (response) {
+                            alert(response);
+                            document.getElementById("QuotNo").value = "";
+                            $("#LinkQuot").hide();
+                        },
+                        error: function (errormessage) {
+                            alert("error");
+                            alert(errormessage.responseText);
+                        }
+                    });
+                } else {
+                    alert("Invalid Quotation No");
+                }
+            }
+        } else {
+            alert("Invalid or empty input!");
+        }
+    }
+
+    var QuotationList = [];
+    $("#QuotationID").keyup(function () {
+        var searchtext = document.getElementById("QuotationID").value;
+        if (searchtext != "") {
+            var data = { 'SearchText': searchtext };
+            data = JSON.stringify(data);
+            $.ajax({
+                type: 'post',
+                url: '/Quotation/GetQuotationNo',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function (list) {
+                    itemData = list;
+                    if (list.length != 0) {
+                        var itemList = [];
+                        for (i = 0; i < list.length; i++) {
+                            itemList[i] = list[i].QuotID;
+                        }
+                        $("#QuotationID").autocomplete({
+                            source: itemList
+                        });
+                    }
+                },
+                error: function (error) { }
+            });
+        }
+    });
+
+    var CompanyList = [];
+    var LocationList = [];
+    var CompanyID, LocationID;
+    $("#CompanyN").keyup(function () {
+        SearchCompanyList();
+    });
+
+    $("#CompanyN").focusout(function () {
+        SearchLocationList();
+    });
+
+    function SearchCompanyList() {
+        var searchtext = document.getElementById("CompanyN").value;
+        $('#saveCustomer').show();
+        $('#UpdateCustomer').hide();
+        CompanyID = 0;
+        LocationID = 0;
+        if (searchtext.length > 1) {
+            var data = { 'SearchText': searchtext };
+            data = JSON.stringify(data);
+            $.ajax({
+                type: 'post',
+                url: '/ManageContact/CompanyList',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function (list) {
+                    if (list.length != 0) {
+                        CompanyList = list;
+                        var itemList = [];
+                        var sortedList = [];
+                        var compID = 0;
+                        for (k = 0; k < list.length; k++) {
+                            if (compID != list[k].CompanyID) {
+                                compID = list[k].CompanyID;
+                                var element = {};
+                                element.CompanyName = list[k].CompanyName;
+                                sortedList.push(element);
+                            }
+                        }
+
+                        for (i = 0; i < sortedList.length; i++) {
+
+                            itemList[i] = sortedList[i].CompanyName;
+
+                        }
+
+                        $("#CompanyN").autocomplete({
+                            source: itemList
+                        });
+                    }
+
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
+    function SearchLocationList() {
+        if (CompanyList.length == 0) {
+            $("#cute-loader").fadeIn("slow");
+            SearchCompanyList();
+            $("#cute-loader").fadeOut("slow");
+        }
+        var searchtext = document.getElementById("CompanyN").value;
+        for (i = 0; i < CompanyList.length; i++) {
+            if (searchtext != "" || searchtext != undefined) {
+                if (searchtext == CompanyList[i].CompanyName) {
+                    $('#saveCustomer').hide();
+                    $('#UpdateCustomer').show();
+                    var element = {};
+                    CompanyID = CompanyList[i].CompanyID;
+                    element.LocationID = CompanyList[i].LocationID;
+                    element.Location = CompanyList[i].Location;
+                    LocationList.push(element);
+                }
+            }
+        }
+        if (CompanyID == 0) {
+            $('#CompanyParameter').show();
+        } else {
+            $('#CompanyParameter').hide();
+        }
+        var itemList = [];
+        for (i = 0; i < LocationList.length; i++) {
+
+            itemList[i] = LocationList[i].Location;
+
+        }
+
+        $("#LocationN").autocomplete({
+            source: itemList
+        });
+    }
+
+    function UpdateContactDetail() {
+        var LocationName = document.getElementById("LocationN").value;
+        if (LocationName != "") {
+            for (i = 0; i < LocationList.length; i++) {
+                if (LocationName.trim() == LocationList[i].Location) {
+                    LocationID = LocationList[i].LocationID;
+                    break;
+                } else {
+                    LocationID = 0;
+                }
+            }
+        } else {
+            return;
+        }
+        mode = 0;
+        var element = {};
+        element.CompanyID = CompanyID;
+        element.Location = document.getElementById("LocationN").value;
+        element.LocationID = LocationID;
+        element.ContactPersonName = document.getElementById("CPName").value;
+        element.ContactNo = document.getElementById("CPContact").value;
+        if (element.ContactNo == "" || element.ContactNo == undefined) {
+            element.ContactNo = 0;
+        }
+        element.ContactEmail = document.getElementById("CPEmail").value;
+        var e = document.getElementById("ddlStateDropdown");
+        element.StateID = e.options[e.selectedIndex].value;
+        var c = document.getElementById("ddlCountryDropdown");
+        element.CountryID = c.options[c.selectedIndex].value;
+
+        element.AddedOn = new Date();
+        var data = element;
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/ManageContact/QuickUpdateCustomer",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                alert(response);
+                $("#MessageBody").show();
+                $("#AddContact").hide();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function RefreshMailList() {
+        $.ajax({
+            url: "/EmailManager/RefreshMailList",
+            //data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+        document.location = '@Url.Action( "Inbox", "EmailManager")';
+
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,1153 @@
+﻿@*@model IEnumerable<BombayToolsEntities.BusinessEntities.EnquiryList>*@
+
+@{
+    ViewBag.Title = "EnquirySummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<style>
+    .btn i {
+        font-size: 10px !important;
+    }
+
+    .btn-size i {
+        font-size: 16px !important;
+    }
+
+    .m_1 {
+        margin: 2px !important;
+    }
+
+    .th_font {
+        font-size: 12px !important;
+    }
+
+    .th_w {
+        width: 1px;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter label {
+        display: inline-flex;
+    }
+</style>
+<div id="EnquiryFollowUp" style="display:none"></div>
+<div class=" content-area overflow-hidden" id="HeaderLabel">
+    <div class="page-header">
+        <h4 class="page-title" id="QuotHeader">Enquiry Summary</h4>
+        <h4 class="page-title" id="DescHeader">Enquiry Description</h4>
+        <h4 class="page-title" id="EnqSummary">Summary</h4>
+        <h4 class="page-title" id="EditHeader">Edit Enquiry</h4>
+        <ol class="breadcrumb" id="ShowSummary">
+            <li class="breadcrumb-item">
+                <a onclick="getBack();" class="btn btn-primary btn-success" style="color:white;align-content:center;">
+                    <i class="fa fa-arrow-left" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back"></i>
+                </a>
+            </li>
+        </ol>
+    </div>
+    <div class="row" style="margin-top: -58px;" id="EnquiryStatus">
+        <div class="col-12">
+            <div class="form-group float-right">
+                <label class="custom-switch">
+                    <input type="checkbox" name="custom-switch-checkbox" id="ToggleSummary" class="custom-switch-input" onchange="toggleSummary()">
+                    <span class="custom-switch-description mr-1">Open</span>
+                    <span class="custom-switch-indicator"></span>
+                    <span class="custom-switch-description">Close</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="QuoteSummary">
+
+        <div class="col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">From Date</label>
+                                @Html.TextBox("FromDate", null, new { @class = "form-control datePickerD", @id = "FromDate", name = "FromDate", @Value = DateTime.Now.AddDays(-7).ToString("dd MMM yyyy") })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">To Date</label>
+                                @Html.TextBox("ToDate", null, new { @class = "form-control datePickerD", @id = "ToDate", name = "ToDate", @Value = DateTime.Now.ToString("dd MMM yyyy") })
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <button class="btn btn-primary mt-5" onclick="GetEnquiryOpenSummary();" type="button"><i style="font-size:15px;" class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="tblEnquirySummary" class="table table-striped table-bordered compact" style="width:100%">
+                            <thead>
+                                <tr>
+                                    @*<th style="display:none;"></th>*@
+                                    <th class="th_font">#</th>
+                                    <th class="th_font" style="width:130px;">Date</th>
+                                    <th class="th_font">Refernce</th>
+                                    <th class="th_font">Company</th>
+                                    <th class="th_font">Location</th>
+                                    <th class="th_font" style="width:110px;">Contact Person</th>
+                                    <th class="th_font">Assigned</th>
+                                    <th class="th_font">Created By</th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                    <th class="th_font th_w"></th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+                <!-- table-wrapper -->
+            </div>
+            <!-- section-wrapper -->
+        </div>
+    </div>
+    <!--Show Description -->
+    <div class="col-sm-12 col-lg-12" id="ShowDescription">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-3">
+                        <p><strong>Enquiry No.</strong>: <label id="dEnqNo"></label></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <p><strong>Date</strong>: <label id="dDate"></label></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <p><strong>Type</strong>: <label id="dType"></label></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <p><strong>Status</strong>: <label id="dStatus"></label></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <p><strong>Quotation No</strong>: <label id="dQuotation"></label></p>
+                    </div>
+                </div>
+                <hr style="margin:0 !important;" />
+                <div class="row">
+                    <div class="col-12">
+                        <p class="m-0"><strong>Company: </strong><label id="dCompany"></label></p>
+                        <p class="m-0"><strong>Contact Person</strong>: <label id="dContactPerson"></label></p>
+                    </div>
+                </div>
+                <hr style="margin:0 !important;" />
+                <div class="row mt-2">
+                    <div class="col-sm-12">
+                        <h6>Enquiry Description</h6>
+                        <p id="FullDesc"></p>
+                    </div>        
+                    <div class="col-sm-12">
+                        <h6>Close Remark</h6>
+                        <p id="dCloseRemark"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Description-->
+    <!--Generate Quotation-->
+    <div class="col-sm-12 col-lg-12" id="GenerateEnquiry">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-3">
+                                <p><strong>Enquiry No.</strong>: <label id="qEnqNo"></label></p>
+                            </div>
+                            <div class="col-sm-12 col-lg-3">
+                                <p><strong>Date</strong>: <label id="qDate"></label></p>
+                            </div>
+                            <div class="col-sm-12 col-lg-3">
+                                <p><strong>Type</strong>: <label id="qType"></label></p>
+                            </div>
+                            <div class="col-sm-12 col-lg-3">
+                                <p><strong>Status</strong>: <label id="qStatus"></label></p>
+                            </div>
+                        </div>
+                        <hr style="margin:0 !important;" />
+                        <div class="row mt-1">
+                            <div class="col-sm-12 col-lg-6">
+                                <p class="m-0"><strong><label id="qCompany"></label></strong></p>
+                                <p class="m-0"><strong>Location</strong>: <label id="qLocation"></label></p>
+                            </div>
+                            <div class="col-sm-12 col-lg-6">
+                                <p class="m-0"><strong>Contact Person</strong>: <label id="qContactPerson"></label></p>
+                                <p class="m-0"><strong>Email</strong>: <label id="qEmail"></label></p>
+                                <p class="m-0"><strong>Contact</strong>: <label id="qContact"></label></p>
+                            </div>
+                        </div>
+                        <hr style="margin:0 !important;" />
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="m-1"><strong>Enquiry Description</strong></p>
+                                <p id="qDescription"></p>
+                                <button class="btn btn-primary" onclick="CreateNewQuotation()">Generate Quotation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Generate Quotation-->
+    <!--Start Edit Enquiry-->
+    <div class="col-sm-12 col-lg-12" id="EditEnquiry">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="enqno">Enquiry No</label>
+                            @Html.TextBox("eEnqNo", null, new { @class = "form-control", @id = "eEnqNo", name = "eEnqNo", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="enqno">Enquiry Date</label>
+                            @Html.TextBox("eDate", null, new { @class = "form-control", @id = "eDate", name = "eDate", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="enqno">Enquiry From</label>
+                            @Html.TextBox("eContactPerson", null, new { @class = "form-control", @id = "eContactPerson", name = "eContactPerson", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="enqno">Attended By</label>
+                            @Html.TextBox("eAttendedBY", null, new { @class = "form-control", @id = "eAttendedBY", name = "eAttendedBY", autocomplete = "off", disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="form-control-label" for="enqno">Company</label>
+                        @Html.TextBox("eCompany", null, new { @class = "form-control", @id = "eCompany", name = "eCompany", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="form-control-label" for="enqno">Location</label>
+                        @Html.TextBox("eLocation", null, new { @class = "form-control", @id = "eLocation", name = "eLocation", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-lg-3">
+                        <label class="form-control-label" for="enqno">Email</label>
+                        @Html.TextBox("eEmail", null, new { @class = "form-control", @id = "eEmail", name = "eEmail", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <label class="form-control-label" for="enqno">Contact Number</label>
+                        @Html.TextBox("eContact", null, new { @class = "form-control", @id = "eContact", name = "eContact", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <label class="form-control-label" for="enqno">Mobile No</label>
+                        @Html.TextBox("eMobile", null, new { @class = "form-control", @id = "eMobile", name = "eMobile", autocomplete = "off", disabled = "disabled" })
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <label class="form-control-label" for="enqno">Reference</label>
+                        @Html.TextBox("eType", null, new { @class = "form-control", @id = "eType", name = "eType", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label for="Sales person"> Sales Person</label>
+                            @Html.DropDownList("ddlSalesPersonDropdown", (IEnumerable<SelectListItem>)ViewBag.SalesPersonList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesPersonDropdown", name = "ddlSalesPersonDropdown", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label for="Sales person"> Sales Co-Ordinator</label>
+                            @Html.DropDownList("ddlSalesCoordinatorList", (IEnumerable<SelectListItem>)ViewBag.SalesCoordinatorList, "--Select--", new { @class = "form-control custom-select", @id = "ddlSalesCoordinatorList", name = "ddlSalesCoordinatorList", autocomplete = "off" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Enquiry Description</label>
+                    @Html.TextArea("eDescription", new { @class = "form-control", @id = "eDescription", name = "eDescription", autocomplete = "off" })
+                </div>
+                <div class="row float-right">
+                    <div class="form-group ">
+                        <button type="button" class="btn btn-size btn-success" title="save" onclick="updateEnquiry()"><i class="fa fa-save"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Edit Enquiry-->
+    <!--Start close enquiry-->
+    <div class="row" id="QuoteCloseSummary">
+
+        <div class="col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">From Date</label>
+                                @Html.TextBox("FromDateC", null, new { @class = "form-control datePickerD", @id = "FromDateC", name = "FromDateC", @Value = DateTime.Now.AddDays(-7).ToString("dd MMM yyyy") })
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">To Date</label>
+                                @Html.TextBox("ToDateC", null, new { @class = "form-control datePickerD", @id = "ToDateC", name = "ToDateC", @Value = DateTime.Now.ToString("dd MMM yyyy") })
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <button class="btn btn-primary mt-5" onclick="GetEnquiryCloseSummary();" type="button"><i style="font-size:15px;" class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="QuotationCloseTableSummary">
+                        <div class="table-responsive">
+                            <table id="tblCloseEnquirySummary" class="table table-striped table-bordered compact" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th style="display:none;"></th>
+
+                                        <th class="th_font">#</th>
+                                        <th class="th_font" style="width:60px;">Date</th>
+                                        <th class="th_font" style="width:60px;">Close Date</th>
+                                        <th class="th_font">Refernce</th>
+                                        <th class="th_font">Company</th>
+                                        <th class="th_font">Location</th>
+                                        <th class="th_font" style="width:110px;">Contact Person</th>
+                                        @*<th class="th_font" style="width:180px;min-width:180px;">Description</th>*@
+                                        <th class="th_font">Assigned</th>
+                                        <th class="th_font" style="width:1px;"></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- table-wrapper -->
+            </div>
+        </div>
+    </div>
+    <!--End close Enquiry-->
+</div>
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @*share View*@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-Modal3">Share Enquiry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ShareEnqView"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveShareList()">Share</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal23" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div id="SelectTemplate"></div>
+    </div>
+</div>
+<div id="LinkQuotation"></div>
+
+
+<div class="modal fade" id="DeleteRemark" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-Modal3">Close Enquiry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12">
+                        <label class="form-label">  Remark</label>
+                        @Html.TextBox("Remark", null, new { @class = "form-control", @id = "Remark", name = "Remark", autocomplete = "off", placeholder = "", @maxlength = 100 })
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteEnquiry(EnquiryNo)">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var EnquiryMaster = [];
+    $(document).ready(function () {
+        $('#DescHeader').hide();
+        $('#ShowDescription').hide();
+        $('#ShowSummary').hide();
+        $('#GenerateEnquiry').hide();
+        $('#QuotHeader').hide();
+        $('#EditEnquiry').hide();
+        $('#EditHeader').hide();
+        $('#QuoteCloseSummary').hide();
+        @*EnquiryMaster = @Html.Raw(Json.Encode(@ViewBag.EnquiryList));
+        EnquiryMaster = JSON.parse(EnquiryMaster);*@
+
+        $('#tblEnquirySummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "autoWidth": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "paging": false,
+            "order": [],
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [0] },
+                { 'bSortable': false, 'aTargets': [8] },
+                { 'bSortable': false, 'aTargets': [9] },
+                { 'bSortable': false, 'aTargets': [10] },
+                { 'bSortable': false, 'aTargets': [11] },
+                { 'bSortable': false, 'aTargets': [12] },
+                { 'bSortable': false, 'aTargets': [13] },
+                { 'bSortable': false, 'aTargets': [14] },
+                { 'bSortable': false, 'aTargets': [17] }
+            ]
+        });
+        GetEnquiryOpenSummary();
+    });
+    //global - loader
+    function GetEnquiryOpenSummary() {
+        var FromDate = document.getElementById("FromDate").value;
+        var ToDate = document.getElementById("ToDate").value;
+        if (FromDate == "" || ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+        $("#global-loader").fadeIn("slow");
+        var data = { 'FromDate': FromDate, 'To': ToDate };
+        data = JSON.stringify(data);
+            $.ajax({
+                url: "/Enquiry/GetOpenEnquiryList",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    EnquiryMaster = [];
+                    EnquiryMaster = response;
+                    $('#tblEnquirySummary').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "autoWidth": false,
+                        "bPaginate": false,
+                        "bInfo": false,
+                        "paging": false,
+                        "order": [],
+                        "aaData": EnquiryMaster,
+                        "columns": [
+                            //{ "data": "DisplayDesc" },
+                            { "data": "EnqNO" },
+                            { "data": "DisplayDate" },
+                            { "data": "Reference" },
+                            { "data": "Company" },
+                            { "data": "Location" },
+                            { "data": "EnqFrom" },
+                            { "data": "SalesPerson" },
+                            { "data": "AttendedBY" },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className":"pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<div data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Share\" onclick=\"ShareEnqView('" + row.EnqNO + "')\"><button class=\"btn btn-warning btn-sm m_1\" type=\"button\" data-toggle=\"modal\" data-target=\"#exampleModal3\"> <i class=\"fa fa-share-alt\"></i>       </button> </div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = " <div  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"View Description\"><button class=\"btn btn-info btn-sm m_1\" type=\"button\" onclick=\"showDescription('" + row.EnqNO + "')\"><i class=\"fa fa-eye\"></i>  </button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = " <div  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Edit Enquiry\"><button class=\"btn btn-primary btn-sm m_1\" type=\"button\" onclick=\"editEnquiry('" + row.EnqNO + "')\"><i class=\"fa fa-pencil\"></i>  </button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = " <div  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Generate Quotation\"><button class=\"btn btn-success btn-sm m_1\" type=\"button\" onclick=\"generateQuotationView('" + row.EnqNO + "')\"><i class=\"fa fa-sticky-note\"></i>  </button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = " <div  data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Use Quotation Template\"><button class=\"btn bg-orange btn-sm m_1\" data-target=\"#exampleModal23\" data-toggle=\"modal\"  type=\"button\" onclick=\"SelectTemplate('" + row.EnqNO + "','" + row.DisplayDate + "','" + row.Reference + "','" + row.Status + "','" + row.Company + "','" + row.Location + "','" + row.EnqFrom + "','" + row.CPEmailID + "','" + row.CPContactNO + "','" + row.Address + "','" + row.ContactPersonID + "')\"><i class=\"fa fa-sticky-note\"></i>  </button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<div><button class=\"btn bg-blue btn-sm m_1\" type=\"button\" onclick=\"EnquiryFollowUp('" + row.EnqNO + "')\"><i class=\"fa fa-commenting\" data-toggle=\"tooltip\" data-placement=\"bottom\"  data-original-title=\"Enquiry Follow up\"></i></button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                "data": "EnqNO",
+                                "orderable": false,
+                                "className": "pl-0 pr-0",
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<div data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Close Enquiry\"><button class=\"btn btn-danger btn-sm m_1\" type=\"button\" onclick=\"SaveDeleteRemark('" + row.EnqNO + "')\"><i class=\"fa fa-trash\"></i></button></div>"
+                                        //data = "<div data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Delete Enquiry\"><button class=\"btn btn-danger btn-sm m_1\" type=\"button\" onclick=\"deleteEnquiry('" + row.EnqNO + "','" + row.DisplayDate + "','" + row.Reference + "','" + row.CPMobileNO + "','" + row.Company + "','" + row.Location + "','" + row.EnqFrom + "','" + row.CPEmailID + "','" + row.CPContactNO + "','" + row.AttendedBY + "','" + row.ContactPersonID + "','" + row.AddedBYID + "')\"><i class=\"fa fa-trash\"></i></button></div>"
+                                    }
+                                    return data;
+                                }
+                            },
+                        ],
+
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] },
+                            { 'bSortable': false, 'aTargets': [8] },
+                            { 'bSortable': false, 'aTargets': [9] },
+                            { 'bSortable': false, 'aTargets': [10] },
+                            { 'bSortable': false, 'aTargets': [11] },
+                            { 'bSortable': false, 'aTargets': [12] },
+                            { 'bSortable': false, 'aTargets': [13] },
+                            { 'bSortable': false, 'aTargets': [14] },
+                            { 'bSortable': false, 'aTargets': [7] }
+                        ]
+                    });
+                    $("#global-loader").fadeOut("slow");
+                },
+                error: function (errormessage) {
+                    $("#global-loader").fadeOut("slow");
+                    alert(errormessage.responseText);
+                }
+        });
+    }
+
+    function GetEnquiryCloseSummary() {
+        $("#global-loader").fadeIn("slow");
+
+        var FromDate = document.getElementById("FromDateC").value;
+        var ToDate = document.getElementById("ToDateC").value;
+        if (FromDate == "" || ToDate == "") {
+            alert("Please Select date range");
+            return false;
+        }
+            var closestat = 2;
+        data = { 'status': closestat, 'FromDate': FromDate, 'To': ToDate  }
+            data = JSON.stringify(data);
+            $.ajax({
+                url: "/Enquiry/GetCloseEnquiryList",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    CloseEnquiry = [];
+                    CloseEnquiry = response;
+                    $('#tblCloseEnquirySummary').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "aaData": response,
+                        "bPaginate": false,
+                        "bInfo": false,
+                        "paging": false,
+                        "columns": [
+                            { "data": "EnqNO" },
+                            { "data": "DisplayDate" },
+                            { "data": "CloseDate" },
+                            { "data": "Reference" },
+                            { "data": "Company" },
+                            { "data": "Location" },
+                            { "data": "EnqFrom" },
+                            { "data": "SalesPerson" },
+                            {
+                                "data": "DisplayDesc",
+                                "orderable": false,
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<button type=\"button\" class=\"btn btn-info btn-sm m_1\" name=\"removebutton\" onclick=\"showCloseEnquiryDescription('" + row.EnqNO + "')\"><i class=\"fa fa-eye\"></i></button>"
+                                    }
+                                    return data;
+                                }
+                            }
+                        ],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [1] },
+                            { 'bSortable': false, 'aTargets': [8] },
+
+                        ]
+                    });
+                    $("#global-loader").fadeOut("slow");
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                    $("#global-loader").fadeOut("slow");
+                }
+        });
+    }
+</script>
+<script>
+    var CPID = 0;
+    var AddedBy = 0;
+    var CompanyName_q;
+    var Address_q;
+    var ContactPersonName_q;
+    var EmailID_q;
+    var ContactNo_q;
+    var ContactPersonID_q;
+    var EnqNo_q;
+    var CloseEnquiry = [];
+    var statusCheck = Boolean;
+    var EnquiryNo =0;
+    function getBack() {
+        if (statusCheck == true) {
+            $("#QuoteCloseSummary").show();
+            $("#EnquiryStatus").show();
+            $("#ShowSummary").hide();
+            $('#ShowDescription').hide();
+            document.getElementById("ToggleSummary").checked = true;
+
+            return;
+        }
+        $('#ShowSummary').hide();
+        $('#ShowDescription').hide();
+        $('#GenerateEnquiry').hide();
+        $('#DescHeader').hide();
+        $('#QuotHeader').hide();
+        $('#EditHeader').hide();
+        $('#EditEnquiry').hide();
+        $('#QuoteSummary').show();
+        $('#EnqSummary').show();
+        $('#EnquiryStatus').show();
+
+    }
+    //d, EnqNO, DisplayDate, Reference, Status, Company, EnqFrom, QuotationNo
+
+    function showDescription(EnqNo) {
+        $('#ShowSummary').show();
+        $('#ShowDescription').show();
+        $('#DescHeader').show();
+        $('#QuoteSummary').hide();
+        $('#QuotHeader').hide();
+        $('#EnqSummary').hide();
+        $('#EnquiryStatus').hide();
+        $("#QuoteCloseSummary").hide();
+        var QuotationNo = 0;
+        document.getElementById("ToggleSummary").checked = false;
+        for (i = 0; i < EnquiryMaster.length; i++) {
+            if (EnquiryMaster[i].EnqNO == EnqNo) {
+                document.getElementById('FullDesc').innerHTML = EnquiryMaster[i].DisplayDesc;
+                document.getElementById('dEnqNo').innerHTML = EnquiryMaster[i].EnqNO;
+                document.getElementById('dDate').innerHTML = EnquiryMaster[i].DisplayDate;
+                document.getElementById('dType').innerHTML = EnquiryMaster[i].Reference;
+                document.getElementById('dStatus').innerHTML = EnquiryMaster[i].Status;
+                document.getElementById('dCompany').innerHTML = EnquiryMaster[i].Company;
+                document.getElementById('dContactPerson').innerHTML = EnquiryMaster[i].EnqFrom;
+                QuotationNo = EnquiryMaster[i].QuotationNo;
+                break;
+            }
+        }
+        if (QuotationNo == 0 || QuotationNo == undefined) {
+            $("#dQuotation").hide();
+        } else {
+            $("#dQuotation").show();
+            document.getElementById('dQuotation').innerHTML = QuotationNo;
+        }
+        $('html, body').animate({
+            scrollTop: $("#ShowSummary").offset().top
+        }, 2000);
+
+    }
+
+    function generateQuotationView(EnqNo) {
+        for (i = 0; i < EnquiryMaster.length; i++) {
+            if (EnquiryMaster[i].EnqNO == EnqNo) {
+                document.getElementById('qEnqNo').innerHTML = EnquiryMaster[i].EnqNO;;
+                document.getElementById('qDate').innerHTML = EnquiryMaster[i].DisplayDate;
+                document.getElementById('qType').innerHTML = EnquiryMaster[i].Reference;
+                document.getElementById('qStatus').innerHTML = EnquiryMaster[i].Status;
+                document.getElementById('qCompany').innerHTML = EnquiryMaster[i].Company;
+                document.getElementById('qLocation').innerHTML = EnquiryMaster[i].Location;
+                document.getElementById('qContactPerson').innerHTML = EnquiryMaster[i].EnqFrom
+                document.getElementById('qEmail').innerHTML = EnquiryMaster[i].CPEmailID;
+                document.getElementById('qContact').innerHTML = EnquiryMaster[i].CPContactNO;
+                document.getElementById('qDescription').innerHTML = EnquiryMaster[i].DisplayDesc;
+
+                CompanyName_q = EnquiryMaster[i].Company;
+                Address_q = EnquiryMaster[i].Address;
+                ContactPersonName_q = EnquiryMaster[i].EnqFrom;
+                EmailID_q = EnquiryMaster[i].CPEmailID;
+                ContactNo_q = EnquiryMaster[i].CPContactNO;
+                ContactPersonID_q = EnquiryMaster[i].ContactPersonID;
+                EnqNo_q = EnquiryMaster[i].EnqNO;
+                break;
+            }
+        }
+
+        CreateNewQuotation();
+
+    }
+
+    function editEnquiry(EnqNo) {
+        $('#QuoteSummary').hide();
+        $('#EnqSummary').hide();
+        $('#EditHeader').show();
+        $('#EditEnquiry').show();
+        $('#ShowSummary').show();
+        $('#EnquiryStatus').hide();
+        for (i = 0; i < EnquiryMaster.length; i++) {
+            if (EnquiryMaster[i].EnqNO == EnqNo) {
+                var s = document.getElementById("ddlSalesPersonDropdown");
+                s.value = EnquiryMaster[i].SalesPersonID;
+                var sc = document.getElementById("ddlSalesCoordinatorList");
+                sc.value = EnquiryMaster[i].SalesCoordinator;
+                CPID = EnquiryMaster[i].ContactPersonID;
+                AddedBy = EnquiryMaster[i].AddedBYID;
+                document.getElementById('eEnqNo').value = EnquiryMaster[i].EnqNO;
+                document.getElementById('eDate').value = EnquiryMaster[i].DisplayDate;
+                document.getElementById('eType').value = EnquiryMaster[i].Reference;
+                document.getElementById('eMobile').value = EnquiryMaster[i].CPMobileNO;
+                document.getElementById('eCompany').value = EnquiryMaster[i].Company;
+                document.getElementById('eLocation').value = EnquiryMaster[i].Location;
+                document.getElementById('eContactPerson').value = EnquiryMaster[i].EnqFrom;
+                document.getElementById('eEmail').value = EnquiryMaster[i].CPEmailID;
+                document.getElementById('eContact').value = EnquiryMaster[i].CPContactNO;
+                document.getElementById('eDescription').innerHTML = EnquiryMaster[i].DisplayDesc;
+                document.getElementById('eAttendedBY').value = EnquiryMaster[i].AttendedBY;
+            }
+        }
+        $('html, body').animate({
+            scrollTop: $("#EditEnquiry").offset().top
+        }, 2000);
+    }
+
+    function updateEnquiry() {
+        DisplayDesc = document.getElementById('eDescription').innerHTML;
+        Reference= document.getElementById('eType').value;
+        if (DisplayDesc == "" || Reference == "") {
+            alert("Input field empty");
+            return;
+        }
+        var today =new Date();
+            var element = {};
+            element.EnquiryNO = document.getElementById('eEnqNo').value;
+            element.StatusID = 1;
+            element.ContactPersonID = CPID;
+            element.RevisionNo = 0;
+            element.AddedBY = AddedBy;
+            element.AddedON = today;
+            element.EnqDate = today;
+            element.SalesPersonID = 1;
+            element.ModifiedBY = 1;
+            element.ModifiedON = today;
+            element.IsDeleted = false;
+            var s = document.getElementById("ddlSalesPersonDropdown");
+            element.SalesPersonID = s.options[s.selectedIndex].value;
+            var sc = document.getElementById("ddlSalesCoordinatorList");
+        element.SalesCoordinatorID = sc.options[sc.selectedIndex].value;
+            element.Reference = document.getElementById("eType").value;
+            element.Desc = document.getElementById("eDescription").value;
+            data = JSON.stringify(element)
+            $.ajax({
+                url: "/Enquiry/EditEnquiryDetail",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (value) {
+                    alert("Enquiry detail updated successfully!");
+                    //getBack();
+                    document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+    }
+
+    function deleteEnquiry(EnquiryNo){
+
+        var remark = document.getElementById("Remark").value;
+        console.log(remark);
+
+         var today = new Date();
+         var element = {};
+
+
+        for (i = 0; i < EnquiryMaster.length; i++) {
+            if (EnquiryMaster[i].EnqNO == EnquiryNo) {
+
+                element.SalesCoordinatorID  = EnquiryMaster[i].SalesCoordinator;
+                element.ContactPersonID = EnquiryMaster[i].ContactPersonID;
+                element.AddedBY = EnquiryMaster[i].AddedBYID;
+                element.EnquiryNO = EnquiryMaster[i].EnqNO;
+
+                element.Reference  = EnquiryMaster[i].Reference;
+
+            }
+        }
+
+          //  element.EnquiryNO = EnqNO;
+          //  element.ContactPersonID = ContactPersonID;
+          //  element.Reference = Reference;
+          //  element.AddedBY = AddedBYID;
+            element.StatusID = 2;
+            element.RevisionNo = 0;
+            element.AddedON = today;
+            element.EnqDate = today;
+            element.SalesPersonID = 1;
+            element.ModifiedBY = 1;
+            element.ModifiedON = today;
+            element.IsDeleted = true;
+            element.Desc = "-";
+            element.Remark = remark;
+
+        data = JSON.stringify(element)
+        console.log(data);
+
+            $.ajax({
+                url: "/Enquiry/EditEnquiryDetail",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (value) {
+                    alert("Enquiry No: " + EnquiryNo + " Deleted");
+                    //getBack();
+                        document.location = '@Url.Action("EnquirySummary", "Enquiry")';
+                },
+                error: function (errormessage) {
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+
+    function CreateNewQuotation() {
+        var data = { 'EnqNo':EnqNo_q,'CompanyName': CompanyName_q, 'Address': Address_q, 'ContactPersonName': ContactPersonName_q, 'EmailID': EmailID_q, 'ContactNo': ContactNo_q, 'ContactPersonID': ContactPersonID_q }
+         data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/GenerateQuot",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var i = response;
+                if (response == 1) {
+                    document.location = '@Url.Action("NewQuotation", "Quotation")';
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function toggleSummary() {
+        var status = Boolean;
+        status = document.getElementById("ToggleSummary").checked;
+        statusCheck = document.getElementById("ToggleSummary").checked;
+        if (status) {
+            $("#QuoteCloseSummary").show();
+            $("#QuoteSummary").hide();
+            GetEnquiryCloseSummary();
+        } else {
+            $("#QuoteSummary").show();
+            $("#QuoteCloseSummary").hide();
+        }
+    }
+
+    function getCloseEquiryList() {
+        if (CloseEnquiry.length == 0) {
+            var closestat = 2;
+            data = { 'status': closestat }
+            data = JSON.stringify(data);
+            $("#global-loader").fadeIn("slow");
+            $.ajax({
+                url: "/Enquiry/GetCloseEnquiryList",
+                data: data,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    CloseEnquiry = response;
+                    $('#tblCloseEnquirySummary').DataTable({
+                        "destroy": true,
+                        "bLengthChange": false,
+                        "aaData": response,
+                        "bPaginate": false,
+                        "bInfo": false,
+                        "paging": false,
+                        "columns": [
+                            { "data": "EnqNO" },
+                            { "data": "DisplayDate" },
+                            { "data": "CloseDate" },
+                            { "data": "Reference" },
+                            { "data": "Company" },
+                            { "data": "Location" },
+                            { "data": "EnqFrom" },
+                            { "data": "SalesPerson" },
+                            {
+                                "data": "DisplayDesc",
+                                "orderable": false,
+                                "render": function (data, type, row, meta) {
+                                    if (type === 'display') {
+                                        data = "<button type=\"button\" class=\"btn btn-info btn-sm m_1\" name=\"removebutton\" onclick=\"showCloseEnquiryDescription('" + row.EnqNO + "')\"><i class=\"fa fa-eye\"></i></button>"
+                                    }
+                                    return data;
+                                }
+                            }
+                        ],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [1] },
+                            { 'bSortable': false, 'aTargets': [8] },
+
+                        ]
+                    });
+                    $("#global-loader").fadeOut("slow");
+                },
+                error: function (errormessage) {
+                    $("#global-loader").fadeOut("slow");
+                    alert("error");
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+    }
+
+    function showCloseEnquiryDescription(EnqNo) {
+        $('#ShowSummary').show();
+        $('#ShowDescription').show();
+        $('#DescHeader').show();
+        $('#QuoteSummary').hide();
+        $('#QuotHeader').hide();
+        $('#EnqSummary').hide();
+        $('#EnquiryStatus').hide();
+        $("#QuoteCloseSummary").hide();
+        for (i = 0; i < CloseEnquiry.length; i++) {
+            if (CloseEnquiry[i].EnqNO == EnqNo) {
+                document.getElementById('FullDesc').innerHTML = CloseEnquiry[i].DisplayDesc;
+                document.getElementById('dEnqNo').innerHTML = CloseEnquiry[i].EnqNO;
+                document.getElementById('dDate').innerHTML = CloseEnquiry[i].DisplayDate;
+                document.getElementById('dType').innerHTML = CloseEnquiry[i].Reference;
+                document.getElementById('dStatus').innerHTML = CloseEnquiry[i].Status;
+                document.getElementById('dCompany').innerHTML = CloseEnquiry[i].Company;
+                document.getElementById('dContactPerson').innerHTML = CloseEnquiry[i].EnqFrom;
+                document.getElementById('dCloseRemark').innerHTML = CloseEnquiry[i].CloseRemark;
+                document.getElementById('dQuotation').innerHTML = CloseEnquiry[i].QuotationNo;
+                QuotationNo = CloseEnquiry[i].QuotationNo;
+                break;
+            }
+        }
+    }
+
+    var tempForShare;
+    function ShareEnqView(ID) {
+        tempForShare = ID;
+        var data = { 'ID': ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/ShareEnquiryDetail",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#ShareEnqView').html(response);
+                $('#ShareEnqView').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function SaveShareList() {
+        var myColumnDefs = [];
+        $('.uniqCheck').each(function () {
+            if (this.checked) {
+                myColumnDefs.push({ 'Status': true, 'ID': $(this).val() })
+            } else {
+                myColumnDefs.push({ 'Status': false, 'ID': $(this).val() })
+            }
+        });
+        if (myColumnDefs == "") {
+            alert("There is no Menu list")
+            return false;
+        }
+        var SharedWith ="";
+        for (i = 0; i < myColumnDefs.length; i++) {
+            if (myColumnDefs[i].Status) {
+                SharedWith = SharedWith + myColumnDefs[i].ID+",";
+            }
+        }
+        var data = { 'SharedWith': SharedWith, 'ID': tempForShare };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/SaveSharedList",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var i = response;
+                if (response == 1) {
+                    $("#exampleModal3").hide();
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function SaveDeleteRemark (EnqNO) {
+        EnquiryNo = EnqNO;
+        $("#DeleteRemark").modal();
+        $("#DeleteRemark").show();
+
+    }
+</script>
+<script>
+    function EnquiryFollowUp(ID) {
+        var data = { 'ID': ID };
+        data = JSON.stringify(data);
+        $.ajax({
+            url: "/Enquiry/EnquiryFollowUp",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#HeaderLabel').hide();
+
+
+                $('#LinkQuotation').html(response);
+                $('#LinkQuotation').show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function GetBackFromFollowUp() {
+        $('#HeaderLabel').show();
+        $('#LinkQuotation').hide();
+
+    }
+
+    var CompanyName, Address, ContactPersonName, EmailID, ContactNo, ContactPersonID, EnqNO;
+
+
+    function SelectTemplate(EnqNo, DisplayDate, Reference, Status, Company, Location, EnqFrom, CPEmailID, CPContactNO, Address, CPContactPersonID) {
+        EnqNO = EnqNo;
+        CompanyName = Company;
+        Address = Address;
+        ContactPersonName = EnqFrom;
+        EmailID = CPEmailID;
+        ContactNo = CPContactNO;
+        ContactPersonID = CPContactPersonID;
+        $.ajax({
+            url: "/Quotation/SelectTemplateForView",
+            //data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            //  dataType: "json",
+            success: function (response) {
+                $('#SelectTemplate').html(response);
+                //$("#QuotationDashboard").hide();
+                $("SelectTemplate").show();
+            },
+            error: function (errormessage) {
+                alert("error");
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function GenerateQuotFromTemplate() {
+        var e = document.getElementById("ddlTemplate");
+        TemplateID = e.options[e.selectedIndex].value;
+        var data1 = { 'CompanyName': CompanyName, 'Address': Address, 'ContactPersonName': ContactPersonName, 'EmailID': EmailID, 'ContactNo': ContactNo, 'ContactPersonID': ContactPersonID, 'TemplateID': TemplateID, 'EnqNo': EnqNO}
+        var data = JSON.stringify(data1);
+        $.ajax({
+        url: "/Quotation/AddNewQuotation",
+        data: data,
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+        var i = response;
+        if (response == 1) {
+            document.location = '@Url.Action("NewQuotation", "Quotation")';
+
+        }
+        },
+        error: function (errormessage) {
+        alert("error");
+        alert(errormessage.responseText);
+        }
+        });
+    }
+
+</script>
+

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.EmailScanner>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Count : @ViewBag.Count</h4>
+    </div>
+</div>
+<div class="row" id="SearchList">
+    <div class="card">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-inbox table-hover">
+
+                    <tbody>
+                        @foreach (var d in Model)
+                        {
+                            <tr>
+                                <td class="view-message dont-show" style="width:150px;">@Html.DisplayFor(m => d.FromName)</td>
+                                <td class="view-message" onclick="ShowBodyTagView('@d.ID')">@Html.DisplayFor(m => d.Subject)</td>
+                                <td class="view-message text-right" style="width:150px;">@Html.DisplayFor(m => d.Display)</td>
+                                <td>
+                                    @if (d.IsRegistered == 0)
+                                    {
+                                        <i class="fa fa-check-circle" style="color:red;font-size: 24px;"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle" style="color:forestgreen;font-size: 24px;"></i>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

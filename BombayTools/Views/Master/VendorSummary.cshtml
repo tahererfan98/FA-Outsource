@@ -1,0 +1,104 @@
+﻿@model IEnumerable<BombayToolsEntities.BusinessEntities.VendorM>
+
+@{
+    ViewBag.Title = "VendorSummary";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div id="summary">
+    <div class="page-header">
+        <h4 class="page-title">Vendor Summary <label class="bg-primary text-white br-7 pl-3 pr-3" id="poCount"></label></h4>
+        <div class="pull-right">
+            <div id="buttons">
+                @Html.TextBox("SearchText", null, new { @class = "form-control", @id = "searchText", name = "searchText", autocomplete = "off" })
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="">
+            <div class="table-responsive">
+                <table class="table table-bordered  table-hover w-100 card-table m-0 text-nowrap" id="tblVendorSummary">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>VENDOR CODE</th>
+                            <th>NAME</th>
+                            <th>GST</th>
+                            <th>PAN NO.</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var d in Model)
+                        {
+                        <tr>
+                            <td>@d.SrNo</td>
+                            <td>@d.VendorCode</td>
+                            <td>@d.VendorName</td>
+                            <td>@d.Contact</td>
+                            <td>@d.Registration</td>
+                            <td> <button class="btn btn-sm btn-primary" onclick="addNewVendor(@d.VendorID)"><i class="fa fa-edit"></i></button> <button class="btn btn-sm  btn-danger" onclick="deleteVendor(@d.VendorID)"><i class="fa fa-trash"></i></button></td>
+                            @*<button class="btn btn-sm btn-info" onclick="viewVendor(@d.VendorID)"><i class="fa fa-eye"></i></button>*@
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="vendorForm"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#tblVendorSummary').DataTable({
+            "destroy": true,
+            "bLengthChange": false,
+            "bPaginate": true,
+            "bInfo": false,
+            "paging": true,
+            order: [],
+            "searching": true,
+            "dom": '<"top"i>rt<"bottom float-left m-3"p><"newQuote bottom float-right m-3"><"clear">',
+            mark: true
+        });
+        $("div.newQuote").html('<div class="float-right" style="display:flex"><button class="btn btn-success" onclick="addNewVendor(0)"><i class="fa fa-plus"></i> Add New Vendor</button></div>');
+        var table = $('#tblVendorSummary').DataTable();
+
+        // #myInput is a <input type="text"> element
+        $('#searchText').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+    });
+
+    function addNewVendor(id) {
+        var data = { 'ID': id };
+        data = JSON.stringify(data);
+        $("#global-loader").fadeIn();
+        $.ajax({
+            url: "/Master/_AddorEditVendor",
+            data: data,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#summary').hide();
+                $('#vendorForm').html(response);
+                $('#vendorForm').show();
+                $("#global-loader").fadeOut();
+            },
+            error: function (errormessage) {
+                $("#global-loader").fadeOut();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function getBack() {
+        $('#summary').show();
+        $('#vendorForm').hide();
+        $('#vendorForm').empty();
+
+    }
+
+</script>

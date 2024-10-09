@@ -1,0 +1,159 @@
+﻿
+body {
+    margin: 0;
+    padding: 0;
+}
+
+@media only screen and (min-width: 100px) and (max-width : 480px) {
+
+    .fc-content {
+        font-size: 12px;
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .fc-widget-header {
+        font-size: 10px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 12px;
+    }
+
+}
+
+@media only screen and (min-width: 481px) and (max-width : 599px) {
+
+    .fc-content {
+        font-size: 14px;
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .fc-widget-header {
+        font-size: 14px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 14px;
+    }
+
+}
+
+@media only screen and (min-width: 600px) and (max-width : 799px) {
+
+    .fc-content {
+        font-size: 12px;
+        text-align: center;
+        margin: 1px;
+        padding: 1px;
+    }
+
+    .fc-widget-header {
+        font-size: 12px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 12px;
+    }
+
+}
+
+@media only screen and (min-width: 800px) and (max-width : 1000px) {
+
+    .fc-content {
+        font-size: 14px;
+        text-align: center;
+        margin: 2px;
+        padding: 2px;
+    }
+
+    .fc-widget-header {
+        font-size: 14px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 14px;
+    }
+
+}
+
+@media only screen and (min-width: 1001) and (max-width : 1249px) {
+
+    .fc-content {
+        font-size: 16px;
+        text-align: center;
+        margin: 4px;
+        padding: 4px;
+    }
+
+    .fc-widget-header {
+        font-size: 16px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 16px;
+    }
+
+}
+
+@media only screen and (min-width: 1250px) and (max-width : 1400px) {
+
+    .fc-content {
+        font-size: 20px;
+        text-align: center;
+        margin: 9px;
+        padding: 9px;
+    }
+
+    .fc-widget-header {
+        font-size: 20px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 20px;
+    }
+
+}
+ 
+@media only screen and (min-width: 1401px) and (max-width : 4050px) {
+
+    .fc-content {
+        font-size: 28px;
+        text-align: center;
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .fc-widget-header {
+        font-size: 28px;
+        background-color: #9F78FF;
+        color: white;
+        height: 35px;
+    }
+
+    .fc-day-number {
+        font-size: 28px;
+    }
+
+}
